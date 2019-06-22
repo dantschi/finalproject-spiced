@@ -17,6 +17,8 @@ const db = require("./utils/db");
 const bc = require("./utils/bc");
 const s3 = require("./utils/s3");
 
+const csurf = require("csurf");
+
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 
@@ -61,7 +63,7 @@ app.use(cookieSessionMiddleware);
 io.use((socket, next) => {
     cookieSessionMiddleware(socket.request, socket.request.res, next);
 });
-
+/////////////////////////////////////////////////////////////
 
 
 app.use(compression());
@@ -85,6 +87,78 @@ if (process.env.NODE_ENV != 'production') {
 } else {
     app.use('/bundle.js', (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
+
+/////////////////////////////////////////////////////////////
+//
+// ROUTES
+//
+//////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+/////////////////////////////////////////////////////////////
+// REGISTER
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/register", async (req, res) =>{
+    let {fn, ln, em, pw} = req.body;
+    // if something is missing, go back to "/"
+    if(!fn || !ln || !em || !pw) {
+        return res.redirect("/");
+    }
+    // otherwise add user
+    try {
+        let hashedPw = await bc.hashPassword(pw);
+        let rslt = await db.addUser(fn.trim(), ln.trim(), em.trim(), hashedPw);
+        req.session.userId = rslt.rows[0].id
+        res.json({success:true})
+    } catch(err) {
+        console.log("error in adding user", err);
+        res.json({error: "Something went wrong!"})
+    }
+}); // register ends
+
+/////////////////////////////////////////////////////////////
+// LOGIN
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/login", async (req, res) =>{
+    let {em, pw} = req.body;
+    // if something is missing, go back to "/"
+    if (!em || !pw) {
+        res.redirect("/");
+    }
+    // otherwise grab user data from db
+    let pwQuery = await db.getUserPwd(em);
+    //check if there is a row with this email
+    if (pwQuery.rows.length) {
+        let userId = pwQuery.rows[0].id
+        let pwCheck = await bc.checkPassword(pw,pwQuery.rows[0].pw)
+        // if password is correct set session id, else drop an error
+        if (pwCheck){
+            req.session.userId = userId;
+            res.json({success:true});
+        } else {
+            res.json({error: "Email or password is not correct"});
+        }
+    } else {
+        res.json({
+            error: "Something went wrong!"
+        })
+    }
+
+}) // login ends
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('*', function(req, res) {
     res.sendFile(__dirname + '/index.html');
