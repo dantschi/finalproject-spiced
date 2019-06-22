@@ -1,6 +1,8 @@
 import React from "react";
-import axiops from "./axios";
 import axios from "./axios";
+import {Header} from "./header";
+import { ProfilePic } from "./profilepic";
+import { BrowserRouter, Route } from "react-router-dom";
 
 export class App extends React.Component{
     constructor(props) {
@@ -24,16 +26,18 @@ export class App extends React.Component{
 
     render() {
         return (
-            <div className="app-wrapper">
-                <h1>
-                    App is on screen
-                </h1>
+            <BrowserRouter>
+                <div className="app-wrapper">        
+                    <Header />
+                    <h1>
+                       App is on screen
+                    </h1>
 
-                <div className="logout">
-                    <img onClick={this.logout} src="/logout.svg" />
+                    <div className="logout">
+                        <img onClick={this.logout} src="/logout.svg" />
+                    </div>
                 </div>
-
-            </div>
+            </BrowserRouter>
         )
     }
 }
