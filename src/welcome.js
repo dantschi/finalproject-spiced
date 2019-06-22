@@ -92,6 +92,7 @@ export class Welcome extends React.Component {
     render() {
         return(
             <div className="welcome-wrapper">
+                <div className="welcome-background"> </div>
                 <div className="welcome-box">
 
 
