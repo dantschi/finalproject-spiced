@@ -11,31 +11,51 @@ export class Welcome extends React.Component {
             error: ""
         }
         this.handleChange = this.handleChange.bind(this);
+        // this.handleChangeLogin = this.handleChangeLogin.bind(this);
     }
 
     handleChange(e) {
-        console.log("handlechange target, valuie", e.target.name, e.target.value);
-        
+        console.log("handlechangeregister target, value", e.target.name, e.target.value);
+        console.log(this.state);       
         this.setState({
             data: {
                 ...this.state.data,
-                [e.target.name]: e.target.value
+                [event.target.name]: event.target.value
             },
             error: ""
-        })
+        });
     }
+
+    // handleChangeLogin(e) {
+    //     console.log("handlechangelogin target, value", e.target.name, e.target.value);
+    //     console.log(this.state);
+        
+        
+    //     this.setState({
+            
+    //             login: {
+    //                 ...this.state.data,
+    //                 [e.target.name]: e.target.value
+    //             }
+
+    //     })
+    // }
 
     submitRegister() {
         console.log("submit register this.state.data", this.state.data);
-        const {fn,ln,em,pw1,pw2} = this.state.data;
-        if (!fn || !ln || !em || !pw1 || !pw2) {
+        const {first,last,email,password1,password2} = this.state.data;
+        console.log(first, last, email. password);
+        
+        if (!first || !last || !email || !password1 || !password2) {
             console.log("field is empty");
             this.setState({error: "Please fill every field!"})
 
         } else {
-            if (pw1==pw2) {
-                axios.post("/register", {fn,ln,em,pw}).then(rslt=>{
-                    console.log("register result");
+            if (password1==password2) {
+                console.log("passwords are identical", first, last, email, password1);
+                
+                axios.post("/register", {first,last,email,password1}).then(rslt=>{
+                    console.log("register result", rslt);
                     if (rslt.data.success) {
                         location.replace("/");
                     } else {
@@ -53,85 +73,104 @@ export class Welcome extends React.Component {
 
     submitLogin() {
         console.log("sumbitLogin fires, state", this.state.data);
+        const {email, password} = this.state.data;
+        if (!email || !password) {
+            console.log("field is empty");
+            this.setState({error:"Please fill every field!"})            
+        } else {
+            axios.post("/login", {email, password}).then(rslt=>{
+                console.log("login result", rslt);
+                location.replace("/");                
+            }).catch(err=>{
+                console.log(err);
+                this.setState({error: "Something went wrong"})                
+            })
+        }
         
     }
 
     render() {
         return(
             <div className="welcome-wrapper">
-                <div className="register-box">
-                {this.state.error && (
-                    <p className="error-message">{this.state.error}</p>
-                )}
-                <input
-                    name="fn"
-                    type="text"
-                    onChange={this.handleChange}
-                    placeholder="First name"
-                    autoComplete="new-password"
-                    required
-                />
-                <input
-                    name="ln"
-                    type="text"
-                    onChange={this.handleChange}
-                    placeholder="Last name"
-                    autoComplete="new-password"
-                    required
-                />
-                <input
-                    name="em"
-                    type="email"
-                    onChange={this.handleChange}
-                    placeholder="Email address"
-                    autoComplete="new-password"
-                    required
-                />
-                <input
-                    name="pw1"
-                    type="password"
-                    onChange={this.handleChange}
-                    placeholder="Password"
-                    autoComplete="new-password"
-                    required
-                />
-                <input
-                    name="pw2"
-                    type="password"
-                    onChange={this.handleChange}
-                    placeholder="Password again"
-                    autoComplete="new-password"
-                    required
-                />
+                <div className="welcome-box">
 
-                <button onClick={() => this.submitRegister()}>Register</button>
+
+                    <div className="register-box">
+                        {this.state.error && (
+                            <p className="error-message">{this.state.error}</p>
+                        )}
+                        <input
+                            name="first"
+                            type="text"
+                            onChange={this.handleChange}
+                            placeholder="First name"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <input
+                            name="last"
+                            type="text"
+                            onChange={this.handleChange}
+                            placeholder="Last name"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <input
+                            name="email"
+                            type="email"
+                            onChange={this.handleChange}
+                            placeholder="Email address"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <input
+                            name="password1"
+                            type="password"
+                            onChange={this.handleChange}
+                            placeholder="Password"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <input
+                            name="password2"
+                            type="password"
+                            onChange={this.handleChange}
+                            placeholder="Password again"
+                            autoComplete="new-password"
+                            required
+                        />
+
+
+
+                        <button onClick={() => this.submitRegister()}>Register</button>
+
+                    </div>
+
+                    <div className="login-box">
+                        {this.state.error && (
+                            <p className="error-message">{this.state.error}</p>
+                        )}
+                        <input
+                            name="email"
+                            type="email"
+                            onChange={this.handleChange}
+                            placeholder="Email address"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <input
+                            name="password"
+                            type="password"
+                            onChange={this.handleChange}
+                            placeholder="Password"
+                            autoComplete="new-password"
+                            required
+                        />
+                        <button onClick={() => this.submitLogin()}>Login</button>
+                    </div>
+
 
                 </div>
-
-                <div className="login-box">
-                {this.state.error && (
-                    <p className="error-message">{this.state.error}</p>
-                )}
-                <input
-                    name="em"
-                    type="email"
-                    onChange={this.handleChange}
-                    placeholder="Email address"
-                    autoComplete="new-password"
-                    required
-                />
-                <input
-                    name="pw"
-                    type="password"
-                    onChange={this.handleChange}
-                    placeholder="Password"
-                    autoComplete="new-password"
-                    required
-                />
-                <button onClick={() => this.submitLogin()}>Login</button>
-                </div>
-
-
 
             </div>
         )

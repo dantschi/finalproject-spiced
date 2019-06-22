@@ -99,16 +99,24 @@ if (process.env.NODE_ENV != 'production') {
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/register", async (req, res) =>{
-    let {fn, ln, em, pw} = req.body;
+    console.log("/register req.body", req.body);
+    
+    let {first, last, email, password1} = req.body;
     // if something is missing, go back to "/"
-    if(!fn || !ln || !em || !pw) {
+    if(!first || !last || !email || !password1) {
+        console.log("is missing?");
+        
         return res.redirect("/");
     }
     // otherwise add user
     try {
-        let hashedPw = await bc.hashPassword(pw);
-        let rslt = await db.addUser(fn.trim(), ln.trim(), em.trim(), hashedPw);
+        console.log("nothing is empty", first, last, email, password1);
+        
+        let hashedPw = await bc.hashPassword(password1);
+        let rslt = await db.addUser(first, last, email, hashedPw);
         req.session.userId = rslt.rows[0].id
+        console.log(req.session.userId);
+        
         res.json({success:true})
     } catch(err) {
         console.log("error in adding user", err);
@@ -121,17 +129,19 @@ app.post("/register", async (req, res) =>{
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/login", async (req, res) =>{
-    let {em, pw} = req.body;
+    console.log("/login req.body", req.body);
+    
+    let {email, password} = req.body;
     // if something is missing, go back to "/"
-    if (!em || !pw) {
+    if (!email || !password) {
         res.redirect("/");
     }
     // otherwise grab user data from db
-    let pwQuery = await db.getUserPwd(em);
+    let pwQuery = await db.getUserPwd(email);
     //check if there is a row with this email
     if (pwQuery.rows.length) {
         let userId = pwQuery.rows[0].id
-        let pwCheck = await bc.checkPassword(pw,pwQuery.rows[0].pw)
+        let pwCheck = await bc.checkPassword(password,pwQuery.rows[0].password)
         // if password is correct set session id, else drop an error
         if (pwCheck){
             req.session.userId = userId;
@@ -147,22 +157,34 @@ app.post("/login", async (req, res) =>{
 
 }) // login ends
 
+/////////////////////////////////////////////////////////////
+// LOGOUT
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+app.post("/logout", (req, res) => {
+    console.log("/logout POST req.body", req.session);
+    if (req.body.wantToLogout) {
+        req.session = null;
 
-
-
-
-
-
-
-
-
-
-
-
-app.get('*', function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+        res.redirect("/");
+    } else {
+        res.json("Something went wrong with logout");
+    }
 });
+
+
+app.get("/welcome", (req, res) => {
+    req.session.userId
+        ? res.redirect("/")
+        : res.sendFile(__dirname + "/index.html");
+});
+
+app.get("*", (req, res) => {
+    !req.session.userId
+        ? res.redirect("/welcome")
+        : res.sendFile(__dirname + "/index.html");
+});
+
 
 server.listen(8080, function() {
     console.log("Server is listening on port 8080");
