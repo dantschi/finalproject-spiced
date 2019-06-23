@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Welcome } from './welcome';
-import { App } from "./app";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Welcome } from "./welcome";
+import App from "./app";
 
 /////////////// REDUX STUFF \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 import reducer from "./reducers";
