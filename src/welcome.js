@@ -1,22 +1,26 @@
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
-import {Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "./axios";
 
 export class Welcome extends React.Component {
     constructor(props) {
         super(props);
-        this.state={
+        this.state = {
             data: {},
             error: ""
-        }
+        };
         this.handleChange = this.handleChange.bind(this);
         // this.handleChangeLogin = this.handleChangeLogin.bind(this);
     }
 
     handleChange(e) {
-        console.log("handlechangeregister target, value", e.target.name, e.target.value);
-        console.log(this.state);       
+        console.log(
+            "handlechangeregister target, value",
+            e.target.name,
+            e.target.value
+        );
+        console.log(this.state);
         this.setState({
             data: {
                 ...this.state.data,
@@ -29,10 +33,9 @@ export class Welcome extends React.Component {
     // handleChangeLogin(e) {
     //     console.log("handlechangelogin target, value", e.target.name, e.target.value);
     //     console.log(this.state);
-        
-        
+
     //     this.setState({
-            
+
     //             login: {
     //                 ...this.state.data,
     //                 [e.target.name]: e.target.value
@@ -43,59 +46,66 @@ export class Welcome extends React.Component {
 
     submitRegister() {
         console.log("submit register this.state.data", this.state.data);
-        const {first,last,email,password1,password2} = this.state.data;
-        console.log(first, last, email. password);
-        
+        const { first, last, email, password1, password2 } = this.state.data;
+        console.log(first, last, email.password);
+
         if (!first || !last || !email || !password1 || !password2) {
             console.log("field is empty");
-            this.setState({error: "Please fill every field!"})
-
+            this.setState({ error: "Please fill every field!" });
         } else {
-            if (password1==password2) {
-                console.log("passwords are identical", first, last, email, password1);
-                
-                axios.post("/register", {first,last,email,password1}).then(rslt=>{
-                    console.log("register result", rslt);
-                    if (rslt.data.success) {
-                        location.replace("/");
-                    } else {
-                        this.setState({error:rslt.data.error})
-                    }
-                    
-                }).catch(err=>{
-                    this.setState({error: "Something went wrong"});
-                })
+            if (password1 == password2) {
+                console.log(
+                    "passwords are identical",
+                    first,
+                    last,
+                    email,
+                    password1
+                );
+
+                axios
+                    .post("/register", { first, last, email, password1 })
+                    .then(rslt => {
+                        console.log("register result", rslt);
+                        if (rslt.data.success) {
+                            location.replace("/");
+                        } else {
+                            this.setState({ error: rslt.data.error });
+                        }
+                    })
+                    .catch(err => {
+                        this.setState({ error: "Something went wrong" });
+                    });
             } else {
-                this.setState({error: "Passwords must be identical"})
+                this.setState({ error: "Passwords must be identical" });
             }
         }
     }
 
     submitLogin() {
         console.log("sumbitLogin fires, state", this.state.data);
-        const {email, password} = this.state.data;
+        const { email, password } = this.state.data;
         if (!email || !password) {
             console.log("field is empty");
-            this.setState({error:"Please fill every field!"})            
+            this.setState({ error: "Please fill every field!" });
         } else {
-            axios.post("/login", {email, password}).then(rslt=>{
-                console.log("login result", rslt);
-                location.replace("/");                
-            }).catch(err=>{
-                console.log(err);
-                this.setState({error: "Something went wrong"})                
-            })
+            axios
+                .post("/login", { email, password })
+                .then(rslt => {
+                    console.log("login result", rslt);
+                    location.replace("/");
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.setState({ error: "Something went wrong" });
+                });
         }
-        
     }
 
     render() {
-        return(
+        return (
             <div className="welcome-wrapper">
                 <div className="welcome-background"> </div>
                 <div className="welcome-box">
-
-
                     <div className="register-box">
                         {this.state.error && (
                             <p className="error-message">{this.state.error}</p>
@@ -141,10 +151,12 @@ export class Welcome extends React.Component {
                             required
                         />
 
-
-
-                        <button onClick={() => this.submitRegister()}>Register</button>
-
+                        <button
+                            className="welcome-button"
+                            onClick={() => this.submitRegister()}
+                        >
+                            Register
+                        </button>
                     </div>
 
                     <div className="login-box">
@@ -167,13 +179,15 @@ export class Welcome extends React.Component {
                             autoComplete="new-password"
                             required
                         />
-                        <button onClick={() => this.submitLogin()}>Login</button>
+                        <button
+                            className="welcome-button"
+                            onClick={() => this.submitLogin()}
+                        >
+                            Login
+                        </button>
                     </div>
-
-
                 </div>
-
             </div>
-        )
+        );
     }
 }

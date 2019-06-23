@@ -1,7 +1,7 @@
 import React from "react";
 import ProfilePic from "./profilepic";
 import axios from "./axios";
-import changeUserInfo from "./actions";
+import { changeUserInfo } from "./actions";
 import { connect } from "react-redux";
 
 export class Profile extends React.Component {
@@ -14,10 +14,14 @@ export class Profile extends React.Component {
         };
         // this.showProps = this.showProps.bind(this);
         // this.deleteAccount = this.deleteAccount.bind(this);
-        console.log("profile this.props", this.props);
+        console.log("profile this.props", this.props.first);
         this.handleChange = this.handleChange.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.closeMenu();
     }
 
     handleChange(e) {
@@ -55,7 +59,7 @@ export class Profile extends React.Component {
             .post("/changeuserinfo", formData)
             .then(rslt => {
                 console.log("/changeuserimage POST response", rslt);
-                props.dispatch(changeUserInfo(rslt.data));
+                this.props.dispatch(changeUserInfo(rslt.data));
             })
             .catch(err => {
                 console.log("/changeuserimage POST error", err);
@@ -67,6 +71,7 @@ export class Profile extends React.Component {
     // }
 
     render() {
+        console.log("props");
         return (
             <div className="profile-container">
                 <div className="editor-box">
@@ -177,7 +182,7 @@ export class Profile extends React.Component {
                                 about yourself
                             </p>
                             <div className="input-wrapper">
-                                <textarea name="bio" />
+                                <textarea name="description" />
                             </div>
                         </div>
                     </div>
@@ -190,8 +195,8 @@ export class Profile extends React.Component {
     }
 }
 
-const mapStateToProps = (state, props) => {
-    console.log("profile state, props", state, props);
+const mapStateToProps = state => {
+    console.log("profile state, props", state);
     if (!state.userData) {
         return {};
     } else {

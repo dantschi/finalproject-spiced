@@ -9,6 +9,11 @@ export class Recorder extends React.Component {
         this.record = this.record.bind(this);
         this.stopRecord = this.stopRecording.bind(this);
         this.fourSquare = this.fourSquare.bind(this);
+        this.getNews = this.getNews.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.closeMenu();
     }
 
     record() {
@@ -70,6 +75,18 @@ export class Recorder extends React.Component {
             });
     }
 
+    getNews() {
+        console.log("getNews");
+        axios
+            .get("/get-news")
+            .then(rslt => {
+                console.log("getNews rslt", rslt);
+            })
+            .catch(err => {
+                console.log("getNews error", err);
+            });
+    }
+
     render() {
         return (
             <div className="recorder-container">
@@ -85,6 +102,9 @@ export class Recorder extends React.Component {
                     <button id="btn-play">play</button>
                     <button onClick={this.fourSquare} id="btn-foursquare">
                         Foursquare
+                    </button>
+                    <button onClick={this.getNews} id="btn-getnews">
+                        Get News
                     </button>
                 </div>
             </div>

@@ -18,6 +18,7 @@ export class App extends React.Component {
 
         this.logout = this.logout.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
     }
 
     componentDidMount() {
@@ -54,19 +55,33 @@ export class App extends React.Component {
         console.log(this.state);
     }
 
+    closeMenu() {
+        this.setState({ menuOnScreen: false });
+    }
+
     render() {
         return (
             <BrowserRouter>
                 <div className="app-wrapper">
                     <Header toggleMenu={this.toggleMenu} />
                     <div className="anything-else">
-                        {this.state.menuOnScreen && <Menu />}
+                        {this.state.menuOnScreen && (
+                            <Menu toggleMenu={this.toggleMenu} />
+                        )}
                         <div className="logout">
                             <img onClick={this.logout} src="/logout.svg" />
                         </div>
                     </div>
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/recorder" component={Recorder} />
+                    <Route
+                        path="/profile"
+                        render={props => <Profile closeMenu={this.closeMenu} />}
+                    />
+                    <Route
+                        path="/recorder"
+                        render={props => (
+                            <Recorder closeMenu={this.closeMenu} />
+                        )}
+                    />
                 </div>
             </BrowserRouter>
         );

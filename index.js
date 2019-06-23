@@ -16,6 +16,8 @@ const db = require("./utils/db");
 const bc = require("./utils/bc");
 const s3 = require("./utils/s3");
 
+const getNews = require("./utils/news");
+
 const csurf = require("csurf");
 
 const bodyParser = require("body-parser");
@@ -226,6 +228,20 @@ app.post("/changeuserinfo", uploader.single("file"), s3.upload, function(
 app.post("/audio-recorded", (req, res) => {
     console.log("/audio-recorded", req.body);
     res.json("audio arrived");
+});
+
+/////////////////////////////////////////////////////////////
+// NEWS
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.get("/get-news", (req, res) => {
+    getNews.getNews("Metallica", (err, rslt) => {
+        if (err) {
+            console.log("getNews error", err);
+        }
+        console.log("getNews result", rslt);
+    });
+    console.log("/news");
 });
 
 /////////////////////////////////////////////////////////////

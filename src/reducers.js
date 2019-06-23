@@ -11,33 +11,6 @@ export default function reducer(state = {}, action) {
         return { ...state, userData: action.userData };
     }
 
-    if (action.type == "ADD_FRIENDSANDWANNBES") {
-        // console.log("action in reducer, ADD_FRIENDS", action);
-        return { ...state, friendsList: action.friendsList };
-    }
-
-    if (action.type == "CANCEL_FRIENDSHIP") {
-        // console.log("action in reducer, CANCEL_FRIENDSHIP: ", action);
-        return { ...state, friendsList: action.friendsList };
-    }
-
-    if (action.type == "ACCEPT_FRIENDSHIP") {
-        // console.log("action in reducer, ACCEPT_FRIENDSHIP");
-        return { ...state, friendsList: action.friendsList };
-    }
-
-    if (action.type == "REJECT_REQUEST") {
-        // console.log("reject request ");
-        return { ...state, friendsList: action.friendsList };
-    }
-
-    if (action.type == "ADD_LIST_ANIMALS") {
-        // here I tell reducer how to add
-        // list of animals to global state
-        // spread OR "Object.assign()"
-        return { ...state, listAnimals: action.listAnimals };
-    }
-
     if (action.type == "GET_CHAT_MESSAGES") {
         // console.log("action in get chat messages:", action.chatMessages);
         return {

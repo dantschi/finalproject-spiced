@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 export function ProfilePic(props) {
-    console.log("profilepic props", props.userData);
+    // console.log("profilepic props", props.userData);
 
     if (!props.userData) {
         return (
