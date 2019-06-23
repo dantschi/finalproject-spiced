@@ -10,10 +10,13 @@ export class Menu extends React.Component {
     render() {
         return (
             <div className="aside-menu">
-                <Link to="profile">
+                <Link to="/profile">
                     <p className="aside-menu-item">Profile</p>
                 </Link>
-                <Link to="logout">
+                <Link to="/recorder">
+                    <p>Recorder</p>
+                </Link>
+                <Link to="/logout">
                     <p className="aside-menu-item">Log out</p>
                 </Link>
             </div>

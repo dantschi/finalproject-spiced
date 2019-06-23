@@ -5,6 +5,8 @@ import { ProfilePic } from "./profilepic";
 import { Menu } from "./menu";
 import { connect } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
+import { Recorder } from "./recorder";
+import { Profile } from "./profile";
 
 export class App extends React.Component {
     constructor(props) {
@@ -63,6 +65,8 @@ export class App extends React.Component {
                             <img onClick={this.logout} src="/logout.svg" />
                         </div>
                     </div>
+                    <Route path="/profile" component={Profile} />
+                    <Route path="/recorder" component={Recorder} />
                 </div>
             </BrowserRouter>
         );

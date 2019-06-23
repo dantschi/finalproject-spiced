@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
 // express
-const express = require('express');
+const express = require("express");
 const app = express();
 ////////////////////////////////////////////////////
 
@@ -11,8 +11,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:8080" });
 ////////////////////////////////////////////////////
 
-
-const compression = require('compression');
+const compression = require("compression");
 const db = require("./utils/db");
 const bc = require("./utils/bc");
 const s3 = require("./utils/s3");
@@ -65,7 +64,6 @@ io.use((socket, next) => {
 });
 /////////////////////////////////////////////////////////////
 
-
 app.use(compression());
 
 app.use(express.static(__dirname + "/public"));
@@ -76,16 +74,15 @@ app.use(function(req, res, next) {
     next();
 });
 
-
-if (process.env.NODE_ENV != 'production') {
+if (process.env.NODE_ENV != "production") {
     app.use(
-        '/bundle.js',
-        require('http-proxy-middleware')({
-            target: 'http://localhost:8081/'
+        "/bundle.js",
+        require("http-proxy-middleware")({
+            target: "http://localhost:8081/"
         })
     );
 } else {
-    app.use('/bundle.js', (req, res) => res.sendFile(`${__dirname}/bundle.js`));
+    app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
 /////////////////////////////////////////////////////////////
@@ -98,29 +95,29 @@ if (process.env.NODE_ENV != 'production') {
 // REGISTER
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/register", async (req, res) =>{
+app.post("/register", async (req, res) => {
     console.log("/register req.body", req.body);
-    
-    let {first, last, email, password1} = req.body;
+
+    let { first, last, email, password1 } = req.body;
     // if something is missing, go back to "/"
-    if(!first || !last || !email || !password1) {
+    if (!first || !last || !email || !password1) {
         console.log("is missing?");
-        
+
         return res.redirect("/");
     }
     // otherwise add user
     try {
         console.log("nothing is empty", first, last, email, password1);
-        
+
         let hashedPw = await bc.hashPassword(password1);
         let rslt = await db.addUser(first, last, email, hashedPw);
-        req.session.userId = rslt.rows[0].id
+        req.session.userId = rslt.rows[0].id;
         console.log(req.session.userId);
-        
-        res.json({success:true})
-    } catch(err) {
+
+        res.json({ success: true });
+    } catch (err) {
         console.log("error in adding user", err);
-        res.json({error: "Something went wrong!"})
+        res.json({ error: "Something went wrong!" });
     }
 }); // register ends
 
@@ -128,10 +125,10 @@ app.post("/register", async (req, res) =>{
 // LOGIN
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/login", async (req, res) =>{
+app.post("/login", async (req, res) => {
     console.log("/login req.body", req.body);
-    
-    let {email, password} = req.body;
+
+    let { email, password } = req.body;
     // if something is missing, go back to "/"
     if (!email || !password) {
         res.redirect("/");
@@ -140,22 +137,24 @@ app.post("/login", async (req, res) =>{
     let pwQuery = await db.getUserPwd(email);
     //check if there is a row with this email
     if (pwQuery.rows.length) {
-        let userId = pwQuery.rows[0].id
-        let pwCheck = await bc.checkPassword(password,pwQuery.rows[0].password)
+        let userId = pwQuery.rows[0].id;
+        let pwCheck = await bc.checkPassword(
+            password,
+            pwQuery.rows[0].password
+        );
         // if password is correct set session id, else drop an error
-        if (pwCheck){
+        if (pwCheck) {
             req.session.userId = userId;
-            res.json({success:true});
+            res.json({ success: true });
         } else {
-            res.json({error: "Email or password is not correct"});
+            res.json({ error: "Email or password is not correct" });
         }
     } else {
         res.json({
             error: "Something went wrong!"
-        })
+        });
     }
-
-}) // login ends
+}); // login ends
 
 /////////////////////////////////////////////////////////////
 // LOGOUT
@@ -172,6 +171,19 @@ app.post("/logout", (req, res) => {
     }
 });
 
+/////////////////////////////////////////////////////////////
+// AUDIO RECORDED
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/audio-recorded", (req, res) => {
+    console.log("/audio-recorded", req.body);
+    res.json("audio arrived");
+});
+
+app.get("/foursquare", (req, res) => {
+    console.log("foursquare");
+    res.json("foursquare arrived");
+});
 
 app.get("/welcome", (req, res) => {
     req.session.userId
@@ -184,7 +196,6 @@ app.get("*", (req, res) => {
         ? res.redirect("/welcome")
         : res.sendFile(__dirname + "/index.html");
 });
-
 
 server.listen(8080, function() {
     console.log("Server is listening on port 8080");
