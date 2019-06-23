@@ -59,7 +59,6 @@ export class App extends React.Component {
                 <div className="app-wrapper">
                     <Header toggleMenu={this.toggleMenu} />
                     <div className="anything-else">
-                        <h1>App is on screen</h1>
                         {this.state.menuOnScreen && <Menu />}
                         <div className="logout">
                             <img onClick={this.logout} src="/logout.svg" />
