@@ -1,8 +1,12 @@
 import React from "react";
 import ProfilePic from "./profilepic";
+import axios from "./axios";
+import changeUserInfo from "./actions";
+import { connect } from "react-redux";
 
 export class Profile extends React.Component {
     constructor(props) {
+        console.log("profile props", props);
         super(props);
         this.state = {
             data: {},
@@ -13,6 +17,7 @@ export class Profile extends React.Component {
         console.log("profile this.props", this.props);
         this.handleChange = this.handleChange.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
     handleChange(e) {
@@ -25,8 +30,36 @@ export class Profile extends React.Component {
         });
     }
 
+    handleFileChange(e) {
+        console.log("handleFileChange", e.target.files[0]);
+        if (e.target.files[0].size > 2097152) {
+            this.setState({
+                ...this.state,
+                error: "Maximal file size is 2MB"
+            });
+        } else {
+            this.setState({
+                file: e.target.files[0],
+                error: null
+            });
+        }
+    }
+
     saveChanges() {
         console.log("saveChanges, this.state", this.state);
+        console.log("uploader file:", this.state.file);
+        let formData = new FormData();
+        formData.append("file", this.state.file);
+        console.log("handleUpload tihs.state", this.state, formData);
+        axios
+            .post("/changeuserinfo", formData)
+            .then(rslt => {
+                console.log("/changeuserimage POST response", rslt);
+                props.dispatch(changeUserInfo(rslt.data));
+            })
+            .catch(err => {
+                console.log("/changeuserimage POST error", err);
+            });
     }
 
     // showProps() {
@@ -69,8 +102,17 @@ export class Profile extends React.Component {
                             </div>
                         </div>
                         <div className="input-row">
-                            <div className="profilepic-box">
+                            <div className="profilepic-box input-label">
                                 <ProfilePic />
+                            </div>
+                            <div className="input-wrapper">
+                                <input
+                                    className="inputfile"
+                                    id="file"
+                                    name="file"
+                                    type="file"
+                                    onChange={this.handleFileChange}
+                                />
                             </div>
                         </div>
                     </div>
@@ -147,3 +189,16 @@ export class Profile extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state, props) => {
+    console.log("profile state, props", state, props);
+    if (!state.userData) {
+        return {};
+    } else {
+        return {
+            userData: state.userData
+        };
+    }
+};
+
+export default connect(mapStateToProps)(Profile);

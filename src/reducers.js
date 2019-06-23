@@ -3,6 +3,14 @@ export default function reducer(state = {}, action) {
     // ALWAYS CONSOLE LOG THE ACTION!!!! \\
     console.log("action: ", action);
 
+    if (action.type == "ADD_USER_DATA") {
+        return { ...state, userData: action.userData };
+    }
+
+    if (action.type == "CHANGE_USER_INFO") {
+        return { ...state, userData: action.userData };
+    }
+
     if (action.type == "ADD_FRIENDSANDWANNBES") {
         // console.log("action in reducer, ADD_FRIENDS", action);
         return { ...state, friendsList: action.friendsList };

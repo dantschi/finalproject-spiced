@@ -5,28 +5,48 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ProfilePic from "./profilepic";
 
-export function Header(props) {
-    console.log("header props", props);
+export function Header(props, toggleMenu) {
+    console.log("header props", props, toggleMenu);
 
-    return (
-        <header>
-            <div className="header-content-container">
-                <Link to="/">
-                    <div className="logo-container">Logo</div>
-                </Link>
-                <div className="header-links">
-                    <div className="header-menu">
-                        <ProfilePic toggleMenu={props.toggleMenu} />
+    if (!props.userData) {
+        return (
+            <div className="loading">
+                <img src="./Ajax-loader.gif" />
+            </div>
+        );
+    } else {
+        return (
+            <header>
+                <div className="header-content-container">
+                    <Link to="/">
+                        <div className="logo-container">Logo</div>
+                    </Link>
+                    <div className="header-links">
+                        <div
+                            onClick={() => props.toggleMenu()}
+                            className="header-menu"
+                        >
+                            <ProfilePic />
+                            <p>{`${props.userData.first} ${
+                                props.userData.last
+                            }`}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
-    );
+            </header>
+        );
+    }
 }
 
-const mapStateToProps = state => {
-    console.log("redux state header");
-    return {};
+const mapStateToProps = (state, props) => {
+    console.log("profilepic state, props", state, props);
+    if (!state.userData) {
+        return {};
+    } else {
+        return {
+            userData: state.userData
+        };
+    }
 };
 
 export default connect(mapStateToProps)(Header);

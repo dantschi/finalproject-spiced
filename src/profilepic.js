@@ -3,18 +3,37 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-export function ProfilePic({ props, imageurl, firstname, lastname }) {
-    // console.log("profilepic props", props);
+export function ProfilePic(props) {
+    console.log("profilepic props", props.userData);
 
-    return (
-        <div onClick={() => props.toggleMenu()} className="profile-pic">
-            <img src={imageurl} alt={`${firstname} ${lastname}`} />
-        </div>
-    );
+    if (!props.userData) {
+        return (
+            <div className="loading">
+                <img src="./Ajax-loader.gif" />
+            </div>
+        );
+    } else {
+        return (
+            <div className="profile-pic-container">
+                <img
+                    className="profilepic"
+                    src={props.userData.imageurl}
+                    alt={`${props.userData.first} ${props.userData.last}`}
+                />
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = (state, props) => {
-    return {};
+    console.log("profilepic state, props", state, props);
+    if (!state.userData) {
+        return {};
+    } else {
+        return {
+            userData: state.userData
+        };
+    }
 };
 
 export default connect(mapStateToProps)(ProfilePic);

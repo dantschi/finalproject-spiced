@@ -42,3 +42,14 @@ module.exports.getUserData = function getUserData(id) {
         [id]
     );
 };
+
+module.exports.changeUserInfo = function changeUserInfo(id, url) {
+    return db.query(
+        `
+        INSERT INTO user_profiles(user_id, imageurl)
+        VALUES($1,$2)
+        RETURNING *;
+        `,
+        [id, url]
+    );
+};

@@ -3,6 +3,20 @@
 import axios from "./axios";
 // import * as io from "socket.io-client";
 
+export function addUserData(data) {
+    return {
+        type: "ADD_USER_DATA",
+        userData: data
+    };
+}
+
+export function changeUserInfo(data) {
+    return {
+        type: "CHANGE_USER_INFO",
+        userData: data
+    };
+}
+
 export async function getChatMessages(msgs) {
     // console.log("getChatMessages fires in actions: ", msgs);
     return {

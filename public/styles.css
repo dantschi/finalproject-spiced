@@ -69,6 +69,7 @@ header {
 .input-row {
     display: flex;
     align-items: center;
+    margin-top: 10px;
 }
 
 .input-label {
@@ -78,6 +79,11 @@ header {
 
 .input-wrapper {
     width: 50%;
+}
+
+.profilepic {
+    width: 50px;
+    height: 50px;
 }
 
 .welcome-wrapper {

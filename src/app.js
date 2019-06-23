@@ -6,7 +6,8 @@ import { Menu } from "./menu";
 import { connect } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Recorder } from "./recorder";
-import { Profile } from "./profile";
+import Profile from "./profile";
+import { addUserData } from "./actions";
 
 export class App extends React.Component {
     constructor(props) {
@@ -25,7 +26,8 @@ export class App extends React.Component {
             .get("/getuserdata")
             .then(rslt => {
                 console.log(rslt.data);
-                this.setState(rslt.data);
+                // this.setState(rslt.data);
+                this.props.dispatch(addUserData(rslt.data));
                 // console.log("App did mount:", this.state);
             })
             .catch(err => {
@@ -71,9 +73,15 @@ export class App extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log(state);
-    return {};
+const mapStateToProps = (props, state) => {
+    console.log("app redux state", state);
+    if (!state.userData) {
+        return {};
+    } else {
+        return {
+            userData: state.userData
+        };
+    }
 };
 
 export default connect(mapStateToProps)(App);

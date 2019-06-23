@@ -15,7 +15,7 @@ CREATE TABLE user_profiles(
     instruments VARCHAR(255),
     imageurl VARCHAR,
     description VARCHAR,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

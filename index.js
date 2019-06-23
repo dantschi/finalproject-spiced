@@ -179,12 +179,43 @@ app.get("/getuserdata", (req, res) => {
     db.getUserData(req.session.userId)
         .then(rslt => {
             if (!rslt.rows[0].imageurl) {
-                rslt.rows[0].imageurl = "./logo.svg";
+                rslt.rows[0].imageurl = "./user.svg";
             }
             res.json(rslt.rows[0]);
         })
         .catch(err => {
             console.log("/getuserdata query error: ", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
+// CHANGE USER IMAGE
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/changeuserinfo", uploader.single("file"), s3.upload, function(
+    req,
+    res
+) {
+    console.log("/changeuserimage POST", req.body);
+    let imageurl =
+        "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
+    console.log(
+        "/changeuserimage POST req.file.filename, imageurl, req.session: ",
+        req.file.filename,
+        imageurl,
+        req.session
+    );
+
+    db.changeUserInfo(req.session.userId, imageurl)
+        .then(rslt => {
+            console.log("/changeuserimage result", rslt);
+            res.json({
+                status: "success",
+                url: imageurl
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
 });
 
@@ -196,6 +227,10 @@ app.post("/audio-recorded", (req, res) => {
     console.log("/audio-recorded", req.body);
     res.json("audio arrived");
 });
+
+/////////////////////////////////////////////////////////////
+// FOURSQUARE
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.get("/foursquare", (req, res) => {
     console.log("foursquare");
