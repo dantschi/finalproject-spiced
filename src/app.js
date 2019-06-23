@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "./axios";
 import Header from "./header";
-import { ProfilePic } from "./profilepic";
+import ProfilePic from "./profilepic";
 import { Menu } from "./menu";
 import { connect } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
@@ -21,17 +21,16 @@ export class App extends React.Component {
 
     componentDidMount() {
         //getting user data when App mounts, and setting this.state.
-        // axios
-        //     .get("/getuserdata")
-        //     .then(rslt => {
-        //         console.log(rslt.data);
-        //         this.setState(rslt.data);
-        //         // console.log("App did mount:", this.state);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
-        //
+        axios
+            .get("/getuserdata")
+            .then(rslt => {
+                console.log(rslt.data);
+                this.setState(rslt.data);
+                // console.log("App did mount:", this.state);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     async logout(e) {

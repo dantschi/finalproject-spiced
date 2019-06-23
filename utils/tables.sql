@@ -9,9 +9,14 @@ CREATE TABLE users (
 
 CREATE TABLE user_profiles(
     id SERIAL PRIMARY KEY,
-    city VARCHAR(255),
-    url VARCHAR,
-    user_id INTEGER NOT NULL REFERENCES users(id) UNIQUE ON DELETE CASCADE
+    location VARCHAR(255),
+    genres VARCHAR(255),
+    bands VARCHAR(255),
+    instruments VARCHAR(255),
+    imageurl VARCHAR,
+    description VARCHAR,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chat (

@@ -3,7 +3,7 @@ import React from "react";
 // import { ProfilePic } from "./profilepic";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { ProfilePic } from "./profilepic";
+import ProfilePic from "./profilepic";
 
 export function Header(props) {
     console.log("header props", props);

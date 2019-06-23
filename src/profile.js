@@ -1,5 +1,5 @@
 import React from "react";
-import { ProfilePic } from "./profilepic";
+import ProfilePic from "./profilepic";
 
 export class Profile extends React.Component {
     constructor(props) {
@@ -12,16 +12,21 @@ export class Profile extends React.Component {
         // this.deleteAccount = this.deleteAccount.bind(this);
         console.log("profile this.props", this.props);
         this.handleChange = this.handleChange.bind(this);
+        this.saveChanges = this.saveChanges.bind(this);
     }
 
     handleChange(e) {
-        console.log(e.target.name, e.target.value, this.state);
+        // console.log(e.target.name, e.target.value, this.state);
         this.setState({
             data: {
                 ...this.state.data,
                 [e.target.name]: e.target.value
             }
         });
+    }
+
+    saveChanges() {
+        console.log("saveChanges, this.state", this.state);
     }
 
     // showProps() {
@@ -32,9 +37,11 @@ export class Profile extends React.Component {
         return (
             <div className="profile-container">
                 <div className="editor-box">
-                    <h2>Edit profile</h2>
                     <div className="editor-section">
-                        <h3>Personal data</h3>
+                        <h2 className="input-label">Edit profile</h2>
+                    </div>
+                    <div className="editor-section">
+                        <h3 className="input-label">Personal data</h3>
                         <div className="input-row">
                             <p className="input-label">First</p>
                             <div className="input-wrapper">
@@ -83,7 +90,7 @@ export class Profile extends React.Component {
                         </div>
 
                         <div className="input-row">
-                            <p className="input-label">Genres you like</p>
+                            <p className="input-label">Genres</p>
                             <div className="input-wrapper">
                                 <input
                                     name="genre"
@@ -96,7 +103,7 @@ export class Profile extends React.Component {
                         </div>
 
                         <div className="input-row">
-                            <p className="input-label">Bands you like</p>
+                            <p className="input-label">Bands</p>
                             <div className="input-wrapper">
                                 <input
                                     name="bands"
@@ -108,7 +115,7 @@ export class Profile extends React.Component {
                             </div>
                         </div>
                         <div className="input-row">
-                            <p className="input-label">Instruments you play</p>
+                            <p className="input-label">Instruments</p>
                             <div className="input-wrapper">
                                 <input
                                     name="instruments"
@@ -132,6 +139,9 @@ export class Profile extends React.Component {
                             </div>
                         </div>
                     </div>
+                    <button onClick={() => this.saveChanges()}>
+                        Save changes
+                    </button>
                 </div>
             </div>
         );

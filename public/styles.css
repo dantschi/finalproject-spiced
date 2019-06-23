@@ -29,6 +29,7 @@ header {
     position: fixed;
     top: 0;
     left: 0;
+    background-color: white;
 }
 
 .header-content-container {
@@ -47,6 +48,13 @@ header {
     display: flex;
     flex-direction: column;
     /* flex-wrap: wrap; */
+}
+
+.editor-section::after {
+    content: "";
+    width: 90%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 36px auto;
 }
 
 .aside-menu {

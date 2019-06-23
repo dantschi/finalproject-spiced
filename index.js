@@ -172,6 +172,23 @@ app.post("/logout", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
+// GET USER DATA
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.get("/getuserdata", (req, res) => {
+    db.getUserData(req.session.userId)
+        .then(rslt => {
+            if (!rslt.rows[0].imageurl) {
+                rslt.rows[0].imageurl = "./logo.svg";
+            }
+            res.json(rslt.rows[0]);
+        })
+        .catch(err => {
+            console.log("/getuserdata query error: ", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
 // AUDIO RECORDED
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

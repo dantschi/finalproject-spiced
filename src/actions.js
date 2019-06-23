@@ -3,59 +3,6 @@
 import axios from "./axios";
 // import * as io from "socket.io-client";
 
-export function getListOfAnimals() {
-    // return is necessary in case of Promise.
-    // in case of async/await is not necessary
-    return axios.get("/get-list-animals").then(({ data }) => {
-        // console.log("data in getListOfAnimals: ", data);
-        // EVERY action creator MUST return an object
-        // "type" property is required
-        return {
-            type: "ADD_LIST_ANIMALS",
-            listAnimals: data
-        };
-    });
-}
-
-export async function getFriends() {
-    let friends = await axios.get("/get-friends");
-    // console.log("getFriends in action:", friends);
-    // console.log("data in /get-friends", friends.data);
-    return {
-        type: "ADD_FRIENDSANDWANNBES",
-        friendsList: friends.data
-    };
-}
-
-export async function cancelFriendship(id) {
-    // console.log("id in cancelFriendship: ", id);
-    let friends = await axios.post("/cancel-friendship", { id: id });
-    // let friends = await getFriends();
-    return {
-        type: "CANCEL_FRIENDSHIP",
-        friendsList: friends.data
-    };
-}
-
-export async function rejectRequest(id) {
-    // console.log("reject request", id);
-    let friends = await axios.post("/cancel-friendship", { id: id });
-    return {
-        type: "REJECT_REQUEST",
-        friendsList: friends.data
-    };
-}
-
-export async function acceptFriendshipRequest(id) {
-    // console.log("id in acceptFriendshipRequest", id);
-    let friends = await axios.post("/accept-friendship-request", { id: id });
-    // let friends = await getFriends();
-    return {
-        type: "ACCEPT_FRIENDSHIP",
-        friendsList: friends.data
-    };
-}
-
 export async function getChatMessages(msgs) {
     // console.log("getChatMessages fires in actions: ", msgs);
     return {
