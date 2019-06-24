@@ -101,19 +101,19 @@ if (process.env.NODE_ENV != "production") {
 app.post("/register", async (req, res) => {
     console.log("/register req.body", req.body);
 
-    let { first, last, email, password1 } = req.body;
+    let { first, last, emailReg, password1 } = req.body;
     // if something is missing, go back to "/"
-    if (!first || !last || !email || !password1) {
+    if (!first || !last || !emailReg || !password1) {
         console.log("is missing?");
 
         return res.redirect("/");
     }
     // otherwise add user
     try {
-        console.log("nothing is empty", first, last, email, password1);
+        console.log("nothing is empty", first, last, emailReg, password1);
 
         let hashedPw = await bc.hashPassword(password1);
-        let rslt = await db.addUser(first, last, email, hashedPw);
+        let rslt = await db.addUser(first, last, emailReg, hashedPw);
         req.session.userId = rslt.rows[0].id;
         console.log(req.session.userId);
 
@@ -251,6 +251,7 @@ app.get("/get-lesson-data/:id", (req, res) => {
 /////////////////////////////////////////////////////////////
 // START LESSON DETAILS
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 app.post("/start-lesson", (req, res) => {
     console.log("/start-lesson req.body", req.body);
     db.startedLesson(req.body.lessonId, req.session.userId)
@@ -260,6 +261,22 @@ app.post("/start-lesson", (req, res) => {
         })
         .catch(err => {
             console.log("/start-lesson query error", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
+// GET STARTED LESSONS
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.get("/get-started-lessons", (req, res) => {
+    console.log("/get-started-lessons");
+    db.getStartedLessons(req.session.userId)
+        .then(rslt => {
+            console.log("/get-started-lessons query result", rslt.rows);
+            res.json(rslt.rows);
+        })
+        .catch(err => {
+            console.log("/get-started-lessons query error", err);
         });
 });
 

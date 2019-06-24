@@ -1,6 +1,6 @@
 // ALL of the action creators for the project are stored in the actions.js
 // this is the place to make ajax requests
-import axios from "./axios";
+// import axios from "./axios";
 // import * as io from "socket.io-client";
 
 export function addUserData(data) {
@@ -30,6 +30,22 @@ export function newLesson(lesson) {
     return {
         type: "NEW_LESSON",
         lesson: lesson
+    };
+}
+//
+// export function usersLessons(lessons) {
+//     console.log("usersLessons in Actions");
+//     return {
+//         type: "A_A",
+//         usersLessons: lessons
+//     };
+// }
+
+export function abc(data) {
+    console.log("abc in Actions");
+    return {
+        type: "A_A",
+        lessons: data
     };
 }
 

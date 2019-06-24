@@ -107,3 +107,13 @@ module.exports.startedLesson = function startedLesson(id, uid, comp) {
         [id, uid, comp || false]
     );
 };
+
+module.exports.getStartedLessons = function getStartedLessons(uid) {
+    return db.query(
+        `
+        SELECT * from started_lessons
+        WHERE user_id=$1
+        `,
+        [uid]
+    );
+};

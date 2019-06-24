@@ -19,6 +19,12 @@ export class Menu extends React.Component {
                         <li className="aside-menu-item">Lessons</li>
                     </Link>
                     <Link
+                        to="/yourlessons"
+                        onClick={() => this.props.toggleMenu()}
+                    >
+                        <li className="aside-menu-item">Your lessons</li>
+                    </Link>
+                    <Link
                         to="/create-lesson"
                         onClick={() => this.props.toggleMenu()}
                     >

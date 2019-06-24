@@ -11,6 +11,7 @@ import { addUserData, getLessons } from "./actions";
 import CreateLesson from "./createlesson";
 import Lessons from "./lessons";
 import { Lesson } from "./lesson";
+import { YourLessons } from "./yourlessons";
 
 export class App extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export class App extends React.Component {
                 // console.log("App did mount:", this.state);
             })
             .catch(err => {
-                console.log(err);
+                console.log("app getuserdata error", err);
             });
     }
 
@@ -104,6 +105,12 @@ export class App extends React.Component {
                                 match={props.match}
                                 history={props.history}
                             />
+                        )}
+                    />
+                    <Route
+                        path="/yourlessons"
+                        render={props => (
+                            <YourLessons closeMenu={this.closeMenu} />
                         )}
                     />
                 </div>

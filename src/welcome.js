@@ -46,10 +46,10 @@ export class Welcome extends React.Component {
 
     submitRegister() {
         console.log("submit register this.state.data", this.state.data);
-        const { first, last, email, password1, password2 } = this.state.data;
-        console.log(first, last, email.password);
+        const { first, last, emailReg, password1, password2 } = this.state.data;
+        console.log(first, last, emailReg, password1);
 
-        if (!first || !last || !email || !password1 || !password2) {
+        if (!first || !last || !emailReg || !password1 || !password2) {
             console.log("field is empty");
             this.setState({ error: "Please fill every field!" });
         } else {
@@ -58,12 +58,12 @@ export class Welcome extends React.Component {
                     "passwords are identical",
                     first,
                     last,
-                    email,
+                    emailReg,
                     password1
                 );
 
                 axios
-                    .post("/register", { first, last, email, password1 })
+                    .post("/register", { first, last, emailReg, password1 })
                     .then(rslt => {
                         console.log("register result", rslt);
                         if (rslt.data.success) {
@@ -111,6 +111,7 @@ export class Welcome extends React.Component {
                             <p className="error-message">{this.state.error}</p>
                         )}
                         <input
+                            value={this.state.data.first}
                             name="first"
                             type="text"
                             onChange={this.handleChange}
@@ -126,8 +127,10 @@ export class Welcome extends React.Component {
                             autoComplete="new-password"
                             required
                         />
+
                         <input
-                            name="email"
+                            value={this.state.data.emailReg}
+                            name="emailReg"
                             type="email"
                             onChange={this.handleChange}
                             placeholder="Email address"
@@ -150,7 +153,6 @@ export class Welcome extends React.Component {
                             autoComplete="new-password"
                             required
                         />
-
                         <button
                             className="welcome-button"
                             onClick={() => this.submitRegister()}
@@ -164,7 +166,8 @@ export class Welcome extends React.Component {
                             <p className="error-message">{this.state.error}</p>
                         )}
                         <input
-                            name="email"
+                            value={this.state.data.email}
+                            name="emailLogin"
                             type="email"
                             onChange={this.handleChange}
                             placeholder="Email address"
@@ -172,6 +175,7 @@ export class Welcome extends React.Component {
                             required
                         />
                         <input
+                            value={this.state.data.password}
                             name="password"
                             type="password"
                             onChange={this.handleChange}

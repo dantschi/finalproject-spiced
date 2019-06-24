@@ -21,6 +21,7 @@ export class Profile extends React.Component {
     }
 
     componentDidMount() {
+        console.log("props in profile componentDidMount", this.props);
         this.props.closeMenu();
     }
 
@@ -74,6 +75,13 @@ export class Profile extends React.Component {
     // }
 
     render() {
+        if (!this.props.userData) {
+            return (
+                <div className="loading">
+                    <img src="./Ajax-loader.gif" />
+                </div>
+            );
+        }
         console.log("props");
         return (
             <div className="profile-container">
@@ -87,6 +95,7 @@ export class Profile extends React.Component {
                             <p className="input-label">First</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={this.props.userData.first}
                                     name="first"
                                     type="text"
                                     onChange={this.handleChange}
