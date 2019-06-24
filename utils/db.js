@@ -85,3 +85,25 @@ module.exports.getLessons = function getLessons() {
         []
     );
 };
+
+module.exports.getLessonData = function getLessonData(id) {
+    return db.query(
+        `
+        SELECT * from lessons
+        WHERE id=$1
+        `,
+        [id]
+    );
+};
+
+module.exports.startedLesson = function startedLesson(id, uid, comp) {
+    return db.query(
+        `
+        INSERT INTO started_lessons(lesson_id, user_id, completed)
+        VALUES ($1,$2,$3)
+        RETURNING *;
+
+        `,
+        [id, uid, comp || false]
+    );
+};

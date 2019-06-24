@@ -29,10 +29,17 @@ CREATE TABLE lessons(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE started_lessons(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+    completed BOOLEAN NOT NULL
+);
+
 CREATE TABLE lessons_recordings(
     id SERIAL PRIMARY KEY,
     url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chat (

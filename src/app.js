@@ -10,6 +10,7 @@ import Profile from "./profile";
 import { addUserData, getLessons } from "./actions";
 import CreateLesson from "./createlesson";
 import Lessons from "./lessons";
+import { Lesson } from "./lesson";
 
 export class App extends React.Component {
     constructor(props) {
@@ -36,10 +37,6 @@ export class App extends React.Component {
             .catch(err => {
                 console.log(err);
             });
-        axios.get("/get-lessons").then(rslt => {
-            console.log("get-lessons result", rslt.data);
-            this.props.dispatch(getLessons(rslt.data));
-        });
     }
 
     async logout(e) {
@@ -97,6 +94,17 @@ export class App extends React.Component {
                     <Route
                         path="/lessons"
                         render={props => <Lessons closeMenu={this.closeMenu} />}
+                    />
+                    <Route
+                        path="/lesson/:id"
+                        render={props => (
+                            <Lesson
+                                closeMenu={this.closeMenu}
+                                key={props.match.url}
+                                match={props.match}
+                                history={props.history}
+                            />
+                        )}
                     />
                 </div>
             </BrowserRouter>

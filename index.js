@@ -234,6 +234,36 @@ app.get("/get-lessons", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
+// GET LESSON DETAILS
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+app.get("/get-lesson-data/:id", (req, res) => {
+    console.log("/get-lesson-details params", req.params);
+    db.getLessonData(req.params.id)
+        .then(rslt => {
+            console.log("lesson data", rslt);
+            res.json(rslt.rows[0]);
+        })
+        .catch(err => {
+            console.log("lesson data error", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
+// START LESSON DETAILS
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+app.post("/start-lesson", (req, res) => {
+    console.log("/start-lesson req.body", req.body);
+    db.startedLesson(req.body.lessonId, req.session.userId)
+        .then(rslt => {
+            console.log("/start-lesson query result", rslt);
+            res.json(rslt.rows[0]);
+        })
+        .catch(err => {
+            console.log("/start-lesson query error", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
 // AUDIO RECORDED
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
