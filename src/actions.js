@@ -10,10 +10,18 @@ export function addUserData(data) {
     };
 }
 
-export function changeUserInfo(data) {
+export function changeUserImage(data) {
+    console.log("changeuserimage data in actions", data);
     return {
-        type: "CHANGE_USER_INFO",
-        userData: data
+        type: "CHANGE_USER_IMAGE",
+        imageurl: data
+    };
+}
+
+export function getLessons(data) {
+    return {
+        type: "GET_LESSONS",
+        lessons: data
     };
 }
 

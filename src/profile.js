@@ -1,12 +1,12 @@
 import React from "react";
 import ProfilePic from "./profilepic";
 import axios from "./axios";
-import { changeUserInfo } from "./actions";
+import { changeUserImage } from "./actions";
 import { connect } from "react-redux";
 
 export class Profile extends React.Component {
     constructor(props) {
-        console.log("profile props", props);
+        // console.log("profile props", props);
         super(props);
         this.state = {
             data: {},
@@ -14,7 +14,7 @@ export class Profile extends React.Component {
         };
         // this.showProps = this.showProps.bind(this);
         // this.deleteAccount = this.deleteAccount.bind(this);
-        console.log("profile this.props", this.props.first);
+        console.log("profile this.props", this.props);
         this.handleChange = this.handleChange.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
@@ -35,7 +35,7 @@ export class Profile extends React.Component {
     }
 
     handleFileChange(e) {
-        console.log("handleFileChange", e.target.files[0]);
+        // console.log("handleFileChange", e.target.files[0]);
         if (e.target.files[0].size > 2097152) {
             this.setState({
                 ...this.state,
@@ -49,21 +49,24 @@ export class Profile extends React.Component {
         }
     }
 
-    saveChanges() {
-        console.log("saveChanges, this.state", this.state);
-        console.log("uploader file:", this.state.file);
-        let formData = new FormData();
-        formData.append("file", this.state.file);
-        console.log("handleUpload tihs.state", this.state, formData);
-        axios
-            .post("/changeuserinfo", formData)
-            .then(rslt => {
-                console.log("/changeuserimage POST response", rslt);
-                this.props.dispatch(changeUserInfo(rslt.data));
-            })
-            .catch(err => {
-                console.log("/changeuserimage POST error", err);
-            });
+    async saveChanges() {
+        // console.log("saveChanges, this.state", this.state);
+        // console.log("uploader file:", this.state.file);
+
+        if (this.state.file) {
+            let formData = new FormData();
+            formData.append("file", this.state.file);
+            // console.log("handleUpload tihs.state", this.state, formData);
+            axios
+                .post("/changeuserimage", formData)
+                .then(rslt => {
+                    // console.log("/changeuserimage POST response", rslt);
+                    this.props.dispatch(changeUserImage(rslt.data.url));
+                })
+                .catch(err => {
+                    console.log("/changeuserimage POST error", err);
+                });
+        }
     }
 
     // showProps() {
@@ -182,7 +185,11 @@ export class Profile extends React.Component {
                                 about yourself
                             </p>
                             <div className="input-wrapper">
-                                <textarea name="description" />
+                                <textarea
+                                    name="description"
+                                    type="text"
+                                    onChange={this.handleChange}
+                                />
                             </div>
                         </div>
                     </div>

@@ -194,7 +194,7 @@ app.get("/getuserdata", (req, res) => {
 // CHANGE USER IMAGE
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/changeuserinfo", uploader.single("file"), s3.upload, function(
+app.post("/changeuserimage", uploader.single("file"), s3.upload, function(
     req,
     res
 ) {
@@ -208,7 +208,7 @@ app.post("/changeuserinfo", uploader.single("file"), s3.upload, function(
         req.session
     );
 
-    db.changeUserInfo(req.session.userId, imageurl)
+    db.changeUserImage(req.session.userId, imageurl)
         .then(rslt => {
             console.log("/changeuserimage result", rslt);
             res.json({
@@ -252,6 +252,33 @@ app.get("/foursquare", (req, res) => {
     console.log("foursquare");
     res.json("foursquare arrived");
 });
+
+////////////////////////////////////////////////////////////
+// SOCKET
+
+io.on("connection", async socket => {
+    console.log("new socket connection", socket.request.session);
+    console.log(`socket with the id ${socket.id} is now connected`);
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+
+    try {
+        socket.on("newLesson", lesson => {
+            console.log("newLesson", lesson);
+        });
+    } catch (err) {
+        console.log("socket error", err);
+    }
+
+    socket.on("disconnect", async () => {
+        // await db.deleteOffline(socket.id, socket.request.session.userId);
+        // let rslt = await db.getOnlineFriends();
+
+        // console.log("onlineusers after deleting: ", rslt.rows);
+        console.log(`socket with the id ${socket.id} is now disconnected`);
+    });
+}); //socket ends
 
 app.get("/welcome", (req, res) => {
     req.session.userId

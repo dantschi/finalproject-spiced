@@ -7,36 +7,40 @@ export default function reducer(state = {}, action) {
         return { ...state, userData: action.userData };
     }
 
-    if (action.type == "CHANGE_USER_INFO") {
-        return { ...state, userData: action.userData };
+    if (action.type == "CHANGE_USER_IMAGE") {
+        return { ...state, imageurl: action.imageurl };
     }
 
-    if (action.type == "GET_CHAT_MESSAGES") {
-        // console.log("action in get chat messages:", action.chatMessages);
-        return {
-            ...state,
-            chatMessages: action.chatMessages.chatMessages.reverse()
-        };
+    if (action.type == "GET_LESSONS") {
+        return { ...state, lessons: action.lessons };
     }
 
-    if (action.type == "LAST_CHAT_MESSAGE") {
-        // console.log("lastMessage in reducer: ", action.chatMessage);
-        let temp = state.chatMessages;
-
-        return {
-            ...state,
-            chatMessages: temp.concat(action.chatMessage)
-        };
-    }
-
-    if (action.type == "ONLINE_USERS") {
-        // console.log("onlineUsers in reducer: ", action.onlineUsers);
-
-        return {
-            ...state,
-            onlineUsers: action.onlineUsers
-        };
-    }
+    // if (action.type == "GET_CHAT_MESSAGES") {
+    //     // console.log("action in get chat messages:", action.chatMessages);
+    //     return {
+    //         ...state,
+    //         chatMessages: action.chatMessages.chatMessages.reverse()
+    //     };
+    // }
+    //
+    // if (action.type == "LAST_CHAT_MESSAGE") {
+    //     // console.log("lastMessage in reducer: ", action.chatMessage);
+    //     let temp = state.chatMessages;
+    //
+    //     return {
+    //         ...state,
+    //         chatMessages: temp.concat(action.chatMessage)
+    //     };
+    // }
+    //
+    // if (action.type == "ONLINE_USERS") {
+    //     // console.log("onlineUsers in reducer: ", action.onlineUsers);
+    //
+    //     return {
+    //         ...state,
+    //         onlineUsers: action.onlineUsers
+    //     };
+    // }
 
     // if (action.type == "WALL_MESSAGES") {
     //     console.log("wallMessages in reducer ", action.wallMessages);

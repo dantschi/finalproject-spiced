@@ -51,6 +51,9 @@ header {
     padding: 0 0 0 18px;
 }
 
+.header-links {
+    width: 180px;
+}
 .anything-else {
     margin-top: 75px;
 }
@@ -71,10 +74,26 @@ header {
 .aside-menu {
     position: fixed;
     right: 0;
-    top: 100px;
-    width: 150px;
-    height: 100vh;
-    background-color: lavender;
+    top: 75px;
+    width: 200px;
+    /* height: 100vh; */
+    background-color: white;
+}
+
+.aside-menu ul {
+    color: black;
+}
+
+.menu-list li {
+    padding: 10px 18px;
+    list-style: none;
+}
+
+.menu-list li:hover {
+    background-color: lightgray;
+}
+.menu-list a li {
+    text-decoration: none;
 }
 
 .input-row {

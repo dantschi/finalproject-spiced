@@ -32,9 +32,9 @@ module.exports.getUserPwd = function getUserPwd(em) {
 module.exports.getUserData = function getUserData(id) {
     return db.query(
         `
-    SELECT users.id, users.first, users.last,
+    SELECT users.id, users.first, users.last, users.imageurl,
     user_profiles.location, user_profiles.genres, user_profiles.bands,
-    user_profiles.instruments, user_profiles.imageurl, user_profiles.description
+    user_profiles.instruments, user_profiles.description
     FROM users
     LEFT JOIN user_profiles ON users.id = user_profiles.user_id
     WHERE users.id = $1;
@@ -43,11 +43,12 @@ module.exports.getUserData = function getUserData(id) {
     );
 };
 
-module.exports.changeUserInfo = function changeUserInfo(id, url) {
+module.exports.changeUserImage = function changeUserImage(id, url) {
     return db.query(
         `
-        INSERT INTO user_profiles(user_id, imageurl)
-        VALUES($1,$2)
+        UPDATE users
+        SET imageurl=$2
+        WHERE id=$1
         RETURNING *;
         `,
         [id, url]

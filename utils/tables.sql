@@ -21,6 +21,20 @@ CREATE TABLE user_profiles(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE lessons(
+    id SERIAL PRIMARY KEY,
+    external_url TEXT,
+    description TEXT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE lessons_recordings(
+    id SERIAL PRIMARY KEY,
+    url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    
+);
+
 CREATE TABLE chat (
     id SERIAL PRIMARY KEY,
     message TEXT,

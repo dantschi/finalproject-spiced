@@ -11,15 +11,26 @@ export class Menu extends React.Component {
     render() {
         return (
             <div className="aside-menu">
-                <Link to="/profile">
-                    <p className="aside-menu-item">Profile</p>
-                </Link>
-                <Link to="/recorder" onClick={() => this.props.toggleMenu()}>
-                    <p>Recorder</p>
-                </Link>
-                <Link to="/logout" onClick={() => this.props.toggleMenu()}>
-                    <p className="aside-menu-item">Log out</p>
-                </Link>
+                <ul className="menu-list">
+                    <Link to="/profile">
+                        <li className="aside-menu-item">Profile</li>
+                    </Link>
+                    <Link
+                        to="/create-lesson"
+                        onClick={() => this.props.toggleMenu()}
+                    >
+                        <li className="aside-menu-item">Create lesson</li>
+                    </Link>
+                    <Link
+                        to="/recorder"
+                        onClick={() => this.props.toggleMenu()}
+                    >
+                        <li>Recorder</li>
+                    </Link>
+                    <Link to="/logout" onClick={() => this.props.toggleMenu()}>
+                        <li className="aside-menu-item">Log out</li>
+                    </Link>
+                </ul>
             </div>
         );
     }

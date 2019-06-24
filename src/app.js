@@ -8,6 +8,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { Recorder } from "./recorder";
 import Profile from "./profile";
 import { addUserData } from "./actions";
+import CreateLesson from "./createlesson";
 
 export class App extends React.Component {
     constructor(props) {
@@ -80,6 +81,12 @@ export class App extends React.Component {
                         path="/recorder"
                         render={props => (
                             <Recorder closeMenu={this.closeMenu} />
+                        )}
+                    />
+                    <Route
+                        path="/create-lesson"
+                        render={props => (
+                            <CreateLesson closeMenu={this.closeMenu} />
                         )}
                     />
                 </div>
