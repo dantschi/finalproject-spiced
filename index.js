@@ -285,7 +285,7 @@ app.get("/get-started-lessons", (req, res) => {
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/audio-recorded", (req, res) => {
-    console.log("/audio-recorded", req.body);
+    console.log("/audio-recorded", req);
     res.json("audio arrived");
 });
 

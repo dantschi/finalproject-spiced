@@ -22,7 +22,7 @@ export class YourLessons extends React.Component {
             .then(rslt => {
                 console.log("yourlessons did mount result", rslt.data);
                 console.log("yourlessos did mount this.props", this.props);
-                this.props.dispatch(abc(rslt.data));
+                this.props.dispatch(abc(rslt.data)).bind(this);
             })
             .catch(err => {
                 console.log("get started lessons error", err);

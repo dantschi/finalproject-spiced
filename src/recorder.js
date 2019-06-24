@@ -28,14 +28,17 @@ export class Recorder extends React.Component {
             });
 
             mediaRecorder.addEventListener("stop", () => {
+                let formData = new FormData();
                 const audioBlob = new Blob(audioChunks);
+                formData.append("key", audioBlob);
                 const audioUrl = URL.createObjectURL(audioBlob);
                 const audio = new Audio(audioUrl);
-                console.log("audioUrl", audioBlob, audioUrl, audio);
-                fetch("audio-recorded", {
-                    method: "POST",
-                    body: audioBlob
-                })
+                console.log("audioChunks", audioBlob, audioChunks, audio);
+
+                axios
+                    .post("/audio-recorded", {
+                        body: formData
+                    })
                     .then(rslt => {
                         console.log(rslt);
                     })
