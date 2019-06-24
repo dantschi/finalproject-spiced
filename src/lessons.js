@@ -9,8 +9,8 @@ export class Lessons extends React.Component {
         this.state = {};
     }
 
-
     componentDidMount() {
+        console.log("lessons did mount, props, state", this.props, this.state);
         axios
             .get("/get-lessons")
             .then(rslt => {
@@ -23,40 +23,35 @@ export class Lessons extends React.Component {
     }
 
     render() {
-        if (!props.lessons) {
+        console.log("this.props in lessons render", this.props);
+        if (!this.props.lessons) {
             return (
                 <div className="loading">
-                <img src="./Ajax-loader.gif" />
+                    <img src="./Ajax-loader.gif" />
                 </div>
-
-            )
+            );
         } else {
-            return(
+            return (
                 <div className="lessons-container">
-                {!!props.lessons.length&&
-                    props.lessons.map(lesson=>(
-                        <div className="lesson-box" key={lesson.id}>
-                            <div className="lesson-">
-                                <h3>Lesson #{lesson.id}</h3>
-                                <p>{lesson.title}</p>
-                                <p>{lesson.description}</p>
-
-
+                    {!!this.props.lessons.length &&
+                        this.props.lessons.map(lesson => (
+                            <div className="lesson-box" key={lesson.id}>
+                                <div className="lesson">
+                                    <p>Title: {lesson.title}</p>
+                                    <p>Description: {lesson.description}</p>
+                                    <p>Challenge: {lesson.challenge}</p>
+                                    <p>Categories: {lesson.categories}</p>
+                                </div>
                             </div>
-                        </div>
-
-                    ))
-                }
-
-                <div>
-            )
-
+                        ))}
+                </div>
+            );
         }
     }
 }
 
 const mapStateToProps = state => {
-    console.log("profile state, props", state);
+    console.log("lessons state, props", state);
     if (!state.lessons) {
         return {};
     } else {

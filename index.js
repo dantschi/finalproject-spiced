@@ -17,6 +17,7 @@ const bc = require("./utils/bc");
 const s3 = require("./utils/s3");
 
 const getNews = require("./utils/news");
+const god = require("./utils/getogdetails");
 
 const csurf = require("csurf");
 
@@ -222,6 +223,17 @@ app.post("/changeuserimage", uploader.single("file"), s3.upload, function(
 });
 
 /////////////////////////////////////////////////////////////
+// GET LESSONS
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.get("/get-lessons", (req, res) => {
+    console.log("/get-lessons request");
+    db.getLessons().then(rslt => {
+        res.json(rslt.rows);
+    });
+});
+
+/////////////////////////////////////////////////////////////
 // AUDIO RECORDED
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -264,8 +276,28 @@ io.on("connection", async socket => {
     }
 
     try {
-        socket.on("newLesson", lesson => {
+        socket.on("newLesson", async lesson => {
             console.log("newLesson", lesson);
+            let {
+                title,
+                externalUrl,
+                description,
+                challange,
+                goal,
+                categories
+            } = lesson;
+            let rslt = await db.addLesson(
+                socket.request.session.userId,
+                title,
+                description,
+                externalUrl,
+                challange,
+                goal,
+                categories
+            );
+            console.log("addLesson result:", rslt);
+
+            io.sockets.emit("newLesson", rslt.rows[0]);
         });
     } catch (err) {
         console.log("socket error", err);

@@ -19,9 +19,17 @@ export function changeUserImage(data) {
 }
 
 export function getLessons(data) {
+    console.log("getLessons data in actions", data);
     return {
         type: "GET_LESSONS",
         lessons: data
+    };
+}
+
+export function newLesson(lesson) {
+    return {
+        type: "NEW_LESSON",
+        lesson: lesson
     };
 }
 

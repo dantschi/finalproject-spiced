@@ -2,7 +2,8 @@ import {
     getChatMessages,
     addLastMessage,
     onlineUsers,
-    wallMessages
+    wallMessages,
+    newLesson
 } from "./actions";
 import * as io from "socket.io-client";
 
@@ -20,6 +21,10 @@ export const init = store => {
         socket.on("onlineUsers", users => {
             // console.log("onlineUsers in socket", users);
             store.dispatch(onlineUsers(users));
+        });
+
+        socket.on("newLesson", lesson => {
+            store.dispatch(newLesson(lesson));
         });
 
         // socket.on("wallMessages", msgs => {

@@ -12,7 +12,20 @@ export default function reducer(state = {}, action) {
     }
 
     if (action.type == "GET_LESSONS") {
-        return { ...state, lessons: action.lessons };
+        console.log("action.lessons in reducers", action.lessons);
+        return { ...state, lessons: action.lessons.data };
+    }
+
+    if (action.type == "NEW_LESSON") {
+        if (!state.lessons) {
+            // let temp = [].push();
+            return { ...state, lessons: [action.lesson] };
+        } else {
+            let temp = state.lessons;
+            temp.unshift(action.lesson);
+
+            return { ...state, lessons: temp };
+        }
     }
 
     // if (action.type == "GET_CHAT_MESSAGES") {
@@ -32,7 +45,7 @@ export default function reducer(state = {}, action) {
     //         chatMessages: temp.concat(action.chatMessage)
     //     };
     // }
-    //
+    //in case of Foursquare copy
     // if (action.type == "ONLINE_USERS") {
     //     // console.log("onlineUsers in reducer: ", action.onlineUsers);
     //

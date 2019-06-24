@@ -8,7 +8,7 @@ export class Recorder extends React.Component {
 
         this.record = this.record.bind(this);
         this.stopRecord = this.stopRecording.bind(this);
-        this.fourSquare = this.fourSquare.bind(this);
+
         this.getNews = this.getNews.bind(this);
     }
 
@@ -63,18 +63,6 @@ export class Recorder extends React.Component {
         console.log("stopRecord fires");
     }
 
-    fourSquare() {
-        console.log("fourSquare");
-        axios
-            .get("/foursquare")
-            .then(rslt => {
-                console.log("/foursquare server response", rslt);
-            })
-            .catch(err => {
-                console.log("/foursquare server error", err);
-            });
-    }
-
     getNews() {
         console.log("getNews");
         axios
@@ -100,9 +88,7 @@ export class Recorder extends React.Component {
                         stop
                     </button>
                     <button id="btn-play">play</button>
-                    <button onClick={this.fourSquare} id="btn-foursquare">
-                        Foursquare
-                    </button>
+
                     <button onClick={this.getNews} id="btn-getnews">
                         Get News
                     </button>
@@ -111,3 +97,25 @@ export class Recorder extends React.Component {
         );
     }
 }
+
+///////////////////////////////////////////////////
+// IN CASE OF FOURSQUARE
+///////////////////////////////////////////////////
+
+// this.fourSquare = this.fourSquare.bind(this);
+
+// <button onClick={this.fourSquare} id="btn-foursquare">
+//     Foursquare
+// </button>
+
+// fourSquare() {
+//     console.log("fourSquare");
+//     axios
+//         .get("/foursquare")
+//         .then(rslt => {
+//             console.log("/foursquare server response", rslt);
+//         })
+//         .catch(err => {
+//             console.log("/foursquare server error", err);
+//         });
+// }

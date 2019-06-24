@@ -7,8 +7,9 @@ import { connect } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Recorder } from "./recorder";
 import Profile from "./profile";
-import { addUserData } from "./actions";
+import { addUserData, getLessons } from "./actions";
 import CreateLesson from "./createlesson";
+import Lessons from "./lessons";
 
 export class App extends React.Component {
     constructor(props) {
@@ -35,6 +36,10 @@ export class App extends React.Component {
             .catch(err => {
                 console.log(err);
             });
+        axios.get("/get-lessons").then(rslt => {
+            console.log("get-lessons result", rslt.data);
+            this.props.dispatch(getLessons(rslt.data));
+        });
     }
 
     async logout(e) {
@@ -88,6 +93,10 @@ export class App extends React.Component {
                         render={props => (
                             <CreateLesson closeMenu={this.closeMenu} />
                         )}
+                    />
+                    <Route
+                        path="/lessons"
+                        render={props => <Lessons closeMenu={this.closeMenu} />}
                     />
                 </div>
             </BrowserRouter>

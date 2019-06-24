@@ -54,3 +54,34 @@ module.exports.changeUserImage = function changeUserImage(id, url) {
         [id, url]
     );
 };
+
+module.exports.addLesson = function addLesson(
+    id,
+    title,
+    desc,
+    exturl,
+    ch,
+    goal,
+    categories
+) {
+    return db.query(
+        `
+        INSERT INTO lessons(user_id, title, description,
+            external_url, challenge, goal, categories)
+        VALUES ($1,$2,$3,$4,$5,$6,$7)
+        RETURNING *;
+        `,
+        [id, title, desc, exturl, ch, goal, categories]
+    );
+};
+
+module.exports.getLessons = function getLessons() {
+    return db.query(
+        `
+        SELECT * from lessons
+        ORDER BY id DESC
+        LIMIT 10;
+        `,
+        []
+    );
+};

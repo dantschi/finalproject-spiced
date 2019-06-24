@@ -70,11 +70,25 @@ export class CreateLesson extends React.Component {
                     </div>
                     <div className="editor-section">
                         <div className="input-row">
+                            <h3 className="input-label">Goal of this lesson</h3>
+                            <div className="input-wrapper">
+                                <input
+                                    name="goal"
+                                    type="text"
+                                    onChange={this.handleChange}
+                                    placeholder="Goal of this lesson"
+                                    autoComplete="new-password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="input-row">
                             <p className="input-label">Title</p>
                             <div className="input-wrapper">
                                 <input
                                     name="title"
                                     type="text"
+                                    await
                                     onChange={this.handleChange}
                                     placeholder="Title"
                                     autoComplete="new-password"
@@ -89,12 +103,13 @@ export class CreateLesson extends React.Component {
                                     name="externalUrl"
                                     type="text"
                                     onChange={this.handleChange}
-                                    placeholder="Title"
+                                    placeholder="External url"
                                     autoComplete="new-password"
                                     required
                                 />
                             </div>
                         </div>
+
                         <div className="input-row">
                             <p className="input-label">Description</p>
                             <div className="input-wrapper">
@@ -102,6 +117,30 @@ export class CreateLesson extends React.Component {
                                     name="description"
                                     type="text"
                                     onChange={this.handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="input-row">
+                            <p className="input-label">Challenge</p>
+                            <div className="input-wrapper">
+                                <input
+                                    name="challenge"
+                                    type="text"
+                                    onChange={this.handleChange}
+                                    placeholder="What is the challenge?"
+                                    autoComplete="new-password"
+                                />
+                            </div>
+                        </div>
+                        <div className="input-row">
+                            <p className="input-label">Categories</p>
+                            <div className="input-wrapper">
+                                <input
+                                    name="categories"
+                                    type="text"
+                                    onChange={this.handleChange}
+                                    placeholder="Type here the categories"
+                                    autoComplete="new-password"
                                 />
                             </div>
                         </div>

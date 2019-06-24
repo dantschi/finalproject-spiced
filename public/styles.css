@@ -21,6 +21,11 @@ body {
     }
 }
 
+textarea[name="description"] {
+    height: 200px;
+    overflow-y: auto;
+}
+
 header {
     width: 100%;
     height: 75px;
@@ -82,6 +87,23 @@ header {
 
 .aside-menu ul {
     color: black;
+}
+
+.lessons-container {
+    width: 90%;
+    margin: 100px auto 20px auto;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.lesson-box {
+    width: 80%;
+    border: 1px solid red;
+    margin: 10px;
+    padding: 10px;
 }
 
 .menu-list li {
