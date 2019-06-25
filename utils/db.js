@@ -97,7 +97,7 @@ module.exports.getLessons = function getLessons() {
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
         ORDER BY id DESC
-        LIMIT 10;
+        LIMIT 50;
         `,
         []
     );

@@ -83,7 +83,7 @@ header {
 .aside-menu {
     position: fixed;
     right: 0;
-    top: 75px;
+    top: var(--distance-top);
     width: 200px;
     /* height: 100vh; */
     background-color: white;
@@ -104,7 +104,7 @@ header {
     margin: 20px auto;
 }
 
-.lesson-box {
+.lessons-box {
     width: 300px;
 
     border-radius: 5px;
@@ -120,7 +120,7 @@ header {
     position: relative;
 }
 
-.lesson-box-abs {
+.lessons-box-abs {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -131,14 +131,33 @@ header {
     border-radius: 50%;
 }
 
-.lesson-box-abs img {
+.lessons-box-abs img {
     width: 50px;
     height: auto;
 }
 
-.lesson {
+.lessons {
     width: 100%;
     max-width: 250px;
+}
+
+.lesson-container {
+    width: 90%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.lesson-box-left,
+.lesson-box-right {
+    width: 45%;
+    border: 1px solid black;
+    /* margin: 10px auto; */
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
 }
 
 .usersLessons-container {
@@ -318,7 +337,7 @@ header {
 
 .app-wrapper {
     position: relative;
-    margin-top: 75px;
+    margin-top: var(--distance-top);
     width: 100%;
     height: 100vh;
 }

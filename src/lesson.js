@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 class Lesson extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             lesson: {}
         };
@@ -52,19 +52,40 @@ class Lesson extends React.Component {
             );
         } else {
             return (
-                <div>
-                    <h2>Lesson {this.state.lesson.id} </h2>
-                    {this.props.userData.id != this.state.lesson.user_id && (
-                        <button onClick={this.startThisLesson}>
-                            Start this lesson
-                        </button>
-                    )}
-                    {this.props.userData.id == this.state.lesson.user_id && (
-                        <h3>
-                            You are the creator of this lesson! Thanks,{" "}
-                            {this.props.userData.first}!
-                        </h3>
-                    )}
+                <div className="lesson-container">
+                    <div className="lesson-box-left">
+                        <p>Lesson {this.state.lesson.id} </p>
+                        <p>
+                            Created by {this.state.lesson.creator_first}{" "}
+                            {this.state.lesson.creator_last}
+                        </p>
+                        <h3>Goal of this lesson</h3>
+                        <p>{this.state.lesson.goal}</p>
+                        <h3>Title</h3>
+                        <p>{this.state.lesson.title}</p>
+
+                        <h3>Challenge</h3>
+                        <p>{this.state.lesson.challenge}</p>
+                        <h3>Description</h3>
+                        <p>{this.state.lesson.description}</p>
+                        <h4>Voice note for the assignment</h4>
+                        <audio src={this.state.lesson.recording_url} />
+                    </div>
+                    <div className="lesson-box-right">
+                        {this.props.userData.id !=
+                            this.state.lesson.user_id && (
+                            <button onClick={this.startThisLesson}>
+                                Start this lesson
+                            </button>
+                        )}
+                        {this.props.userData.id ==
+                            this.state.lesson.user_id && (
+                            <h3>
+                                You are the creator of this lesson! Thanks,{" "}
+                                {this.props.userData.first}!
+                            </h3>
+                        )}
+                    </div>
                 </div>
             );
         }

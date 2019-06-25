@@ -40,9 +40,9 @@ export class Lessons extends React.Component {
                 <div className="lessons-container">
                     {!!this.props.lessons.length &&
                         this.props.lessons.map(lesson => (
-                            <div className="lesson-box" key={lesson.id}>
-                                <div className="lesson">
-                                    <div className="lesson-box-abs">
+                            <div className="lessons-box" key={lesson.id}>
+                                <div className="lessons">
+                                    <div className="lessons-box-abs">
                                         <img src={lesson.creator_img} />
                                     </div>
                                     <p>Title: {lesson.title}</p>
