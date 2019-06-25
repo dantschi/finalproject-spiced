@@ -64,21 +64,28 @@ module.exports.addLesson = function addLesson(
     goal,
     categories
 ) {
+    console.log("addLesson challenge in db", ch);
     return db.query(
         `
         INSERT INTO lessons(user_id, title, description,
-            external_url, challenge, goal, categories)
-        VALUES ($1,$2,$3,$4,$5,$6,$7)
+            external_url, challenge, goal, categories,tags)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
         RETURNING *;
         `,
-        [id, title, desc, exturl, ch, goal, categories]
+        [id, title, desc, exturl, ch, goal, categories, tags]
     );
 };
 
 module.exports.getLessons = function getLessons() {
     return db.query(
         `
-        SELECT * from lessons
+        SELECT lessons.id, lessons.external_url, lessons.title,
+        lessons.challenge, lessons.goal, lessons.description,
+        lessons.categories, lessons.created_at, lessons.user_id,
+        users.first AS "creator_first", users.last AS "creator_last",
+        users.imageurl AS "creator_img"
+        from lessons
+        LEFT JOIN users on users.id=lessons.user_id
         ORDER BY id DESC
         LIMIT 10;
         `,
@@ -89,14 +96,20 @@ module.exports.getLessons = function getLessons() {
 module.exports.getLessonData = function getLessonData(id) {
     return db.query(
         `
-        SELECT * from lessons
-        WHERE id=$1
+        SELECT lessons.id, lessons.external_url, lessons.title,
+        lessons.challenge, lessons.goal, lessons.description,
+        lessons.categories, lessons.created_at, lessons.user_id,
+        users.first AS "creator_first", users.last AS "creator_last",
+        users.imageurl AS "creator_img"
+        from lessons
+        LEFT JOIN users on users.id=lessons.user_id
+        WHERE lessons.id=$1;
         `,
         [id]
     );
 };
 
-module.exports.startedLesson = function startedLesson(id, uid, comp) {
+module.exports.startedLesson = function startLesson(id, uid, comp) {
     return db.query(
         `
         INSERT INTO started_lessons(lesson_id, user_id, completed)

@@ -24,6 +24,7 @@ module.exports.deleteImage = function deleteImage(fileName) {
 };
 
 module.exports.upload = function upload(req, res, next) {
+    console.log("upload request props", req.file);
     if (!req.file) {
         console.log("file upload error, no file selected");
         return res.sendStatus(500);

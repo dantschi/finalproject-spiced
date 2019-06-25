@@ -83,13 +83,13 @@ export class Welcome extends React.Component {
 
     submitLogin() {
         console.log("sumbitLogin fires, state", this.state.data);
-        const { email, password } = this.state.data;
-        if (!email || !password) {
+        const { emailLogin, password } = this.state.data;
+        if (!emailLogin || !password) {
             console.log("field is empty");
             this.setState({ error: "Please fill every field!" });
         } else {
             axios
-                .post("/login", { email, password })
+                .post("/login", { emailLogin, password })
                 .then(rslt => {
                     console.log("login result", rslt);
                     location.replace("/");

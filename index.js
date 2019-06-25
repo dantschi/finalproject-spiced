@@ -30,12 +30,17 @@ const path = require("path");
 
 const https = require("https");
 
+/////////////////////////////////////////////////////////////
+// MULTER
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
         callback(null, __dirname + "/uploads");
     },
     filename: function(req, file, callback) {
         uidSafe(24).then(function(uid) {
+            console.log("file originalname", file.originalname);
             callback(null, uid + path.extname(file.originalname));
         });
     }
@@ -45,11 +50,10 @@ const uploader = multer({
     storage: diskStorage,
     limits: {
         fileSize: 2097152
-    },
-    onError: function(err) {
-        console.log("multer error", err);
     }
 });
+
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -131,13 +135,13 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     console.log("/login req.body", req.body);
 
-    let { email, password } = req.body;
+    let { emailLogin, password } = req.body;
     // if something is missing, go back to "/"
-    if (!email || !password) {
+    if (!emailLogin || !password) {
         res.redirect("/");
     }
     // otherwise grab user data from db
-    let pwQuery = await db.getUserPwd(email);
+    let pwQuery = await db.getUserPwd(emailLogin);
     //check if there is a row with this email
     if (pwQuery.rows.length) {
         let userId = pwQuery.rows[0].id;
@@ -182,13 +186,27 @@ app.get("/getuserdata", (req, res) => {
     db.getUserData(req.session.userId)
         .then(rslt => {
             if (!rslt.rows[0].imageurl) {
-                rslt.rows[0].imageurl = "./user.svg";
+                rslt.rows[0].imageurl = "/user.svg";
             }
             res.json(rslt.rows[0]);
         })
         .catch(err => {
             console.log("/getuserdata query error: ", err);
         });
+});
+
+/////////////////////////////////////////////////////////////
+// AUDIO RECORDED
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/audio-recorded", uploader.single("rec"), s3.upload, function(
+    req,
+    res
+) {
+    let audioUrl =
+        "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
+    console.log("/audio-recorded", audioUrl);
+    res.json("audio arrived");
 });
 
 /////////////////////////////////////////////////////////////
@@ -199,7 +217,7 @@ app.post("/changeuserimage", uploader.single("file"), s3.upload, function(
     req,
     res
 ) {
-    console.log("/changeuserimage POST", req.body);
+    console.log("/changeuserimage POST", req.file);
     let imageurl =
         "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
     console.log(
@@ -254,7 +272,7 @@ app.get("/get-lesson-data/:id", (req, res) => {
 
 app.post("/start-lesson", (req, res) => {
     console.log("/start-lesson req.body", req.body);
-    db.startedLesson(req.body.lessonId, req.session.userId)
+    db.startLesson(req.body.lessonId, req.session.userId)
         .then(rslt => {
             console.log("/start-lesson query result", rslt);
             res.json(rslt.rows[0]);
@@ -278,15 +296,6 @@ app.get("/get-started-lessons", (req, res) => {
         .catch(err => {
             console.log("/get-started-lessons query error", err);
         });
-});
-
-/////////////////////////////////////////////////////////////
-// AUDIO RECORDED
-////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-app.post("/audio-recorded", (req, res) => {
-    console.log("/audio-recorded", req);
-    res.json("audio arrived");
 });
 
 /////////////////////////////////////////////////////////////
@@ -329,7 +338,7 @@ io.on("connection", async socket => {
                 title,
                 externalUrl,
                 description,
-                challange,
+                challenge,
                 goal,
                 categories
             } = lesson;
@@ -338,7 +347,7 @@ io.on("connection", async socket => {
                 title,
                 description,
                 externalUrl,
-                challange,
+                challenge,
                 goal,
                 categories
             );

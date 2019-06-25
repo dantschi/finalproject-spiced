@@ -53,7 +53,12 @@ const mapStateToProps = state => {
         return {};
     } else {
         return {
-            usersLessons: state.usersLessons
+            completed: state.usersLessons.filter(
+                lesson => lesson.completed == true
+            ),
+            onGoing: state.usersLessons.filter(
+                lesson => lesson.completed == false
+            )
         };
     }
 };

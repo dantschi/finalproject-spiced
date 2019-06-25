@@ -261,6 +261,11 @@ input:focus {
         0 0 8px rgba(82, 168, 236, 0.6);
 }
 
+input[name="searchField"] {
+    width: 50%;
+    min-width: 50px;
+}
+
 textarea {
     margin: 5px;
     padding: 12px 20px;

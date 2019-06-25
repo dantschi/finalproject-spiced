@@ -17,52 +17,57 @@ export class Recorder extends React.Component {
     }
 
     record() {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
+        this.setState({ record: true });
+        if (this.state.record) {
+            navigator.mediaDevices
+                .getUserMedia({ audio: true })
+                .then(stream => {
+                    var mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
 
-            const audioChunks = [];
+                    const audioChunks = [];
 
-            mediaRecorder.addEventListener("dataavailable", event => {
-                audioChunks.push(event.data);
-            });
-
-            mediaRecorder.addEventListener("stop", () => {
-                let formData = new FormData();
-                const audioBlob = new Blob(audioChunks);
-                formData.append("key", audioBlob);
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                console.log("audioChunks", audioBlob, audioChunks, audio);
-
-                axios
-                    .post("/audio-recorded", {
-                        body: formData
-                    })
-                    .then(rslt => {
-                        console.log(rslt);
-                    })
-                    .catch(err => {
-                        console.log(err);
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
                     });
-                // axios
-                //     .post("/audio-recorded", { audioBlob })
-                //     .then(rslt => {
-                //         console.log("/audio-recorded server response", rslt);
-                //     })
-                //     .catch(err => {
-                //         console.log("/audio-recorded server error", err);
-                //     });
-                // audio.play();
-            });
 
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 3000);
-        });
+                    mediaRecorder.addEventListener("stop", () => {
+                        let formData = new FormData();
+                        const audioBlob = new Blob(audioChunks, {
+                            type: "audio/webm"
+                        });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        console.log(
+                            "audioChunks",
+                            audioBlob,
+                            audioChunks,
+                            audio
+                        );
+
+                        formData.append("rec", audioBlob);
+                        axios
+                            .post("/audio-recorded", formData)
+                            .then(rslt => {
+                                console.log(rslt);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    });
+
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                    }, 3000);
+                });
+        }
     }
 
     stopRecording() {
+        this.setState({
+            record: false
+        });
+        mediaRecorder.stop();
         console.log("stopRecord fires");
     }
 
