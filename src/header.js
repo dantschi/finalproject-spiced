@@ -4,6 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ProfilePic from "./profilepic";
+// import { BrowserRouter, Route } from "react-router-dom";
 
 export function Header(props, toggleMenu) {
     console.log("header props", props, toggleMenu);

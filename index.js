@@ -203,6 +203,7 @@ app.post("/audio-recorded", uploader.single("rec"), s3.upload, function(
     req,
     res
 ) {
+    console.log("req.body", req.body);
     let audioUrl =
         "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
     console.log("/audio-recorded", audioUrl);

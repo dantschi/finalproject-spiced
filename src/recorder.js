@@ -32,21 +32,19 @@ export class Recorder extends React.Component {
                 audioChunks.push(event.data);
             });
             this.audioDetails.start = new Date();
-
             mediaRecorder.addEventListener("stop", () => {
+                // let formData = new FormData();
+                const audioBlob = new Blob(audioChunks, {
+                    type: "audio/webm"
+                });
+
                 this.audioDetails.stop = new Date();
                 this.audioDetails.length =
                     (this.audioDetails.stop - this.audioDetails.start) / 1000;
                 console.log("length", this.audioDetails.length);
-                let formData = new FormData();
-                const audioBlob = new Blob(audioChunks, {
-                    type: "audio/webm"
-                });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                console.log("audioChunks", audioBlob, audioChunks, audio);
 
                 // formData.append("rec", audioBlob);
+                this.props.handleFileChange(audioBlob);
                 // axios
                 //     .post("/audio-recorded", formData)
                 //     .then(rslt => {
@@ -82,22 +80,17 @@ export class Recorder extends React.Component {
 
     render() {
         return (
-            <div className="recorder-container">
-                <h2>Recorder is here</h2>
-
-                <div className="buttons">
-                    <button onClick={this.record} id="btn-record">
-                        record
-                    </button>
-                    <button onClick={this.stopRecording} id="btn-stop">
-                        stop
-                    </button>
-                    <button id="btn-play">play</button>
-
-                    <button onClick={this.getNews} id="btn-getnews">
-                        Get News
-                    </button>
-                    <audio src="https://s3.amazonaws.com/danielvarga-salt/k8fnBjjxcTRSPBn4L4wLLaqhyLVwiCWx" />
+            <div className="rec-container">
+                <div className="rec-buttons">
+                    <div className="button">
+                        <div onClick={this.record} className="btn-record" />
+                    </div>
+                    <div className="button">
+                        <div
+                            onClick={this.stopRecording}
+                            className="btn-stopRecord"
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -125,3 +118,11 @@ export class Recorder extends React.Component {
 //             console.log("/foursquare server error", err);
 //         });
 // }
+
+///////////////////////////////////////////////////
+// IN CASE OF NEWS API
+///////////////////////////////////////////////////
+//
+// <div onClick={this.getNews} className="btn-getnews">
+//     Get News
+// </div>

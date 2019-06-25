@@ -3,7 +3,9 @@ import axios from "./axios";
 import { connect } from "react-redux";
 import { socket } from "./socket";
 
-export class CreateLesson extends React.Component {
+import { Recorder } from "./recorder";
+
+class CreateLesson extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,8 +14,10 @@ export class CreateLesson extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
-        // this.handleFileChange = this.handleFileChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
+
+    componentDidMount() {}
 
     handleChange(e) {
         // console.log(e.target.name, e.target.value, this.state);
@@ -21,9 +25,32 @@ export class CreateLesson extends React.Component {
             data: {
                 ...this.state.data,
                 [e.target.name]: e.target.value
-            }
+            },
+            error: ""
         });
     }
+
+    handleFileChange(e) {
+        var formData = (this.formData = new FormData());
+        console.log("handleFileChange", e);
+        formData.append("rec", e);
+        // this.setState({
+        //     data: {
+        //         ...this.state.data
+        //     }
+        // });
+    }
+    // if (e.target.files[0].size > 2097152) {
+    //     this.setState({
+    //         ...this.state,
+    //         error: "Maximal file size is 2MB"
+    //     });
+    // } else {
+    //     this.setState({
+    //         file: e.target.files[0],
+    //         error: null
+    //     });
+    // }
 
     // handleFileChange(e) {
     //     console.log("handleFileChange", e.target.files[0]);
@@ -42,8 +69,36 @@ export class CreateLesson extends React.Component {
 
     saveChanges() {
         console.log("CreateLesson this.state", this.state);
+        let {
+            categories,
+            challenge,
+            description,
+            goal,
+            title,
+            externalUrl
+        } = this.state.data;
 
-        socket.emit("newLesson", this.state.data);
+        if (!categories || !challenge || !description || !goal || !title) {
+            this.setState({
+                error: "Please fill out the required fields"
+            });
+        } else {
+            this.formData.append("goal", goal);
+            this.formData.append("title", goal);
+            this.formData.append("externalUrl", externalUrl);
+            this.formData.append("desc", description);
+            this.formData.append("challenge", challenge);
+            this.formData.append("categories", categories);
+            // socket.emit("newLesson", this.state.data);
+            axios
+                .post("/audio-recorded", this.formData)
+                .then(rslt => {
+                    console.log(rslt);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
 
         // console.log("uploader file:", this.state.file);
         // let formData = new FormData();
@@ -103,7 +158,7 @@ export class CreateLesson extends React.Component {
                                     name="externalUrl"
                                     type="text"
                                     onChange={this.handleChange}
-                                    placeholder="External url"
+                                    placeholder="External url (optional)"
                                     autoComplete="new-password"
                                     required
                                 />
@@ -148,11 +203,17 @@ export class CreateLesson extends React.Component {
                         <div className="input-row">
                             <p className="input-label">Recording</p>
                             <div className="input-wrapper">
-                                <h4>Recorder</h4>
+                                <Recorder
+                                    closeMenu={this.props.closeMenu}
+                                    handleFileChange={this.handleFileChange}
+                                />
                             </div>
                         </div>
                     </div>
 
+                    {!!this.state.error.length && (
+                        <p className="error">{this.state.error}</p>
+                    )}
                     <button onClick={() => this.saveChanges()}>
                         Save changes
                     </button>
