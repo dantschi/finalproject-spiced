@@ -4,6 +4,10 @@
     padding: 0;
 }
 
+:root {
+    --distance-top: 75px;
+}
+
 body {
     -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadein 2s; /* Firefox < 16 */
@@ -83,6 +87,7 @@ header {
     width: 200px;
     /* height: 100vh; */
     background-color: white;
+    z-index: 9999;
 }
 
 .aside-menu ul {
@@ -90,20 +95,50 @@ header {
 }
 
 .lessons-container {
-    width: 90%;
-    margin: 100px auto 20px auto;
-    border: 1px solid black;
+    width: 80%;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: center;
+    align-items: stretch;
+    /* text-align: center; */
+    flex-wrap: wrap;
+    margin: 20px auto;
 }
 
 .lesson-box {
-    width: 80%;
-    border: 1px solid red;
+    width: 300px;
+
+    border-radius: 5px;
+    border: 1px solid black;
+    display: inline-block;
     margin: 10px;
+    flex-grow: 1;
+    background-color: lightgray;
+    opacity: 0.9;
     padding: 10px;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.lesson-box-abs {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.lesson-box-abs img {
+    width: 50px;
+    height: auto;
+}
+
+.lesson {
+    width: 100%;
+    max-width: 250px;
 }
 
 .usersLessons-container {

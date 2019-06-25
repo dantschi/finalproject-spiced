@@ -26,6 +26,10 @@ CREATE TABLE lessons(
     external_url TEXT,
     description TEXT,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title TEXT,
+    challenge TEXT,
+    goal TEXT,
+    recording_url,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

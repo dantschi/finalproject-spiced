@@ -71,17 +71,18 @@ module.exports.addLesson = function addLesson(
     exturl,
     ch,
     goal,
-    categories
+    categories,
+    record_url
 ) {
     console.log("addLesson challenge in db", ch);
     return db.query(
         `
         INSERT INTO lessons(user_id, title, description,
-            external_url, challenge, goal, categories,tags)
-        VALUES ($1,$2,$3,$4,$5,$6,$7)
+            external_url, challenge, goal, categories,recording_url)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
         RETURNING *;
         `,
-        [id, title, desc, exturl, ch, goal, categories]
+        [id, title, desc, exturl, ch, goal, categories, record_url]
     );
 };
 
@@ -108,6 +109,7 @@ module.exports.getLessonData = function getLessonData(id) {
         SELECT lessons.id, lessons.external_url, lessons.title,
         lessons.challenge, lessons.goal, lessons.description,
         lessons.categories, lessons.created_at, lessons.user_id,
+        lessons.recording_url,
         users.first AS "creator_first", users.last AS "creator_last",
         users.imageurl AS "creator_img"
         from lessons

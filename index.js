@@ -199,15 +199,31 @@ app.get("/getuserdata", (req, res) => {
 // AUDIO RECORDED
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/audio-recorded", uploader.single("rec"), s3.upload, function(
+app.post("/add-lesson", uploader.single("rec"), s3.upload, async function(
     req,
     res
 ) {
     console.log("req.body", req.body);
+    let { goal, title, externalUrl, desc, challenge, categories } = req.body;
     let audioUrl =
         "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
-    console.log("/audio-recorded", audioUrl);
-    res.json("audio arrived");
+    try {
+        let rslt = await db.addLesson(
+            req.session.userId,
+            title,
+            desc,
+            externalUrl,
+            challenge,
+            goal,
+            categories,
+            audioUrl
+        );
+
+        console.log("/add-lesson success", rslt);
+        res.json(rslt);
+    } catch (err) {
+        console.log("/add-lesson error", err);
+    }
 });
 
 /////////////////////////////////////////////////////////////
@@ -358,29 +374,29 @@ io.on("connection", async socket => {
     }
 
     try {
-        socket.on("newLesson", async lesson => {
-            console.log("newLesson", lesson);
-            let {
-                title,
-                externalUrl,
-                description,
-                challenge,
-                goal,
-                categories
-            } = lesson;
-            let rslt = await db.addLesson(
-                socket.request.session.userId,
-                title,
-                description,
-                externalUrl,
-                challenge,
-                goal,
-                categories
-            );
-            console.log("addLesson result:", rslt);
-
-            io.sockets.emit("newLesson", rslt.rows[0]);
-        });
+        // socket.on("newLesson", async lesson => {
+        //     console.log("newLesson", lesson);
+        //     let {
+        //         title,
+        //         externalUrl,
+        //         description,
+        //         challenge,
+        //         goal,
+        //         categories
+        //     } = lesson;
+        //     let rslt = await db.addLesson(
+        //         socket.request.session.userId,
+        //         title,
+        //         description,
+        //         externalUrl,
+        //         challenge,
+        //         goal,
+        //         categories
+        //     );
+        //     console.log("addLesson result:", rslt);
+        //
+        //     io.sockets.emit("newLesson", rslt.rows[0]);
+        // });
     } catch (err) {
         console.log("socket error", err);
     }

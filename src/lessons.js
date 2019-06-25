@@ -42,8 +42,11 @@ export class Lessons extends React.Component {
                         this.props.lessons.map(lesson => (
                             <div className="lesson-box" key={lesson.id}>
                                 <div className="lesson">
+                                    <div className="lesson-box-abs">
+                                        <img src={lesson.creator_img} />
+                                    </div>
                                     <p>Title: {lesson.title}</p>
-                                    <p>Description: {lesson.description}</p>
+
                                     <p>Challenge: {lesson.challenge}</p>
                                     <p>Categories: {lesson.categories}</p>
                                     <Link to={`/lesson/${lesson.id}`}>

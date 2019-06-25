@@ -91,7 +91,7 @@ class CreateLesson extends React.Component {
             this.formData.append("categories", categories);
             // socket.emit("newLesson", this.state.data);
             axios
-                .post("/audio-recorded", this.formData)
+                .post("/add-lesson", this.formData)
                 .then(rslt => {
                     console.log(rslt);
                 })

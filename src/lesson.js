@@ -51,12 +51,6 @@ class Lesson extends React.Component {
                 </div>
             );
         } else {
-            console.log("this.props, this.state", this.props, this.state);
-            console.log(
-                "condition",
-                this.props.userData.id == this.state.lesson.user_id
-            );
-
             return (
                 <div>
                     <h2>Lesson {this.state.lesson.id} </h2>
