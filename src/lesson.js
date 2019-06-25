@@ -1,9 +1,10 @@
 import React from "react";
 import axios from "./axios";
+import { connect } from "react-redux";
 
 import { Link } from "react-router-dom";
 
-export class Lesson extends React.Component {
+class Lesson extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -23,7 +24,9 @@ export class Lesson extends React.Component {
                 );
 
                 console.log("result in OtherProfile: ", rslt.data);
-                this.setState({ lesson: rslt.data });
+                this.setState({
+                    lesson: rslt.data
+                });
             });
     }
 
@@ -35,29 +38,54 @@ export class Lesson extends React.Component {
             .then(rslt => {
                 console.log("/start-lesson result", rslt);
                 this.setState({
-                    ...this.state,
                     finished: false
                 });
             });
     }
 
     render() {
-        if (!this.state.lesson) {
+        if (!this.state.lesson || !this.props.userData) {
             return (
                 <div className="loading">
                     <img src="./Ajax-loader.gif" />
                 </div>
             );
         } else {
+            console.log("this.props, this.state", this.props, this.state);
+            console.log(
+                "condition",
+                this.props.userData.id == this.state.lesson.user_id
+            );
+
             return (
                 <div>
                     <h2>Lesson {this.state.lesson.id} </h2>
-
-                    <button onClick={this.startThisLesson}>
-                        Start this lesson
-                    </button>
+                    {this.props.userData.id != this.state.lesson.user_id && (
+                        <button onClick={this.startThisLesson}>
+                            Start this lesson
+                        </button>
+                    )}
+                    {this.props.userData.id == this.state.lesson.user_id && (
+                        <h3>
+                            You are the creator of this lesson! Thanks,{" "}
+                            {this.props.userData.first}!
+                        </h3>
+                    )}
                 </div>
             );
         }
     }
 }
+
+const mapStateToProps = (state, props) => {
+    console.log("profilepic state, props", state, props);
+    if (!state.userData) {
+        return {};
+    } else {
+        return {
+            userData: state.userData
+        };
+    }
+};
+
+export default connect(mapStateToProps)(Lesson);

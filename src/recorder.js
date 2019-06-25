@@ -7,7 +7,7 @@ export class Recorder extends React.Component {
         this.state = {};
 
         this.record = this.record.bind(this);
-        this.stopRecord = this.stopRecording.bind(this);
+        this.stopRecording = this.stopRecording.bind(this);
 
         this.getNews = this.getNews.bind(this);
     }
@@ -17,58 +17,55 @@ export class Recorder extends React.Component {
     }
 
     record() {
-        this.setState({ record: true });
-        if (this.state.record) {
-            navigator.mediaDevices
-                .getUserMedia({ audio: true })
-                .then(stream => {
-                    var mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.start();
+        // this.setState({ record: true });
 
-                    const audioChunks = [];
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            var mediaRecorder = (this.mediaRecorder = new MediaRecorder(
+                stream
+            ));
+            var audioDetails = (this.audioDetails = {});
+            mediaRecorder.start();
 
-                    mediaRecorder.addEventListener("dataavailable", event => {
-                        audioChunks.push(event.data);
-                    });
+            const audioChunks = [];
 
-                    mediaRecorder.addEventListener("stop", () => {
-                        let formData = new FormData();
-                        const audioBlob = new Blob(audioChunks, {
-                            type: "audio/webm"
-                        });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audio = new Audio(audioUrl);
-                        console.log(
-                            "audioChunks",
-                            audioBlob,
-                            audioChunks,
-                            audio
-                        );
+            mediaRecorder.addEventListener("dataavailable", event => {
+                audioChunks.push(event.data);
+            });
+            this.audioDetails.start = new Date();
 
-                        formData.append("rec", audioBlob);
-                        axios
-                            .post("/audio-recorded", formData)
-                            .then(rslt => {
-                                console.log(rslt);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
-                    });
-
-                    setTimeout(() => {
-                        mediaRecorder.stop();
-                    }, 3000);
+            mediaRecorder.addEventListener("stop", () => {
+                this.audioDetails.stop = new Date();
+                this.audioDetails.length =
+                    (this.audioDetails.stop - this.audioDetails.start) / 1000;
+                console.log("length", this.audioDetails.length);
+                let formData = new FormData();
+                const audioBlob = new Blob(audioChunks, {
+                    type: "audio/webm"
                 });
-        }
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                console.log("audioChunks", audioBlob, audioChunks, audio);
+
+                // formData.append("rec", audioBlob);
+                // axios
+                //     .post("/audio-recorded", formData)
+                //     .then(rslt => {
+                //         console.log(rslt);
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     });
+            });
+        });
     }
 
     stopRecording() {
-        this.setState({
-            record: false
-        });
-        mediaRecorder.stop();
-        console.log("stopRecord fires");
+        if (!this.mediaRecorder) {
+            return;
+        } else {
+            console.log("stopRecord fires");
+            this.mediaRecorder.stop();
+        }
     }
 
     getNews() {
@@ -100,6 +97,7 @@ export class Recorder extends React.Component {
                     <button onClick={this.getNews} id="btn-getnews">
                         Get News
                     </button>
+                    <audio src="https://s3.amazonaws.com/danielvarga-salt/k8fnBjjxcTRSPBn4L4wLLaqhyLVwiCWx" />
                 </div>
             </div>
         );

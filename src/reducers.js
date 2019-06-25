@@ -28,9 +28,21 @@ export default function reducer(state = {}, action) {
         }
     }
 
-    if (action.type === "A_A") {
-        console.log("usersLessons in reducerdfgfgfffdfdsafsadfsdafasfafdasf");
-        return { ...state, usersLessons: action.data };
+    if (action.type == "USERS_LESSONS") {
+        console.log("usersLessons in r", action);
+        return { ...state, usersLessons: action.lessons };
+    }
+
+    if (action.type == "OWN_LESSONS") {
+        if (!state.ownLessons) {
+            return { ...state, ownLessons: action.lessons };
+        } else {
+            let temp = state.ownLessons;
+            temp.push(action.lessons);
+            return { ...state, ownLessons: temp };
+        }
+        // console.log("usersLessons in r", action);
+        // return { ...state, usersLessons: action.lessons };
     }
 
     console.log("state in reducers.js", state);

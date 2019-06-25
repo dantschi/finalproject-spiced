@@ -68,6 +68,9 @@ export class Profile extends React.Component {
                     console.log("/changeuserimage POST error", err);
                 });
         }
+
+        let rslt = await axios.post("/change-user-data", this.state.data);
+        console.log("/change-user-data", rslt);
     }
 
     // showProps() {
@@ -109,6 +112,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Last</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={this.props.userData.last}
                                     name="last"
                                     type="text"
                                     onChange={this.handleChange}
@@ -139,6 +143,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Location</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={this.props.userData.location}
                                     name="location"
                                     type="text"
                                     onChange={this.handleChange}
@@ -152,6 +157,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Genres</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={this.props.userData.genres}
                                     name="genre"
                                     type="text"
                                     onChange={this.handleChange}
@@ -165,6 +171,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Bands</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={this.props.userData.bands}
                                     name="bands"
                                     type="text"
                                     onChange={this.handleChange}
@@ -177,6 +184,9 @@ export class Profile extends React.Component {
                             <p className="input-label">Instruments</p>
                             <div className="input-wrapper">
                                 <input
+                                    defaultValue={
+                                        this.props.userData.instruments
+                                    }
                                     name="instruments"
                                     type="text"
                                     onChange={this.handleChange}
@@ -195,6 +205,9 @@ export class Profile extends React.Component {
                             </p>
                             <div className="input-wrapper">
                                 <textarea
+                                    defaultValue={
+                                        this.props.userData.description
+                                    }
                                     name="description"
                                     type="text"
                                     onChange={this.handleChange}

@@ -10,8 +10,8 @@ import Profile from "./profile";
 import { addUserData, getLessons } from "./actions";
 import CreateLesson from "./createlesson";
 import Lessons from "./lessons";
-import { Lesson } from "./lesson";
-import { YourLessons } from "./yourlessons";
+import Lesson from "./lesson";
+import YourLessons from "./yourlessons";
 
 export class App extends React.Component {
     constructor(props) {

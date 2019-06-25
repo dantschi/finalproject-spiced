@@ -41,10 +41,18 @@ export function newLesson(lesson) {
 //     };
 // }
 
-export function abc(data) {
-    console.log("abc in Actions");
+export function usersLessons(data) {
+    console.log("usersLessons in actions", data);
     return {
-        type: "A_A",
+        type: "USERS_LESSONS",
+        lessons: data
+    };
+}
+
+export function ownLessons(data) {
+    console.log("own in actions", data);
+    return {
+        type: "OWN_LESSONS",
         lessons: data
     };
 }

@@ -241,6 +241,15 @@ app.post("/changeuserimage", uploader.single("file"), s3.upload, function(
 });
 
 /////////////////////////////////////////////////////////////
+// CHANGE USER DATA
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/change-user-data", (req, res) => {
+    console.log("/change-user-data", req.body);
+    res.json("/change-user-data arrived");
+});
+
+/////////////////////////////////////////////////////////////
 // GET LESSONS
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -295,6 +304,22 @@ app.get("/get-started-lessons", (req, res) => {
         })
         .catch(err => {
             console.log("/get-started-lessons query error", err);
+        });
+});
+
+/////////////////////////////////////////////////////////////
+// GET LESSONS CREATED BY YOURSELF
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.get("/get-your-created-lessons", (req, res) => {
+    console.log("/get-your-created-lessons");
+    db.getYourCreatedLessons(req.session.userId)
+        .then(rslt => {
+            console.log("/get-your-created-lessons", rslt);
+            res.json(rslt.rows);
+        })
+        .catch(err => {
+            console.log("getYourCreatedLessons error: ", err);
         });
 });
 

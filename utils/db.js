@@ -55,6 +55,15 @@ module.exports.changeUserImage = function changeUserImage(id, url) {
     );
 };
 
+// module.exports.changeUserData = function changeUserData(obj) {
+//     return db.query(
+//         `
+//         UPDATE user_profiles SET
+//
+//         `[obj]
+//     );
+// };
+
 module.exports.addLesson = function addLesson(
     id,
     title,
@@ -69,10 +78,10 @@ module.exports.addLesson = function addLesson(
         `
         INSERT INTO lessons(user_id, title, description,
             external_url, challenge, goal, categories,tags)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+        VALUES ($1,$2,$3,$4,$5,$6,$7)
         RETURNING *;
         `,
-        [id, title, desc, exturl, ch, goal, categories, tags]
+        [id, title, desc, exturl, ch, goal, categories]
     );
 };
 
@@ -109,7 +118,7 @@ module.exports.getLessonData = function getLessonData(id) {
     );
 };
 
-module.exports.startedLesson = function startLesson(id, uid, comp) {
+module.exports.startLesson = function startLesson(id, uid, comp) {
     return db.query(
         `
         INSERT INTO started_lessons(lesson_id, user_id, completed)
@@ -126,6 +135,16 @@ module.exports.getStartedLessons = function getStartedLessons(uid) {
         `
         SELECT * from started_lessons
         WHERE user_id=$1
+        `,
+        [uid]
+    );
+};
+
+module.exports.getYourCreatedLessons = function getYourCreatedLessons(uid) {
+    return db.query(
+        `
+        SELECT * from lessons
+        WHERE user_id=$1;
         `,
         [uid]
     );
