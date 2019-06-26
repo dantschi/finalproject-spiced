@@ -47,11 +47,48 @@ module.exports.changeUserImage = function changeUserImage(id, url) {
     return db.query(
         `
         UPDATE users
-        SET imageurl=$2
+        SET imageurl = $2
+        WHERE id=$1
+        `,
+        [id, url]
+    );
+};
+
+module.exports.changeUserProfile = function changeUserProfile(
+    id,
+    loc,
+    genres,
+    bands,
+    instruments,
+    description
+) {
+    return db.query(
+        `
+        UPDATE user_profiles
+        SET
+        location=$2, genres=$3, bands=$4,
+        instruments=$5, description=$6
         WHERE id=$1
         RETURNING *;
         `,
-        [id, url]
+        [id, loc, genres, bands, instruments, description]
+    );
+};
+
+module.exports.getLessonStarters = function getLessonStarters(id) {
+    return db.query(
+        `
+        SELECT
+        started_lessons.id AS "started_lesson_id",
+        started_lessons.text_answer, started_lessons.audio_answer,
+        started_lessons.completed,
+        users.id AS "user_id", users.first,users.last,users.imageurl
+        FROM started_lessons
+        LEFT JOIN users on started_lessons.user_id = users.id
+        WHERE started_lessons.parent_lesson_id = $1
+
+        `,
+        [id]
     );
 };
 
@@ -105,40 +142,64 @@ module.exports.getLessons = function getLessons() {
 module.exports.getLessonData = function getLessonData(id) {
     return db.query(
         `
-        SELECT lessons.id, lessons.external_url, lessons.title,
+        SELECT lessons.id AS "parent_id", lessons.external_url, lessons.title,
         lessons.challenge, lessons.goal, lessons.description,
-        lessons.categories, lessons.created_at, lessons.user_id,
+        lessons.categories, lessons.created_at, lessons.user_id AS "creator_id",
         lessons.recording_url,
         users.first AS "creator_first", users.last AS "creator_last",
-        users.imageurl AS "creator_img", started_lessons.id AS "started_id", started_lessons.completed AS "completed",
-        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer"
+        users.imageurl AS "creator_img",
+        started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
-        LEFT JOIN started_lessons on users.id=started_lessons.user_id AND started_lessons.lesson_id = $1
+        LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id
         WHERE lessons.id=$1;
         `,
         [id]
     );
 };
 
-module.exports.getStartedLessonData = function getStartedLessonData(uid, lid) {
+module.exports.addNote = function addNote(note, lesson_id) {
     return db.query(
         `
-
+        UPDATE started_lessons
+        SET notes=$1
+        WHERE id=$2
         `,
-        [uid, lid]
+        [note, lesson_id]
     );
 };
 
-module.exports.startLesson = function startLesson(id, uid, comp) {
+module.exports.getThisStartedDetails = function getThisStartedDetails(
+    lid,
+    uid
+) {
     return db.query(
         `
-        INSERT INTO started_lessons(lesson_id, user_id, completed)
-        VALUES ($1,$2,$3)
+        SELECT * FROM started_lessons
+        WHERE parent_lesson_id=$1 AND user_id=$2;
+        `,
+        [lid, uid]
+    );
+};
+
+// module.exports.getStartedLessonData = function getStartedLessonData(uid, lid) {
+//     return db.query(
+//         `
+//
+//         `,
+//         [uid, lid]
+//     );
+// };
+
+module.exports.startLesson = function startLesson(id, uid) {
+    return db.query(
+        `
+        INSERT INTO started_lessons(parent_lesson_id, user_id)
+        VALUES ($1,$2)
         RETURNING *;
 
         `,
-        [id, uid, comp || false]
+        [id, uid]
     );
 };
 
@@ -146,7 +207,7 @@ module.exports.getStartedLessons = function getStartedLessons(uid) {
     return db.query(
         `
         SELECT * from started_lessons
-        WHERE user_id=$1
+        WHERE user_id=$1;
         `,
         [uid]
     );

@@ -8,8 +8,13 @@ export default function reducer(state = {}, action) {
     }
 
     if (action.type == "CHANGE_USER_IMAGE") {
-        return { ...state, imageurl: action.imageurl };
+        return { ...state.userData, imageurl: action.imageurl };
     }
+
+    // if (action.type=="CHANGE_USER_DATA") {
+    //     console.log("change user data in reducers", action.data);
+    //     return { ...state.userData}
+    // }
 
     if (action.type == "GET_LESSONS") {
         console.log("action.lessons in reducers", action.lessons);

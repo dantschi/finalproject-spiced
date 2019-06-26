@@ -1,7 +1,7 @@
 import React from "react";
 import ProfilePic from "./profilepic";
 import axios from "./axios";
-import { changeUserImage } from "./actions";
+import { changeUserImage, changeUserData } from "./actions";
 import { connect } from "react-redux";
 
 export class Profile extends React.Component {
@@ -57,25 +57,33 @@ export class Profile extends React.Component {
         if (this.state.file) {
             let formData = new FormData();
             formData.append("file", this.state.file);
-            // console.log("handleUpload tihs.state", this.state, formData);
+            formData.append("location", this.state.data.location);
+            formData.append("genres", this.state.data.genres);
+            formData.append("bands", this.state.data.bands);
+            formData.append("instruments", this.state.data.instruments);
+            formData.append("description", this.state.data.description);
+            // let rslt = await axios.post("/change-user-data-with-image", this.state.data);
+            // console.log("/change-user-data-image", rslt);
             axios
-                .post("/changeuserimage", formData)
+                .post("/changeuserdata-with-image", formData)
                 .then(rslt => {
-                    // console.log("/changeuserimage POST response", rslt);
+                    console.log("/change-user-data-with-image result", rslt);
                     this.props.dispatch(changeUserImage(rslt.data.url));
                 })
                 .catch(err => {
-                    console.log("/changeuserimage POST error", err);
+                    console.log("/changeuserdata-image POST error", err);
+                });
+        } else {
+            axios
+                .post("/changeuserdata", this.state.data)
+                .then(rslt => {
+                    this.props.dispatch(changeUserData(rslt.data));
+                })
+                .catch(err => {
+                    console.log("/changeuserdata-image POST error", err);
                 });
         }
-
-        let rslt = await axios.post("/change-user-data", this.state.data);
-        console.log("/change-user-data", rslt);
     }
-
-    // showProps() {
-    //     console.log("this.props in Profile: ", this.props);
-    // }
 
     render() {
         if (!this.props.userData) {
@@ -85,7 +93,7 @@ export class Profile extends React.Component {
                 </div>
             );
         }
-        console.log("props");
+        console.log("props", this.props);
         return (
             <div className="profile-container">
                 <div className="editor-box">
@@ -124,7 +132,11 @@ export class Profile extends React.Component {
                         </div>
                         <div className="input-row">
                             <div className="profilepic-box input-label">
-                                <ProfilePic />
+                                <ProfilePic
+                                    imageurl={this.props.userData.imageurl}
+                                    first={this.props.userData.first}
+                                    last={this.props.userData.last}
+                                />
                             </div>
                             <div className="input-wrapper">
                                 <input

@@ -272,32 +272,46 @@ app.post("/add-lesson-without-audio", async (req, res) => {
 // CHANGE USER IMAGE
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/changeuserimage", uploader.single("file"), s3.upload, function(
-    req,
-    res
-) {
-    console.log("/changeuserimage POST", req.file);
-    let imageurl =
-        "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
-    console.log(
-        "/changeuserimage POST req.file.filename, imageurl, req.session: ",
-        req.file.filename,
-        imageurl,
-        req.session
-    );
+app.post(
+    "/changeuserdata-with-image",
+    uploader.single("file"),
+    s3.upload,
+    function(req, res) {
+        console.log("/changeuserimage POST", req.file);
+        let { location, genres, bands, instruments, description } = req.body;
+        let imageurl = (this.imageurl =
+            "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename);
+        console.log(
+            "/changeuserimage POST req.file.filename, imageurl, req.session: ",
+            req.file.filename,
+            this.imageurl,
+            req.session
+        );
 
-    db.changeUserImage(req.session.userId, imageurl)
-        .then(rslt => {
-            console.log("/changeuserimage result", rslt);
-            res.json({
-                status: "success",
-                url: imageurl
+        Promise.all([
+            db.changeUserImage(req.session.userId, this.imageurl),
+            db.changeUserProfile(
+                req.session.userId,
+                location,
+                genres,
+                bands,
+                instruments,
+                description
+            )
+        ])
+
+            .then(rslt => {
+                console.log("/changeuserdata result", rslt);
+                res.json({
+                    status: "success",
+                    url: imageurl
+                });
+            })
+            .catch(err => {
+                console.log(err);
             });
-        })
-        .catch(err => {
-            console.log(err);
-        });
-});
+    }
+);
 
 /////////////////////////////////////////////////////////////
 // CHANGE USER DATA
@@ -320,14 +334,27 @@ app.get("/get-lessons", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
-// GET LESSON DETAILS
+// GET LESSON DATA
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-app.get("/get-lesson-data/:id", (req, res) => {
-    console.log("/get-lesson-details params", req.params);
-    db.getLessonData(req.params.id)
+
+app.get("/get-lesson-data/:id", async (req, res) => {
+    console.log("/get-lesson-data params", req.params);
+    // let tempRes = await db.getThisStartedDetails(
+    //     req.params.id,
+    //     req.session.userId
+    // );
+
+    // db.getLessonStarters(req.params.is);
+    // db.getLessonData(req.params.id);
+
+    Promise.all([
+        db.getLessonStarters(req.params.id),
+        db.getLessonData(req.params.id)
+    ])
         .then(rslt => {
-            console.log("lesson data", rslt);
-            res.json(rslt.rows[0]);
+            console.log("lesson data", rslt[0].rows, rslt[1].rows);
+
+            res.json([rslt[0].rows, rslt[1].rows]);
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -335,19 +362,35 @@ app.get("/get-lesson-data/:id", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
-// START LESSON DETAILS
+// START LESSON AND DETAILS
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/start-lesson", (req, res) => {
     console.log("/start-lesson req.body", req.body);
     db.startLesson(req.body.lessonId, req.session.userId)
         .then(rslt => {
-            console.log("/start-lesson query result", rslt);
+            console.log("/start-lesson query result", rslt.rows[0]);
             res.json(rslt.rows[0]);
         })
         .catch(err => {
             console.log("/start-lesson query error", err);
         });
+});
+
+/////////////////////////////////////////////////////////////
+// SUBMIT LESSON
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/submit-lesson-without-audio", (req, res) => {
+    console.log("/submit-lesson-without-audio", req.params);
+});
+
+/////////////////////////////////////////////////////////////
+// SUBMIT LESSON
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/submit-lesson-with-audio", (req, res) => {
+    console.log("/submit-lesson-without-audio", req.body);
 });
 
 /////////////////////////////////////////////////////////////
@@ -416,6 +459,11 @@ io.on("connection", async socket => {
     }
 
     try {
+        socket.on("newNote", async note => {
+            console.log("newNote", note);
+            let rslt = await db.addNote(note.note, note.parent_id);
+            socket.emit("addNoteResult", rslt);
+        });
         // socket.on("newLesson", async lesson => {
         //     console.log("newLesson", lesson);
         //     let {

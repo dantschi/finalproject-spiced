@@ -3,6 +3,7 @@ import axios from "./axios";
 import { connect } from "react-redux";
 import AudioPlayer from "react-h5-audio-player";
 import { Recorder } from "./recorder";
+import { socket } from "./socket";
 // import ReactPlayer from "react-player";
 // import ReactAudioPlayer from "react-audio-player";
 
@@ -12,9 +13,17 @@ class Lesson extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            lesson: {}
+            data: {},
+            lesson: {},
+            error: "",
+            loopLesson: false
         };
         this.startThisLesson = this.startThisLesson.bind(this);
+        this.saveNotes = this.saveNotes.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
+        this.deleteRecording = this.deleteRecording.bind(this);
+        this.loopToggle = this.loopToggle.bind(this);
     }
 
     componentDidMount() {
@@ -22,15 +31,26 @@ class Lesson extends React.Component {
         axios
             .get("/get-lesson-data/" + this.props.match.params.id)
             .then(rslt => {
-                console.log(
-                    "/get-lesson-data GET response from server",
-                    rslt.data
-                );
+                console.log("/get-lesson-data GET response from server", rslt);
 
                 this.setState({
-                    lesson: rslt.data
+                    lesson: rslt.data[1]["0"],
+                    started: rslt.data[0]
                 });
             });
+    }
+
+    loopToggle() {
+        this.setState({
+            loopLesson: !this.state.loopLesson
+        });
+    }
+
+    deleteRecording() {
+        this.setState({
+            tempUrl: "",
+            tempData: null
+        });
     }
 
     handleFileChange(e) {
@@ -40,11 +60,64 @@ class Lesson extends React.Component {
             tempRec: e.data,
             tempUrl: e.tempUrl
         });
-        // this.setState({
-        //     data: {
-        //         ...this.state.data
-        //     }
-        // });
+    }
+
+    handleChange(e) {
+        console.log(this.state);
+        this.setState({
+            data: {
+                ...this.state.data,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    submitLesson() {
+        if (!this.state.tempRec) {
+            axios
+                .post("/submit-lesson-without-audio", this.state.data)
+                .then(rslt => {
+                    console.log(rslt);
+                    // this.setState({
+                    //     data: {
+                    //         categories: "",
+                    //         challenge: "",
+                    //         description: "",
+                    //         goal: "",
+                    //         title: "",
+                    //         externalUrl: ""
+                    //     }
+                    // });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            let formData = new FormData();
+
+            formData.append("rec", this.state.tempRec);
+            formData.append("answer", this.state.textanswer);
+            // socket.emit("newLesson", this.state.data);
+            axios
+                .post("/submit-lesson-with-audio", formData)
+                .then(rslt => {
+                    console.log(rslt);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+    }
+
+    saveNotes() {
+        console.log("savenotes fires");
+        socket.emit("newNote", {
+            note: this.state.data.notes,
+            parent_id: this.state.lesson.started_lesson_id
+        });
+        socket.on("addNoteResult", rslt => {
+            console.log("addNoteResult", rslt);
+        });
     }
 
     startThisLesson() {
@@ -55,8 +128,15 @@ class Lesson extends React.Component {
             .then(rslt => {
                 console.log("/start-lesson result", rslt);
                 this.setState({
-                    finished: false
+                    lesson: {
+                        ...this.state.lesson,
+                        completed: false,
+                        started_id: rslt.data.id
+                    }
                 });
+            })
+            .catch(err => {
+                console.log("/start-lesson error", err);
             });
     }
 
@@ -68,7 +148,8 @@ class Lesson extends React.Component {
                 </div>
             );
         } else {
-            let creator = this.props.userData.id == this.state.lesson.user_id;
+            let creator =
+                this.props.userData.id == this.state.lesson.creator_id;
             let notStarted = this.state.lesson.completed === null;
             let completed = this.state.lesson.completed == true;
 
@@ -80,7 +161,7 @@ class Lesson extends React.Component {
             return (
                 <div className="lesson-container">
                     <div className="lesson-box-left">
-                        <p>Lesson {this.state.lesson.id} </p>
+                        <p>Lesson {this.state.lesson.parent_id} </p>
                         <p>
                             Created by {this.state.lesson.creator_first}{" "}
                             {this.state.lesson.creator_last}
@@ -94,20 +175,42 @@ class Lesson extends React.Component {
                         <p>{this.state.lesson.challenge}</p>
                         <h3>Description</h3>
                         <p>{this.state.lesson.description}</p>
-                        <h3>Voice note for the assignment</h3>
                         {this.state.lesson.recording_url && (
-                            <AudioPlayer
-                                src={this.state.lesson.recording_url}
-                                preload="none"
-                            />
+                            <div>
+                                <h3>Voice note for the assignment</h3>
+
+                                <AudioPlayer
+                                    src={this.state.lesson.recording_url}
+                                    preload="none"
+                                    loop={this.state.loopLesson}
+                                />
+                                <p onClick={this.loopToggle}>Loop it!</p>
+                            </div>
                         )}
                     </div>
                     <div className="lesson-box-right">
                         {creator && (
-                            <h3>
-                                You are the creator of this lesson! Thanks,{" "}
-                                {this.props.userData.first}!
-                            </h3>
+                            <div className="lesson-starters-list">
+                                <h3>
+                                    You are the creator of this lesson! Thanks,{" "}
+                                    {this.props.userData.first}!
+                                </h3>
+                                <p>
+                                    There are already{" "}
+                                    {this.state.started.length} people started
+                                    your lesson
+                                </p>
+                                {this.state.started.map(user => (
+                                    <div
+                                        className="user-box"
+                                        key={user.user_id}
+                                    >
+                                        <p>
+                                            {user.first} {user.last}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         )}
 
                         {!creator && notStarted && (
@@ -117,27 +220,70 @@ class Lesson extends React.Component {
                         )}
                         {!creator && !notStarted && (
                             <div>
-                                <h1>Not creator, started!!!!</h1>
+                                <h1>Not creator, started but not completed!</h1>
                                 <div className="input-row">
                                     <p className="input-label">Your answer</p>
                                     <div className="input-wrapper">
                                         <textarea
-                                            name="text-answer"
+                                            name="textanswer"
+                                            type="text"
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                {!this.state.tempUrl && (
+                                    <div className="input-row">
+                                        <p className="input-label">Recording</p>
+                                        <div className="input-wrapper">
+                                            <Recorder
+                                                closeMenu={this.props.closeMenu}
+                                                handleFileChange={
+                                                    this.handleFileChange
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                {this.state.tempUrl && (
+                                    <div className="input-row">
+                                        <p className="input-label">
+                                            Your recording
+                                        </p>
+                                        <div className="input-wrapper">
+                                            <AudioPlayer
+                                                src={this.state.tempUrl}
+                                                preload="none"
+                                            />
+                                            <button
+                                                onClick={() =>
+                                                    this.deleteRecording()
+                                                }
+                                            >
+                                                Delete this recording if you are
+                                                not satisfied with it
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="input-row">
+                                    <button onClick={this.submitLesson}>
+                                        Submit this lesson
+                                    </button>
+                                </div>
+                                <div className="input-row">
+                                    <p className="input-label">Notes</p>
+                                    <div className="input-wrapper">
+                                        <textarea
+                                            name="notes"
                                             type="text"
                                             onChange={this.handleChange}
                                         />
                                     </div>
                                 </div>
                                 <div className="input-row">
-                                    <p className="input-label">Recording</p>
-                                    <div className="input-wrapper">
-                                        <Recorder
-                                            closeMenu={this.props.closeMenu}
-                                            handleFileChange={
-                                                this.handleFileChange
-                                            }
-                                        />
-                                    </div>
+                                    <button onClick={this.saveNotes}>
+                                        Save notes
+                                    </button>
                                 </div>
                             </div>
                         )}

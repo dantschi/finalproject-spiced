@@ -18,6 +18,14 @@ export function changeUserImage(data) {
     };
 }
 
+export function changeUserData(data) {
+    console.log("changeuserdata in actions:", data);
+    return {
+        type: "CHANGE_USER_DATA",
+        data: data
+    };
+}
+
 export function getLessons(data) {
     console.log("getLessons data in actions", data);
     return {

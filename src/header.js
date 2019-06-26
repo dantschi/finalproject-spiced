@@ -38,7 +38,11 @@ export function Header(props, toggleMenu) {
                             onClick={() => props.toggleMenu()}
                             className="header-menu"
                         >
-                            <ProfilePic />
+                            <ProfilePic
+                                imageurl={props.userData.imageurl}
+                                first={props.userData.first}
+                                last={props.userData.last}
+                            />
                             <p>{`${props.userData.first} ${
                                 props.userData.last
                             }`}</p>

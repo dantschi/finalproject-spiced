@@ -36,8 +36,10 @@ CREATE TABLE lessons(
 CREATE TABLE started_lessons(
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
-    completed BOOLEAN NOT NULL
+    parent_lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+    text_answer TEXT,
+    audio_answer TEXT,
+    completed BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE lessons_recordings(
