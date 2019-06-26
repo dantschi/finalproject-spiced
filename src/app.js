@@ -67,7 +67,19 @@ export class App extends React.Component {
         return (
             <BrowserRouter>
                 <div className="app-wrapper">
-                    <Header toggleMenu={this.toggleMenu} />
+                    <Route
+                        path="/*"
+                        render={props => (
+                            <Header
+                                toggleMenu={this.toggleMenu}
+                                closeMenu={this.closeMenu}
+                                key={props.match.url}
+                                match={props.match}
+                                history={props.history}
+                            />
+                        )}
+                    />
+
                     <div className="anything-else">
                         {this.state.menuOnScreen && (
                             <Menu toggleMenu={this.toggleMenu} />

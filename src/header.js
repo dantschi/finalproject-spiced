@@ -16,20 +16,22 @@ export function Header(props, toggleMenu) {
             </div>
         );
     } else {
+        console.log("header props", props);
         return (
             <header>
                 <div className="header-content-container">
                     <Link to="/">
                         <div className="logo-container">Logo</div>
                     </Link>
-
-                    <input
-                        name="searchField"
-                        type="text"
-                        placeholder="Search"
-                        autoComplete="new-password"
-                        required
-                    />
+                    {props.match.url === "/lessons" && (
+                        <input
+                            name="searchField"
+                            type="text"
+                            placeholder="Search"
+                            autoComplete="new-password"
+                            required
+                        />
+                    )}
 
                     <div className="header-links">
                         <div
