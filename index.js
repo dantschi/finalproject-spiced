@@ -352,7 +352,24 @@ app.get("/get-lesson-data/:id", async (req, res) => {
         db.getLessonData(req.params.id)
     ])
         .then(rslt => {
-            console.log("lesson data", rslt[0].rows, rslt[1].rows);
+            console.log("lesson data", rslt[1].rows[0].external_url);
+            if (rslt[1].rows[0].external_url.startsWith("https://")) {
+                god.getOgDetails(
+                    rslt[1].rows[0].external_url,
+                    (err, result) => {
+                        if (err) {
+                            console.log("omg error", err);
+                        }
+                        console.log(
+                            "omg result",
+                            result,
+                            typeof rslt[1].rows[0]
+                        );
+
+                        rslt[1].rows[0].external_result = result;
+                    }
+                );
+            }
 
             res.json([rslt[0].rows, rslt[1].rows]);
         })

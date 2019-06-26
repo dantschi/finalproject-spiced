@@ -24,7 +24,7 @@ module.exports.getOgDetails = function getOgDetails(url, cb) {
                     let name = $('meta[property="og:site_name"]').attr(
                         "content"
                     );
-                    let img = $('meta[property="og:img"]').attr("content");
+                    let img = $('meta[property="og:image"]').attr("content");
                     console.log("om:type", type);
                     let resObj = {
                         type: type || "external page",

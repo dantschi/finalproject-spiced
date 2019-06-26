@@ -52,7 +52,7 @@ export class Lessons extends React.Component {
                                     <p>Challenge: {lesson.challenge}</p>
                                     <p>Categories: {lesson.categories}</p>
                                     <Link to={`/lesson/${lesson.id}`}>
-                                        Start this lesson now!
+                                        See details here!
                                     </Link>
                                 </div>
                             </div>

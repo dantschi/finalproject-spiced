@@ -98,12 +98,12 @@ const mapStateToProps = state => {
         return {};
     } else {
         return {
-            completed: state.usersLessons.filter(
-                lesson => lesson.completed == true
-            ),
-            onGoing: state.usersLessons.filter(
-                lesson => lesson.completed == false
-            ),
+            completed: state.usersLessons
+                .reverse()
+                .filter(lesson => lesson.completed == true),
+            onGoing: state.usersLessons
+                .reverse()
+                .filter(lesson => lesson.completed == false),
             ownLessons: state.ownLessons
         };
     }

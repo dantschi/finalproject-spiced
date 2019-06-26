@@ -221,9 +221,11 @@ class Lesson extends React.Component {
                         {!creator && !notStarted && (
                             <div>
                                 <h1>Not creator, started but not completed!</h1>
-                                <div className="input-row">
-                                    <p className="input-label">Your answer</p>
-                                    <div className="input-wrapper">
+                                <div className="input-row right">
+                                    <p className="input-label no-width">
+                                        Your answer
+                                    </p>
+                                    <div className="input-wrapper wide">
                                         <textarea
                                             name="textanswer"
                                             type="text"
@@ -232,9 +234,11 @@ class Lesson extends React.Component {
                                     </div>
                                 </div>
                                 {!this.state.tempUrl && (
-                                    <div className="input-row">
-                                        <p className="input-label">Recording</p>
-                                        <div className="input-wrapper">
+                                    <div className="input-row right">
+                                        <p className="input-label no-width">
+                                            Recording
+                                        </p>
+                                        <div className="input-wrapper wide">
                                             <Recorder
                                                 closeMenu={this.props.closeMenu}
                                                 handleFileChange={
@@ -245,11 +249,11 @@ class Lesson extends React.Component {
                                     </div>
                                 )}
                                 {this.state.tempUrl && (
-                                    <div className="input-row">
-                                        <p className="input-label">
+                                    <div className="input-row right">
+                                        <p className="input-label no-width">
                                             Your recording
                                         </p>
-                                        <div className="input-wrapper">
+                                        <div className="input-wrapper wide">
                                             <AudioPlayer
                                                 src={this.state.tempUrl}
                                                 preload="none"
@@ -270,9 +274,11 @@ class Lesson extends React.Component {
                                         Submit this lesson
                                     </button>
                                 </div>
-                                <div className="input-row">
-                                    <p className="input-label">Notes</p>
-                                    <div className="input-wrapper">
+                                <div className="input-row right">
+                                    <p className="input-label no-width">
+                                        Notes
+                                    </p>
+                                    <div className="input-wrapper wide">
                                         <textarea
                                             name="notes"
                                             type="text"
@@ -280,7 +286,7 @@ class Lesson extends React.Component {
                                         />
                                     </div>
                                 </div>
-                                <div className="input-row">
+                                <div className="input-row right">
                                     <button onClick={this.saveNotes}>
                                         Save notes
                                     </button>
