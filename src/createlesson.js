@@ -2,6 +2,7 @@ import React from "react";
 import axios from "./axios";
 import { connect } from "react-redux";
 import { socket } from "./socket";
+import AudioPlayer from "react-h5-audio-player";
 
 import { Recorder } from "./recorder";
 
@@ -15,9 +16,17 @@ class CreateLesson extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
+        this.deleteRecording = this.deleteRecording.bind(this);
     }
 
     componentDidMount() {}
+
+    deleteRecording() {
+        this.setState({
+            tempUrl: "",
+            tempData: null
+        });
+    }
 
     handleChange(e) {
         // console.log(e.target.name, e.target.value, this.state);
@@ -31,9 +40,12 @@ class CreateLesson extends React.Component {
     }
 
     handleFileChange(e) {
-        var formData = (this.formData = new FormData());
         console.log("handleFileChange", e);
-        formData.append("rec", e);
+
+        this.setState({
+            tempRec: e.data,
+            tempUrl: e.tempUrl
+        });
         // this.setState({
         //     data: {
         //         ...this.state.data
@@ -83,6 +95,8 @@ class CreateLesson extends React.Component {
                 error: "Please fill out the required fields"
             });
         } else {
+            var formData = (this.formData = new FormData());
+            formData.append("rec", this.state.tempData);
             this.formData.append("goal", goal);
             this.formData.append("title", goal);
             this.formData.append("externalUrl", externalUrl);
@@ -199,16 +213,34 @@ class CreateLesson extends React.Component {
                                 />
                             </div>
                         </div>
-
-                        <div className="input-row">
-                            <p className="input-label">Recording</p>
-                            <div className="input-wrapper">
-                                <Recorder
-                                    closeMenu={this.props.closeMenu}
-                                    handleFileChange={this.handleFileChange}
-                                />
+                        {!this.state.tempUrl && (
+                            <div className="input-row">
+                                <p className="input-label">Recording</p>
+                                <div className="input-wrapper">
+                                    <Recorder
+                                        closeMenu={this.props.closeMenu}
+                                        handleFileChange={this.handleFileChange}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        {this.state.tempUrl && (
+                            <div className="input-row">
+                                <p className="input-label">Your recording</p>
+                                <div className="input-wrapper">
+                                    <AudioPlayer
+                                        src={this.state.tempUrl}
+                                        preload="none"
+                                    />
+                                    <button
+                                        onClick={() => this.deleteRecording()}
+                                    >
+                                        Delete this recording you are not
+                                        satisfied with it
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {!!this.state.error.length && (

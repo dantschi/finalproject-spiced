@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "./axios";
 import { connect } from "react-redux";
+import AudioPlayer from "react-h5-audio-player";
+// import ReactPlayer from "react-player";
+// import ReactAudioPlayer from "react-audio-player";
 
 import { Link } from "react-router-dom";
 
@@ -69,7 +72,12 @@ class Lesson extends React.Component {
                         <h3>Description</h3>
                         <p>{this.state.lesson.description}</p>
                         <h4>Voice note for the assignment</h4>
-                        <audio src={this.state.lesson.recording_url} />
+                        {this.state.lesson.recording_url && (
+                            <AudioPlayer
+                                src={this.state.lesson.recording_url}
+                                preload="none"
+                            />
+                        )}
                     </div>
                     <div className="lesson-box-right">
                         {this.props.userData.id !=

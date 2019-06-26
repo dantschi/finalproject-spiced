@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Julius;
+    src: url("/fonts/JuliusSansOne-Regular.ttf");
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,6 +19,7 @@ body {
     -ms-animation: fadein 2s; /* Internet Explorer */
     -o-animation: fadein 2s; /* Opera < 12.1 */
     animation: fadein 2s;
+    font-family: "Julius", sans-serif;
 }
 
 @keyframes fadein {
@@ -39,6 +45,7 @@ header {
     top: 0;
     left: 0;
     background-color: white;
+    z-index: 10;
 }
 
 .header-content-container {
@@ -177,16 +184,16 @@ header {
 }
 
 .rec-container {
-    width: 300px;
+    width: 70px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    border: 1px solid black;
-    border-radius: 2px;
+    /* border: 1px solid black; */
+    border-radius: 10px;
     margin: 10px;
-    -webkit-box-shadow: 6px 9px 11px 0px rgba(74, 70, 74, 0.22);
+    /* -webkit-box-shadow: 6px 9px 11px 0px rgba(74, 70, 74, 0.22);
     -moz-box-shadow: 6px 9px 11px 0px rgba(74, 70, 74, 0.22);
-    box-shadow: 6px 9px 11px 0px rgba(74, 70, 74, 0.22);
+    box-shadow: 6px 9px 11px 0px rgba(74, 70, 74, 0.22); */
     -webkit-box-shadow: inset 0px 0px 11px 5px rgba(74, 70, 74, 1);
     -moz-box-shadow: inset 0px 0px 11px 5px rgba(74, 70, 74, 1);
     box-shadow: inset 0px 0px 11px 5px rgba(74, 70, 74, 1);
@@ -262,6 +269,10 @@ header {
     margin-top: 10px;
 }
 
+.input-row p {
+    padding: 5px;
+}
+
 .input-label {
     width: 160px;
     text-align: right;
@@ -314,11 +325,12 @@ header {
 }
 
 .welcome-box {
-    display: inline-flex;
+    display: flex;
     width: 700px;
     height: 400px;
     align-items: flex-end;
     justify-content: center;
+    text-align: center;
 }
 
 .register-box {
@@ -326,6 +338,11 @@ header {
     flex-direction: column;
     width: 300px;
     margin: 10px;
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+    -ms-animation: fadein 2s; /* Internet Explorer */
+    -o-animation: fadein 2s; /* Opera < 12.1 */
+    animation: fadein 2s;
 }
 
 .login-box {
@@ -333,6 +350,11 @@ header {
     flex-direction: column;
     margin: 10px;
     width: 300px;
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+    -ms-animation: fadein 2s; /* Internet Explorer */
+    -o-animation: fadein 2s; /* Opera < 12.1 */
+    animation: fadein 2s;
 }
 
 .app-wrapper {

@@ -1,6 +1,5 @@
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
-import { Link } from "react-router-dom";
+
 import axios from "./axios";
 
 export class Welcome extends React.Component {
@@ -8,10 +7,20 @@ export class Welcome extends React.Component {
         super(props);
         this.state = {
             data: {},
-            error: ""
+            error: "",
+            show: false
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         // this.handleChangeLogin = this.handleChangeLogin.bind(this);
+    }
+
+    handleClick() {
+        this.setState({
+            data: {},
+            show: !this.state.show,
+            error: ""
+        });
     }
 
     handleChange(e) {
@@ -106,90 +115,100 @@ export class Welcome extends React.Component {
             <div className="welcome-wrapper">
                 <div className="welcome-background"> </div>
                 <div className="welcome-box">
-                    <div className="register-box">
-                        {this.state.error && (
-                            <p className="error-message">{this.state.error}</p>
-                        )}
-                        <input
-                            value={this.state.data.first}
-                            name="first"
-                            type="text"
-                            onChange={this.handleChange}
-                            placeholder="First name"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <input
-                            name="last"
-                            type="text"
-                            onChange={this.handleChange}
-                            placeholder="Last name"
-                            autoComplete="new-password"
-                            required
-                        />
+                    {this.state.show && (
+                        <div className="register-box">
+                            {this.state.error && (
+                                <p className="error-message">
+                                    {this.state.error}
+                                </p>
+                            )}
+                            <input
+                                value={this.state.data.first}
+                                name="first"
+                                type="text"
+                                onChange={this.handleChange}
+                                placeholder="First name"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <input
+                                name="last"
+                                type="text"
+                                onChange={this.handleChange}
+                                placeholder="Last name"
+                                autoComplete="new-password"
+                                required
+                            />
 
-                        <input
-                            value={this.state.data.emailReg}
-                            name="emailReg"
-                            type="email"
-                            onChange={this.handleChange}
-                            placeholder="Email address"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <input
-                            name="password1"
-                            type="password"
-                            onChange={this.handleChange}
-                            placeholder="Password"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <input
-                            name="password2"
-                            type="password"
-                            onChange={this.handleChange}
-                            placeholder="Password again"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <button
-                            className="welcome-button"
-                            onClick={() => this.submitRegister()}
-                        >
-                            Register
-                        </button>
-                    </div>
+                            <input
+                                value={this.state.data.emailReg}
+                                name="emailReg"
+                                type="email"
+                                onChange={this.handleChange}
+                                placeholder="Email address"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <input
+                                name="password1"
+                                type="password"
+                                onChange={this.handleChange}
+                                placeholder="Password"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <input
+                                name="password2"
+                                type="password"
+                                onChange={this.handleChange}
+                                placeholder="Password again"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <button
+                                className="welcome-button"
+                                onClick={() => this.submitRegister()}
+                            >
+                                Register
+                            </button>
+                            <p onClick={this.handleClick}>Log in</p>
+                        </div>
+                    )}
 
-                    <div className="login-box">
-                        {this.state.error && (
-                            <p className="error-message">{this.state.error}</p>
-                        )}
-                        <input
-                            value={this.state.data.email}
-                            name="emailLogin"
-                            type="email"
-                            onChange={this.handleChange}
-                            placeholder="Email address"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <input
-                            value={this.state.data.password}
-                            name="password"
-                            type="password"
-                            onChange={this.handleChange}
-                            placeholder="Password"
-                            autoComplete="new-password"
-                            required
-                        />
-                        <button
-                            className="welcome-button"
-                            onClick={() => this.submitLogin()}
-                        >
-                            Login
-                        </button>
-                    </div>
+                    {!this.state.show && (
+                        <div className="login-box">
+                            {this.state.error && (
+                                <p className="error-message">
+                                    {this.state.error}
+                                </p>
+                            )}
+                            <input
+                                value={this.state.data.email}
+                                name="emailLogin"
+                                type="email"
+                                onChange={this.handleChange}
+                                placeholder="Email address"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <input
+                                value={this.state.data.password}
+                                name="password"
+                                type="password"
+                                onChange={this.handleChange}
+                                placeholder="Password"
+                                autoComplete="new-password"
+                                required
+                            />
+                            <button
+                                className="welcome-button"
+                                onClick={() => this.submitLogin()}
+                            >
+                                Login
+                            </button>
+                            <p onClick={this.handleClick}>Register</p>
+                        </div>
+                    )}
                 </div>
             </div>
         );

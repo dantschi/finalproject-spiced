@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "./axios";
+import example from "./example.json";
 
 export class Recorder extends React.Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export class Recorder extends React.Component {
 
     componentDidMount() {
         this.props.closeMenu();
+        console.log("JSON example", example);
     }
 
     record() {
@@ -31,12 +33,20 @@ export class Recorder extends React.Component {
             mediaRecorder.addEventListener("dataavailable", event => {
                 audioChunks.push(event.data);
             });
+            this.setState({
+                onRecord: true
+            });
             this.audioDetails.start = new Date();
+
             mediaRecorder.addEventListener("stop", () => {
+                this.setState({
+                    onRecord: false
+                });
                 // let formData = new FormData();
                 const audioBlob = new Blob(audioChunks, {
                     type: "audio/webm"
                 });
+                const audioUrl = URL.createObjectURL(audioBlob);
 
                 this.audioDetails.stop = new Date();
                 this.audioDetails.length =
@@ -44,7 +54,10 @@ export class Recorder extends React.Component {
                 console.log("length", this.audioDetails.length);
 
                 // formData.append("rec", audioBlob);
-                this.props.handleFileChange(audioBlob);
+                this.props.handleFileChange({
+                    data: audioBlob,
+                    tempUrl: audioUrl
+                });
                 // axios
                 //     .post("/audio-recorded", formData)
                 //     .then(rslt => {
@@ -82,15 +95,19 @@ export class Recorder extends React.Component {
         return (
             <div className="rec-container">
                 <div className="rec-buttons">
-                    <div className="button">
-                        <div onClick={this.record} className="btn-record" />
-                    </div>
-                    <div className="button">
-                        <div
-                            onClick={this.stopRecording}
-                            className="btn-stopRecord"
-                        />
-                    </div>
+                    {!this.state.onRecord && (
+                        <div className="button">
+                            <div onClick={this.record} className="btn-record" />
+                        </div>
+                    )}
+                    {this.state.onRecord && (
+                        <div className="button">
+                            <div
+                                onClick={this.stopRecording}
+                                className="btn-stopRecord"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         );
