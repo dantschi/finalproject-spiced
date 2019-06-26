@@ -196,33 +196,75 @@ app.get("/getuserdata", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
-// AUDIO RECORDED
+// ADD LESSON WITH AUDIO
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/add-lesson", uploader.single("rec"), s3.upload, async function(
-    req,
-    res
-) {
+app.post(
+    "/add-lesson-with-audio",
+    uploader.single("rec"),
+    s3.upload,
+    async function(req, res) {
+        console.log("req.body", req.body);
+        let {
+            goal,
+            title,
+            externalUrl,
+            desc,
+            challenge,
+            categories
+        } = req.body;
+        let audioUrl =
+            "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
+        try {
+            let rslt = await db.addLesson(
+                req.session.userId,
+                title,
+                desc,
+                externalUrl,
+                challenge,
+                goal,
+                categories,
+                audioUrl
+            );
+
+            console.log("/add-lesson-with success", rslt);
+            res.json(rslt);
+        } catch (err) {
+            console.log("/add-lesson-with error", err);
+        }
+    }
+);
+
+/////////////////////////////////////////////////////////////
+// ADD LESSON WITHOUT AUDIO
+////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+app.post("/add-lesson-without-audio", async (req, res) => {
     console.log("req.body", req.body);
-    let { goal, title, externalUrl, desc, challenge, categories } = req.body;
-    let audioUrl =
-        "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
+    let {
+        goal,
+        title,
+        externalUrl,
+        description,
+        challenge,
+        categories
+    } = req.body;
+
     try {
         let rslt = await db.addLesson(
             req.session.userId,
             title,
-            desc,
+            description,
             externalUrl,
             challenge,
             goal,
-            categories,
-            audioUrl
+            categories
         );
 
-        console.log("/add-lesson success", rslt);
+        console.log("/add-lesson-without success", rslt);
         res.json(rslt);
     } catch (err) {
-        console.log("/add-lesson error", err);
+        console.log("/add-lesson-without error", err);
     }
 });
 

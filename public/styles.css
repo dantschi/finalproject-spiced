@@ -165,6 +165,12 @@ header {
     display: flex;
     flex-direction: column;
     padding: 5px;
+    /* line-height: 1.5em; */
+}
+
+.lesson-box-left h3,
+.lesson-box-right h3 {
+    margin-top: 5px;
 }
 
 .usersLessons-container {
@@ -285,6 +291,7 @@ header {
 .profilepic {
     width: 50px;
     height: 50px;
+    border-radius: 5px;
 }
 
 .welcome-wrapper {
@@ -366,6 +373,10 @@ header {
 
 .profile-pic:hover {
     cursor: pointer;
+}
+
+.profile-pic-container + p {
+    padding: 5px;
 }
 
 .profile-container {

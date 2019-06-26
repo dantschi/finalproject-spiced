@@ -82,7 +82,7 @@ module.exports.addLesson = function addLesson(
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
         RETURNING *;
         `,
-        [id, title, desc, exturl, ch, goal, categories, record_url]
+        [id, title, desc, exturl, ch, goal, categories, record_url || null]
     );
 };
 
@@ -96,8 +96,7 @@ module.exports.getLessons = function getLessons() {
         users.imageurl AS "creator_img"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
-        ORDER BY id DESC
-        LIMIT 50;
+        ORDER BY id DESC;
         `,
         []
     );
@@ -111,12 +110,23 @@ module.exports.getLessonData = function getLessonData(id) {
         lessons.categories, lessons.created_at, lessons.user_id,
         lessons.recording_url,
         users.first AS "creator_first", users.last AS "creator_last",
-        users.imageurl AS "creator_img"
+        users.imageurl AS "creator_img", started_lessons.id AS "started_id", started_lessons.completed AS "completed",
+        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
+        LEFT JOIN started_lessons on users.id=started_lessons.user_id AND started_lessons.lesson_id = $1
         WHERE lessons.id=$1;
         `,
         [id]
+    );
+};
+
+module.exports.getStartedLessonData = function getStartedLessonData(uid, lid) {
+    return db.query(
+        `
+
+        `,
+        [uid, lid]
     );
 };
 

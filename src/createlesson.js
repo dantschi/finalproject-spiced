@@ -95,23 +95,57 @@ class CreateLesson extends React.Component {
                 error: "Please fill out the required fields"
             });
         } else {
-            var formData = (this.formData = new FormData());
-            formData.append("rec", this.state.tempData);
-            this.formData.append("goal", goal);
-            this.formData.append("title", goal);
-            this.formData.append("externalUrl", externalUrl);
-            this.formData.append("desc", description);
-            this.formData.append("challenge", challenge);
-            this.formData.append("categories", categories);
-            // socket.emit("newLesson", this.state.data);
-            axios
-                .post("/add-lesson", this.formData)
-                .then(rslt => {
-                    console.log(rslt);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            if (!this.state.tempRec) {
+                axios
+                    .post("/add-lesson-without-audio", this.state.data)
+                    .then(rslt => {
+                        console.log(rslt);
+                        this.setState({
+                            data: {
+                                categories: "",
+                                challenge: "",
+                                description: "",
+                                goal: "",
+                                title: "",
+                                externalUrl: ""
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                let formData = new FormData();
+                formData.append("goal", goal);
+                formData.append("title", title);
+                formData.append("externalUrl", externalUrl);
+                formData.append("desc", description);
+                formData.append("challenge", challenge);
+                formData.append("categories", categories);
+                formData.append("rec", this.state.tempRec);
+                // socket.emit("newLesson", this.state.data);
+                axios
+                    .post("/add-lesson-with-audio", formData)
+                    .then(rslt => {
+                        console.log(rslt);
+                        this.setState({
+                            ...this.state,
+                            data: {
+                                categories: "",
+                                challenge: "",
+                                description: "",
+                                goal: "",
+                                title: "",
+                                externalUrl: ""
+                            },
+                            tempUrl: "",
+                            tempRec: ""
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
         }
 
         // console.log("uploader file:", this.state.file);
@@ -142,6 +176,7 @@ class CreateLesson extends React.Component {
                             <h3 className="input-label">Goal of this lesson</h3>
                             <div className="input-wrapper">
                                 <input
+                                    value={this.state.data.goal}
                                     name="goal"
                                     type="text"
                                     onChange={this.handleChange}
@@ -155,6 +190,7 @@ class CreateLesson extends React.Component {
                             <p className="input-label">Title</p>
                             <div className="input-wrapper">
                                 <input
+                                    value={this.state.data.title}
                                     name="title"
                                     type="text"
                                     await
@@ -169,6 +205,7 @@ class CreateLesson extends React.Component {
                             <p className="input-label">External url</p>
                             <div className="input-wrapper">
                                 <input
+                                    value={this.state.data.externalUrl}
                                     name="externalUrl"
                                     type="text"
                                     onChange={this.handleChange}
@@ -183,6 +220,7 @@ class CreateLesson extends React.Component {
                             <p className="input-label">Description</p>
                             <div className="input-wrapper">
                                 <textarea
+                                    value={this.state.data.description}
                                     name="description"
                                     type="text"
                                     onChange={this.handleChange}
@@ -193,6 +231,7 @@ class CreateLesson extends React.Component {
                             <p className="input-label">Challenge</p>
                             <div className="input-wrapper">
                                 <input
+                                    value={this.state.data.challenge}
                                     name="challenge"
                                     type="text"
                                     onChange={this.handleChange}
@@ -205,6 +244,7 @@ class CreateLesson extends React.Component {
                             <p className="input-label">Categories</p>
                             <div className="input-wrapper">
                                 <input
+                                    value={this.state.data.categories}
                                     name="categories"
                                     type="text"
                                     onChange={this.handleChange}
@@ -235,7 +275,7 @@ class CreateLesson extends React.Component {
                                     <button
                                         onClick={() => this.deleteRecording()}
                                     >
-                                        Delete this recording you are not
+                                        Delete this recording if you are not
                                         satisfied with it
                                     </button>
                                 </div>

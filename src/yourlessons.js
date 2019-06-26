@@ -2,6 +2,7 @@ import React from "react";
 // import { Link } from "react-router-dom";
 import axios from "./axios";
 import { usersLessons, ownLessons } from "./actions";
+import { Link } from "react-router-dom";
 
 // import { socket } from "./socket";
 
@@ -49,7 +50,9 @@ class YourLessons extends React.Component {
                         {!!this.props.completed &&
                             this.props.completed.map(lesson => (
                                 <div key={lesson.id}>
-                                    <p>{lesson.id}</p>
+                                    <Link to={`/lesson/${lesson.id}`}>
+                                        <p>{lesson.id}</p>
+                                    </Link>
                                 </div>
                             ))}
                     </div>
@@ -58,7 +61,9 @@ class YourLessons extends React.Component {
                         {!!this.props.onGoing &&
                             this.props.onGoing.map(lesson => (
                                 <div key={lesson.id}>
-                                    <p>{lesson.id}</p>
+                                    <Link to={`/lesson/${lesson.id}`}>
+                                        <p>{lesson.id}</p>
+                                    </Link>
                                 </div>
                             ))}
                     </div>
@@ -67,7 +72,9 @@ class YourLessons extends React.Component {
                         {!!this.props.ownLessons &&
                             this.props.ownLessons.map(lesson => (
                                 <div key={lesson.id}>
-                                    <p>{lesson.id}</p>
+                                    <Link to={`/lesson/${lesson.id}`}>
+                                        <p>{lesson.id}</p>
+                                    </Link>
                                 </div>
                             ))}
                     </div>

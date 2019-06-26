@@ -12,9 +12,6 @@ export class Menu extends React.Component {
         return (
             <div className="aside-menu">
                 <ul className="menu-list">
-                    <Link to="/profile">
-                        <li className="aside-menu-item">Profile</li>
-                    </Link>
                     <Link to="/lessons" onClick={() => this.props.toggleMenu()}>
                         <li className="aside-menu-item">Lessons</li>
                     </Link>
@@ -35,6 +32,9 @@ export class Menu extends React.Component {
                         onClick={() => this.props.toggleMenu()}
                     >
                         <li>Recorder</li>
+                    </Link>
+                    <Link to="/profile">
+                        <li className="aside-menu-item">Profile</li>
                     </Link>
                     <Link to="/logout" onClick={() => this.props.toggleMenu()}>
                         <li className="aside-menu-item">Log out</li>
