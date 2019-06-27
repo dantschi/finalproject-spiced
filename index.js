@@ -432,18 +432,40 @@ app.post("/submit-lesson-without-audio", (req, res) => {
 // SUBMIT LESSON WITH AUDIO
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-app.post("/submit-lesson-with-audio", (req, res) => {
-    console.log("/submit-lesson-with-audio", req.body, req.params);
+app.post(
+    "/submit-lesson-with-audio",
+    uploader.single("rec"),
+    s3.upload,
+    async function(req, res) {
+        console.log("/submit-lesson-with-audio", req.body, req.params);
 
-    // db.submitWithAudio(req.session.userId, req.body.answer, req.body.)
-    //     .then(rslt => {
-    //         console.log(rslt);
-    //         res.json(rslt);
-    //     })
-    //     .catch(err => {
-    //         console.log("submit-lesson-without-audio query result", err);
-    //     });
-});
+        let audioUrl =
+            "https://s3.amazonaws.com/danielvarga-salt/" + req.file.filename;
+
+        db.submitAnswer(
+            req.session.userId,
+            req.body.parent_lesson_id,
+            req.body.answer,
+            audioUrl
+        )
+            .then(rslt => {
+                console.log(rslt);
+                res.json(rslt);
+            })
+            .catch(err => {
+                console.log("submit-lesson-with-audio query result", err);
+            });
+
+        // db.submitWithAudio(req.session.userId, req.body.answer, req.body.)
+        //     .then(rslt => {
+        //         console.log(rslt);
+        //         res.json(rslt);
+        //     })
+        //     .catch(err => {
+        //         console.log("submit-lesson-without-audio query result", err);
+        //     });
+    }
+);
 
 /////////////////////////////////////////////////////////////
 // GET STARTED LESSONS
@@ -528,6 +550,10 @@ io.on("connection", async socket => {
             let rslt = await db.tryAgain(ans.user_id, ans.lesson_parent_id);
             console.log("tryAgain query result");
             socket.emit("answerSentBack", rslt);
+        });
+
+        socket.on("newLesson", async lesson => {
+            console.log("newLesson details", lesson);
         });
         // socket.on("newLesson", async lesson => {
         //     console.log("newLesson", lesson);

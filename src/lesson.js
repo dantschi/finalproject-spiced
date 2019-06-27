@@ -57,13 +57,12 @@ class Lesson extends React.Component {
     deleteRecording() {
         this.setState({
             tempUrl: "",
-            tempData: null
+            tempRec: null
         });
     }
 
     handleFileChange(e) {
         console.log("handleFileChange", e);
-
         this.setState({
             tempRec: e.data,
             tempUrl: e.tempUrl
@@ -107,10 +106,18 @@ class Lesson extends React.Component {
                 });
         } else {
             console.log("submit lesson with audio");
-            let formData = new FormData();
+            console.log("this.state.tempRec", this.state.tempRec);
+            const formData = new FormData();
             formData.append("rec", this.state.tempRec);
             formData.append("answer", this.state.data.textanswer);
-            // socket.emit("newLesson", this.state.data);
+            formData.append("parent_lesson_id", this.state.lesson.parent_id);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ", " + pair[1]);
+            }
+            socket.emit("newLesson", {
+                text: this.state.data.textanswer,
+                formData: formData
+            });
             axios
                 .post("/submit-lesson-with-audio", formData)
                 .then(rslt => {
