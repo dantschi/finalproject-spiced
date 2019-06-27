@@ -25,6 +25,7 @@ class Lesson extends React.Component {
         this.handleFileChange = this.handleFileChange.bind(this);
         this.deleteRecording = this.deleteRecording.bind(this);
         this.loopToggle = this.loopToggle.bind(this);
+        this.acceptAnswer = this.acceptAnswer.bind(this);
     }
 
     componentDidMount() {
@@ -142,14 +143,21 @@ class Lesson extends React.Component {
             });
     }
 
-    acceptAnswer(e) {
-        console.log("accept answer fires", e);
+    acceptAnswer(e, i) {
+        console.log("accept answer fires", e, i);
         socket.emit("acceptAnswer", {
             user_id: e,
             lesson_parent_id: this.state.lesson.parent_id
         });
         socket.on("answerAccepted", rslt => {
             console.log(rslt);
+            let updated = this.state.started;
+            updated[i].completed = true;
+
+            this.setState({
+                ...this.state,
+                started: updated
+            });
         });
     }
 
@@ -247,7 +255,7 @@ class Lesson extends React.Component {
                                     People who started lesson #
                                     {this.state.lesson.parent_id}:
                                 </h4>
-                                {this.state.started.map(user => (
+                                {this.state.started.map((user, index) => (
                                     <div
                                         className="user-box"
                                         key={user.user_id}
@@ -256,17 +264,22 @@ class Lesson extends React.Component {
                                             {user.first} {user.last}
                                         </p>
                                         <p>Answer: {user.text_answer}</p>
-                                        <p>Recording: </p>
-                                        <AudioPlayer
-                                            src={this.state.tempUrl}
-                                            preload="none"
-                                        />
+                                        {user.audio_answer && (
+                                            <React.Fragment>
+                                                <p>Recording: </p>
+                                                <AudioPlayer
+                                                    src={user.audio_answer}
+                                                    preload="none"
+                                                />
+                                            </React.Fragment>
+                                        )}
                                         {user.completed == false && (
                                             <div>
                                                 <button
                                                     onClick={() =>
                                                         this.acceptAnswer(
-                                                            user.user_id
+                                                            user.user_id,
+                                                            index
                                                         )
                                                     }
                                                 >
@@ -285,13 +298,17 @@ class Lesson extends React.Component {
                                 ))}
                             </div>
                         )}
-
-                        {!creator && notStarted && (
+                        {completed && (
+                            <div>
+                                <h1>Completed!!!!!!!!</h1>
+                            </div>
+                        )}
+                        {!completed && !creator && notStarted && (
                             <button onClick={this.startThisLesson}>
                                 Start this lesson
                             </button>
                         )}
-                        {!creator && !notStarted && (
+                        {!completed && !creator && !notStarted && (
                             <div>
                                 <h1>Not creator, started but not completed!</h1>
                                 <div className="input-row right">
@@ -364,11 +381,6 @@ class Lesson extends React.Component {
                                         Save notes
                                     </button>
                                 </div>
-                            </div>
-                        )}
-                        {completed && (
-                            <div>
-                                <h1>Completed!!!!!!!!</h1>
                             </div>
                         )}
                     </div>

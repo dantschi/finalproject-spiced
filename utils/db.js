@@ -96,8 +96,10 @@ module.exports.getLessonStarters = function getLessonStarters(id) {
         started_lessons.completed, started_lessons.user_id,
         users.id AS "user_id", users.first,users.last,users.imageurl
         FROM started_lessons
+
         LEFT JOIN users on started_lessons.user_id = users.id
         WHERE started_lessons.parent_lesson_id = $1
+        ORDER BY started_lessons.id DESC
 
         `,
         [id]
@@ -176,7 +178,8 @@ module.exports.getLessonData = function getLessonData(id, uid) {
         lessons.recording_url,
         users.first AS "creator_first", users.last AS "creator_last",
         users.imageurl AS "creator_img",
-        started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed"
+        started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed",
+        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
         LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id AND started_lessons.user_id = $2
