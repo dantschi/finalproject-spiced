@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "./axios";
-import example from "./example.json";
 
 export class Recorder extends React.Component {
     constructor(props) {
@@ -9,13 +8,12 @@ export class Recorder extends React.Component {
 
         this.record = this.record.bind(this);
         this.stopRecording = this.stopRecording.bind(this);
-
-        this.getNews = this.getNews.bind(this);
+        //
+        // this.getNews = this.getNews.bind(this);
     }
 
     componentDidMount() {
         this.props.closeMenu();
-        console.log("JSON example", example);
     }
 
     record() {
@@ -77,18 +75,6 @@ export class Recorder extends React.Component {
             console.log("stopRecord fires");
             this.mediaRecorder.stop();
         }
-    }
-
-    getNews() {
-        console.log("getNews");
-        axios
-            .get("/get-news")
-            .then(rslt => {
-                console.log("getNews rslt", rslt);
-            })
-            .catch(err => {
-                console.log("getNews error", err);
-            });
     }
 
     render() {

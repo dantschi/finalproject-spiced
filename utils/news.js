@@ -6,10 +6,9 @@ module.exports.getNews = function getNews(tag, cb) {
     const req = https
         .request(
             {
-                host: `https://newsapi.org/v2/everything?q=${tag}&apiKey=${newsApiKey}`,
-                port: null,
+                host: `https://newsapi.org/v2/everything`,
+                path: `?q=${tag}&apiKey=${newsApiKey}`,
                 method: "GET"
-                // path: `?=${tag}&apiKey=${newsApiKey}`
             },
             res => {
                 if (res.statusCode != 200) {

@@ -365,27 +365,26 @@ app.get("/get-lesson-data/:id", async (req, res) => {
     ])
         .then(rslt => {
             console.log("lesson data", rslt[1].rows[0]);
-            if (rslt[1].rows[0].external_url.startsWith("https://")) {
-                god.getOgDetails(
-                    rslt[1].rows[0].external_url,
-                    (err, result) => {
-                        if (err) {
-                            console.log("omg error", err);
-                        }
-                        console.log(
-                            "omg result",
-                            result,
-                            typeof rslt[1].rows[0],
-                            typeof result
-                        );
-
-                        rslt[1].rows[0].external_url = result;
-                        res.json([rslt[0].rows, rslt[1].rows]);
-                    }
-                );
-            } else {
-                res.json([rslt[0].rows, rslt[1].rows]);
-            }
+            res.json([rslt[0].rows, rslt[1].rows]);
+            // if (rslt[1].rows[0].external_url.startsWith("https://")) {
+            //     god.getOgDetails(
+            //         rslt[1].rows[0].external_url,
+            //         (err, result) => {
+            //             if (err) {
+            //                 console.log("omg error", err);
+            //             }
+            //             console.log(
+            //                 "omg result",
+            //                 result,
+            //                 typeof rslt[1].rows[0]
+            //             );
+            //             rslt[1].rows[0].external_url = result;
+            //             res.json([rslt[0].rows[0], rslt[1].rows]);
+            //         }
+            //     );
+            // } else {
+            //     res.json([rslt[0].rows[0], rslt[1].rows]);
+            // }
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -409,19 +408,41 @@ app.post("/start-lesson", (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////
-// SUBMIT LESSON
+// SUBMIT LESSON WITHOUT AUDIO
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/submit-lesson-without-audio", (req, res) => {
-    console.log("/submit-lesson-without-audio", req.params);
+    console.log("/submit-lesson-without-audio", req.body);
+    db.submitAnswer(
+        req.session.userId,
+        req.body.parent_lesson_id,
+        req.body.answer,
+        null
+    )
+        .then(rslt => {
+            console.log(rslt);
+            res.json(rslt);
+        })
+        .catch(err => {
+            console.log("submit-lesson-without-audio query result", err);
+        });
 });
 
 /////////////////////////////////////////////////////////////
-// SUBMIT LESSON
+// SUBMIT LESSON WITH AUDIO
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/submit-lesson-with-audio", (req, res) => {
-    console.log("/submit-lesson-without-audio", req.body);
+    console.log("/submit-lesson-with-audio", req.body, req.params);
+
+    // db.submitWithAudio(req.session.userId, req.body.answer, req.body.)
+    //     .then(rslt => {
+    //         console.log(rslt);
+    //         res.json(rslt);
+    //     })
+    //     .catch(err => {
+    //         console.log("submit-lesson-without-audio query result", err);
+    //     });
 });
 
 /////////////////////////////////////////////////////////////
@@ -500,6 +521,13 @@ io.on("connection", async socket => {
             let rslt = await db.acceptAnswer(ans.user_id, ans.lesson_parent_id);
             console.log("accept answer query result", rslt);
             socket.emit("answerAccepted", rslt);
+        });
+
+        socket.on("tryAgain", async ans => {
+            console.log("tryAgain details", ans);
+            let rslt = await db.tryAgain(ans.user_id, ans.lesson_parent_id);
+            console.log("tryAgain query result");
+            socket.emit("answerSentBack", rslt);
         });
         // socket.on("newLesson", async lesson => {
         //     console.log("newLesson", lesson);

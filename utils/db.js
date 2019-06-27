@@ -179,13 +179,36 @@ module.exports.getLessonData = function getLessonData(id, uid) {
         users.first AS "creator_first", users.last AS "creator_last",
         users.imageurl AS "creator_img",
         started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed",
-        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer"
+        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer",
+        started_lessons.notes AS "lesson_notes", started_lessons.submitted AS "lesson_submitted"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
         LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id AND started_lessons.user_id = $2
         WHERE lessons.id=$1;
         `,
         [id, uid]
+    );
+};
+
+module.exports.submitAnswer = function submitAnswer(uid, pid, answer, url) {
+    return db.query(
+        `
+        UPDATE started_lessons
+        SET text_answer=$3, audio_answer=$4, submitted=true
+        WHERE user_id=$1 AND parent_lesson_id = $2;
+        `,
+        [uid, pid, answer, url]
+    );
+};
+
+module.exports.tryAgain = function tryAgain(uid, pid) {
+    return db.query(
+        `
+        UPDATE started_lessons
+        SET submitted=false
+        WHERE user_id=$1 AND parent_lesson_id=$2
+        `,
+        [uid, pid]
     );
 };
 

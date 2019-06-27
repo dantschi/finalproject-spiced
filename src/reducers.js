@@ -43,7 +43,7 @@ export default function reducer(state = {}, action) {
             return { ...state, ownLessons: action.lessons };
         } else {
             let temp = state.ownLessons;
-            temp.push(action.lessons);
+            temp.concat(action.lessons);
             return { ...state, ownLessons: temp };
         }
         // console.log("usersLessons in r", action);

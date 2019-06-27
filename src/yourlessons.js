@@ -61,6 +61,21 @@ class YourLessons extends React.Component {
                             ))}
                     </div>
                     <div className="usersLessons-column">
+                        <h2>Submitted lessons, waiting for approval</h2>
+                        {!!this.props.submitted &&
+                            this.props.submitted.map(lesson => (
+                                <div key={lesson.parent_lesson_id}>
+                                    <Link
+                                        to={`/lesson/${
+                                            lesson.parent_lesson_id
+                                        }`}
+                                    >
+                                        <p>#{lesson.parent_lesson_id}</p>
+                                    </Link>
+                                </div>
+                            ))}
+                    </div>
+                    <div className="usersLessons-column">
                         <h2>Started lessons</h2>
                         {!!this.props.onGoing &&
                             this.props.onGoing.map(lesson => (
@@ -98,13 +113,16 @@ const mapStateToProps = state => {
         return {};
     } else {
         return {
-            completed: state.usersLessons
-                .reverse()
-                .filter(lesson => lesson.completed == true),
-            onGoing: state.usersLessons
-                .reverse()
-                .filter(lesson => lesson.completed == false),
-            ownLessons: state.ownLessons
+            completed: state.usersLessons.filter(
+                lesson => lesson.completed == true
+            ),
+            onGoing: state.usersLessons.filter(
+                lesson => lesson.completed == false && lesson.submitted == false
+            ),
+            ownLessons: state.ownLessons,
+            submitted: state.usersLessons.filter(
+                lesson => lesson.completed == false && lesson.submitted == true
+            )
         };
     }
 };

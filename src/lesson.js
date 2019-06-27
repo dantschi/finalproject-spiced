@@ -26,6 +26,9 @@ class Lesson extends React.Component {
         this.deleteRecording = this.deleteRecording.bind(this);
         this.loopToggle = this.loopToggle.bind(this);
         this.acceptAnswer = this.acceptAnswer.bind(this);
+        this.submitLesson = this.submitLesson.bind(this);
+        this.tryAgain = this.tryAgain.bind(this);
+        // this.handleChangeNotes = this.handleChangeNotes.bind(this);
     }
 
     componentDidMount() {
@@ -35,10 +38,13 @@ class Lesson extends React.Component {
             .then(rslt => {
                 console.log("/get-lesson-data GET response from server", rslt);
 
-                this.setState({
-                    lesson: rslt.data[1]["0"],
-                    started: rslt.data[0]
-                });
+                this.setState(
+                    {
+                        started: rslt.data[0],
+                        lesson: rslt.data[1][0]
+                    },
+                    () => console.log("this.state", this.state)
+                );
             });
     }
 
@@ -65,7 +71,7 @@ class Lesson extends React.Component {
     }
 
     handleChange(e) {
-        console.log(this.state);
+        // console.log(this.state);
         this.setState({
             data: {
                 ...this.state.data,
@@ -74,31 +80,36 @@ class Lesson extends React.Component {
         });
     }
 
+    // handleChangeNotes(e) {
+    //     this.setState({
+    //         lesson: {
+    //             ...this.state.lesson,
+    //             lesson_notes: e
+    //         }
+    //     });
+    // }
+
     submitLesson() {
-        if (!this.state.tempRec) {
+        console.log("submitLesson this.state", this.state);
+        if (!this.state.tempUrl) {
+            console.log("submit lesson without audio");
+            console.log("textAnswer", this.state.data.textanswer);
             axios
-                .post("/submit-lesson-without-audio", this.state.data)
+                .post("/submit-lesson-without-audio", {
+                    answer: this.state.data.textanswer,
+                    parent_lesson_id: this.state.lesson.parent_id
+                })
                 .then(rslt => {
-                    console.log(rslt);
-                    // this.setState({
-                    //     data: {
-                    //         categories: "",
-                    //         challenge: "",
-                    //         description: "",
-                    //         goal: "",
-                    //         title: "",
-                    //         externalUrl: ""
-                    //     }
-                    // });
+                    console.log("submit lesson result", rslt);
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log("submit lesson error", err);
                 });
         } else {
+            console.log("submit lesson with audio");
             let formData = new FormData();
-
             formData.append("rec", this.state.tempRec);
-            formData.append("answer", this.state.textanswer);
+            formData.append("answer", this.state.data.textanswer);
             // socket.emit("newLesson", this.state.data);
             axios
                 .post("/submit-lesson-with-audio", formData)
@@ -161,6 +172,24 @@ class Lesson extends React.Component {
         });
     }
 
+    tryAgain(e, i) {
+        console.log("accept answer fires", e, i);
+        socket.emit("tryAgain", {
+            user_id: e,
+            lesson_parent_id: this.state.lesson.parent_id
+        });
+        socket.on("answerSentBack", rslt => {
+            console.log(rslt);
+            let updated = this.state.started;
+            updated[i].lesson_submitted = false;
+
+            this.setState({
+                ...this.state,
+                started: updated
+            });
+        });
+    }
+
     render() {
         if (!this.state.lesson || !this.props.userData) {
             return (
@@ -173,12 +202,16 @@ class Lesson extends React.Component {
                 this.props.userData.id == this.state.lesson.creator_id;
             let notStarted = this.state.lesson.completed === null;
             let completed = this.state.lesson.completed == true;
+            let submitted = this.state.lesson.lesson_submitted == true;
+            let textAnswer = this.state.lesson.text_answer;
+            let audioAnswer = this.state.lesson.audio_answer;
+            let tempAudio = this.state.tempUrl;
 
-            console.log("creator", creator);
-            console.log("notStarted", notStarted);
-            console.log("completed", completed);
-            console.log("!creator && notStarted", !creator && notStarted);
-            console.log("lesson this.state, props", this.state, this.props);
+            // console.log("creator", creator);
+            // console.log("notStarted", notStarted);
+            // console.log("completed", completed);
+            // console.log("!creator && notStarted", !creator && notStarted);
+            // console.log("lesson this.state, props", this.state, this.props);
             return (
                 <div className="lesson-container">
                     <div className="lesson-box-left">
@@ -245,6 +278,8 @@ class Lesson extends React.Component {
                     </div>
 
                     <div className="lesson-box-right">
+                        {/* CREATOR */}
+
                         {creator && (
                             <div className="lesson-starters-list">
                                 <h3>
@@ -285,6 +320,16 @@ class Lesson extends React.Component {
                                                 >
                                                     Accept answer
                                                 </button>
+                                                <button
+                                                    onClick={() => {
+                                                        this.tryAgain(
+                                                            user.user_id,
+                                                            index
+                                                        );
+                                                    }}
+                                                >
+                                                    Try again
+                                                </button>
                                             </div>
                                         )}
                                         {user.completed == true && (
@@ -298,90 +343,115 @@ class Lesson extends React.Component {
                                 ))}
                             </div>
                         )}
+
+                        {/* COMPLETED */}
+
                         {completed && (
                             <div>
-                                <h1>Completed!!!!!!!!</h1>
+                                <h2>You have already completed this lesson</h2>
+                                <h3>Your answer was:</h3>
+                                <p>{textAnswer}</p>
+                                {audioAnswer && (
+                                    <AudioPlayer
+                                        src={audioAnswer}
+                                        preload="none"
+                                    />
+                                )}
                             </div>
                         )}
-                        {!completed && !creator && notStarted && (
+
+                        {/* NOT CREATOR, NOT COMPLETED, NOT STARTED  */}
+
+                        {!creator && !completed && notStarted && (
                             <button onClick={this.startThisLesson}>
                                 Start this lesson
                             </button>
                         )}
-                        {!completed && !creator && !notStarted && (
-                            <div>
-                                <h1>Not creator, started but not completed!</h1>
-                                <div className="input-row right">
-                                    <p className="input-label no-width">
-                                        Your answer
-                                    </p>
-                                    <div className="input-wrapper wide">
-                                        <textarea
-                                            name="textanswer"
-                                            type="text"
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                {!this.state.tempUrl && (
-                                    <div className="input-row right">
-                                        <p className="input-label no-width">
-                                            Recording
-                                        </p>
+
+                        {/* NOT CREATOR, NOT COMPLETED, STARTED */}
+
+                        {!creator && !completed && !notStarted && (
+                            // NOT CREATOR, NOT COMPLETED, STARTED || SUBMITTED
+
+                            <React.Fragment>
+                                {submitted && (
+                                    // NOT CREATOR, NOT COMPLETED, STARTED, SUBMITTED, NOT APPROVED
+
+                                    <React.Fragment>
+                                        <div>
+                                            <p>
+                                                You have submitted this lesson,
+                                                but it has not been approved
+                                                yet.
+                                            </p>
+
+                                            <h2>Your solution was:</h2>
+                                            <p>{textAnswer}</p>
+                                            {audioAnswer && (
+                                                <AudioPlayer
+                                                    src={audioAnswer}
+                                                    preload="none"
+                                                />
+                                            )}
+                                        </div>
+                                    </React.Fragment>
+                                )}
+
+                                {/* NOT CREATOR, NOT COMPLETED, STARTED || NOT SUBMITTED */}
+
+                                {!submitted && (
+                                    <React.Fragment>
+                                        <p>Your answer</p>
                                         <div className="input-wrapper wide">
-                                            <Recorder
-                                                closeMenu={this.props.closeMenu}
-                                                handleFileChange={
-                                                    this.handleFileChange
-                                                }
+                                            <textarea
+                                                name="textanswer"
+                                                type="text"
+                                                onChange={this.handleChange}
                                             />
                                         </div>
-                                    </div>
+
+                                        {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO NOT RECORDED */}
+
+                                        {!this.state.tempUrl && (
+                                            <React.Fragment>
+                                                <p>Your audio-answer</p>
+                                                <Recorder
+                                                    closeMenu={
+                                                        this.props.closeMenu
+                                                    }
+                                                    handleFileChange={
+                                                        this.handleFileChange
+                                                    }
+                                                />
+                                            </React.Fragment>
+                                        )}
+
+                                        {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
+
+                                        {this.state.tempUrl && (
+                                            <React.Fragment>
+                                                <p>Your audio-answer</p>
+                                                <AudioPlayer
+                                                    src={this.state.tempUrl}
+                                                    preload="none"
+                                                />
+                                                <button
+                                                    onClick={() =>
+                                                        this.deleteRecording()
+                                                    }
+                                                >
+                                                    Delete this recording if you
+                                                    are not satisfied with it
+                                                </button>
+                                            </React.Fragment>
+                                        )}
+
+                                        <button onClick={this.submitLesson}>
+                                            Submit this lesson
+                                        </button>
+                                    </React.Fragment>
                                 )}
-                                {this.state.tempUrl && (
-                                    <div className="input-row right">
-                                        <p className="input-label no-width">
-                                            Your recording
-                                        </p>
-                                        <div className="input-wrapper wide">
-                                            <AudioPlayer
-                                                src={this.state.tempUrl}
-                                                preload="none"
-                                            />
-                                            <button
-                                                onClick={() =>
-                                                    this.deleteRecording()
-                                                }
-                                            >
-                                                Delete this recording if you are
-                                                not satisfied with it
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                                <div className="input-row">
-                                    <button onClick={this.submitLesson}>
-                                        Submit this lesson
-                                    </button>
-                                </div>
-                                <div className="input-row right">
-                                    <p className="input-label no-width">
-                                        Notes
-                                    </p>
-                                    <div className="input-wrapper wide">
-                                        <textarea
-                                            name="notes"
-                                            type="text"
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="input-row right">
-                                    <button onClick={this.saveNotes}>
-                                        Save notes
-                                    </button>
-                                </div>
-                            </div>
+                            </React.Fragment>
                         )}
                     </div>
                 </div>
@@ -402,3 +472,26 @@ const mapStateToProps = (state, props) => {
 };
 
 export default connect(mapStateToProps)(Lesson);
+
+// optional
+// <div className="input-row right">
+//     <p className="input-label no-width">
+//         Notes
+//     </p>
+//
+//     <div className="input-wrapper wide">
+//         <textarea
+//             defaultValue={
+//                 this.state.lesson.lesson_notes
+//             }
+//             name="notes"
+//             type="text"
+//             onChange={this.handleChangeNotes}
+//         />
+//     </div>
+// </div>
+// <div className="input-row right">
+//     <button onClick={this.saveNotes}>
+//         Save notes
+//     </button>
+// </div>
