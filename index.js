@@ -366,29 +366,29 @@ app.get("/get-lesson-data/:id", async (req, res) => {
         .then(rslt => {
             console.log("lesson data", rslt[1].rows[0]);
             res.json([rslt[0].rows, rslt[1].rows]);
-            if (rslt[1].rows[0].external_url.startsWith("https://")) {
-                god.getOgDetails(
-                    rslt[1].rows[0].external_url,
-                    (err, result) => {
-                        if (err) {
-                            console.log("omg error", err);
-                            res.json(
-                                rslt[1].rows[0].external_url,
-                                rslt[1].rows
-                            );
-                        }
-                        console.log(
-                            "omg result",
-                            result,
-                            typeof rslt[1].rows[0]
-                        );
-                        rslt[1].rows[0].external_url = result;
-                        res.json([rslt[0].rows[0], rslt[1].rows]);
-                    }
-                );
-            } else {
-                res.json([rslt[0].rows[0], rslt[1].rows]);
-            }
+            // if (rslt[1].rows[0].external_url.startsWith("https://")) {
+            //     god.getOgDetails(
+            //         rslt[1].rows[0].external_url,
+            //         (err, result) => {
+            //             if (err) {
+            //                 console.log("omg error", err);
+            //                 res.json(
+            //                     rslt[1].rows[0].external_url,
+            //                     rslt[1].rows
+            //                 );
+            //             }
+            //             console.log(
+            //                 "omg result",
+            //                 result,
+            //                 typeof rslt[1].rows[0]
+            //             );
+            //             rslt[1].rows[0].external_url = result;
+            //             res.json([rslt[0].rows[0], rslt[1].rows]);
+            //         }
+            //     );
+            // } else {
+            //     res.json([rslt[0].rows[0], rslt[1].rows]);
+            // }
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -546,14 +546,14 @@ io.on("connection", async socket => {
             console.log("accept answer details", ans);
             let rslt = await db.acceptAnswer(ans.user_id, ans.lesson_parent_id);
             console.log("accept answer query result", rslt);
-            socket.emit("answerAccepted", rslt);
+            socket.emit("answerAccepted", rslt.rows[0]);
         });
 
         socket.on("tryAgain", async ans => {
             console.log("tryAgain details", ans);
             let rslt = await db.tryAgain(ans.user_id, ans.lesson_parent_id);
-            console.log("tryAgain query result");
-            socket.emit("answerSentBack", rslt);
+            console.log("tryAgain query result", rslt);
+            socket.emit("answerSentBack", rslt.rows[0]);
         });
 
         socket.on("newLesson", async lesson => {

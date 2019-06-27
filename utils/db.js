@@ -54,15 +54,28 @@ module.exports.changeUserImage = function changeUserImage(id, url) {
     );
 };
 
-module.exports.acceptAnswer = function acceptAnswer(uid, lpid) {
+module.exports.acceptAnswer = function acceptAnswer(uid, plid, note) {
     return db.query(
         `
         UPDATE started_lessons
         SET
-        completed=true
-        WHERE user_id=$1 AND parent_lesson_id=$2;
+        completed=true, author_notes=$3
+        WHERE user_id=$1 AND parent_lesson_id=$2
+        RETURNING *;
         `,
-        [uid, lpid]
+        [uid, plid, note]
+    );
+};
+
+module.exports.tryAgain = function tryAgain(uid, plid, note) {
+    return db.query(
+        `
+        UPDATE started_lessons
+        SET submitted=false, author_notes=$3
+        WHERE user_id=$1 AND parent_lesson_id=$2
+        RETURNING *;
+        `,
+        [uid, plid, note || null]
     );
 };
 
@@ -199,17 +212,6 @@ module.exports.submitAnswer = function submitAnswer(uid, pid, answer, url) {
         RETURNING *;
         `,
         [uid, pid, answer, url]
-    );
-};
-
-module.exports.tryAgain = function tryAgain(uid, pid) {
-    return db.query(
-        `
-        UPDATE started_lessons
-        SET submitted=false
-        WHERE user_id=$1 AND parent_lesson_id=$2
-        `,
-        [uid, pid]
     );
 };
 

@@ -28,6 +28,7 @@ class Lesson extends React.Component {
         this.acceptAnswer = this.acceptAnswer.bind(this);
         this.submitLesson = this.submitLesson.bind(this);
         this.tryAgain = this.tryAgain.bind(this);
+        this.getIndex = this.getIndex.bind(this);
         // this.handleChangeNotes = this.handleChangeNotes.bind(this);
     }
 
@@ -70,11 +71,21 @@ class Lesson extends React.Component {
     }
 
     handleChange(e) {
-        // console.log(this.state);
+        console.log(e.target.name, this.state.data);
         this.setState({
             data: {
                 ...this.state.data,
                 [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    getIndex(e) {
+        console.log(e);
+        this.setState({
+            data: {
+                ...this.state.data,
+                clickedUser: e
             }
         });
     }
@@ -182,7 +193,8 @@ class Lesson extends React.Component {
         console.log("accept answer fires", e, i);
         socket.emit("acceptAnswer", {
             user_id: e,
-            lesson_parent_id: this.state.lesson.parent_id
+            lesson_parent_id: this.state.lesson.parent_id,
+            authorNote: this.state.authorNote
         });
         socket.on("answerAccepted", rslt => {
             console.log(rslt);
@@ -200,10 +212,11 @@ class Lesson extends React.Component {
         console.log("accept answer fires", e, i);
         socket.emit("tryAgain", {
             user_id: e,
-            lesson_parent_id: this.state.lesson.parent_id
+            lesson_parent_id: this.state.lesson.parent_id,
+            authorNote: this.state.authorNote
         });
         socket.on("answerSentBack", rslt => {
-            console.log(rslt);
+            console.log("answerSentBack result", rslt);
             let updated = this.state.started;
             updated[i].lesson_submitted = false;
 
@@ -332,30 +345,42 @@ class Lesson extends React.Component {
                                                 />
                                             </React.Fragment>
                                         )}
-                                        {user.completed == false && (
-                                            <div>
-                                                <button
-                                                    onClick={() =>
-                                                        this.acceptAnswer(
-                                                            user.user_id,
-                                                            index
-                                                        )
-                                                    }
-                                                >
-                                                    Accept answer
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        this.tryAgain(
-                                                            user.user_id,
-                                                            index
-                                                        );
-                                                    }}
-                                                >
-                                                    Try again
-                                                </button>
-                                            </div>
-                                        )}
+                                        {user.completed == false &&
+                                            user.lesson_submitted && (
+                                                <div>
+                                                    <button
+                                                        onClick={() =>
+                                                            this.acceptAnswer(
+                                                                user.user_id,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        Accept answer
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            this.tryAgain(
+                                                                user.user_id,
+                                                                index
+                                                            );
+                                                        }}
+                                                    >
+                                                        Try again
+                                                    </button>
+                                                    <textarea
+                                                        name="authorNote"
+                                                        onChange={
+                                                            this.handleChange
+                                                        }
+                                                        onFocus={() => {
+                                                            this.getIndex(
+                                                                user.user_id
+                                                            );
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
                                         {user.completed == true && (
                                             <p>
                                                 Completed! You have already
@@ -417,6 +442,20 @@ class Lesson extends React.Component {
                                                     preload="none"
                                                 />
                                             )}
+                                            {this.state.lesson.author_notes && (
+                                                <div>
+                                                    <p>
+                                                        The note of the author
+                                                        is:
+                                                    </p>
+                                                    <p>
+                                                        {
+                                                            this.state.lesson
+                                                                .author_notes
+                                                        }
+                                                    </p>
+                                                </div>
+                                            )}
                                         </div>
                                     </React.Fragment>
                                 )}
@@ -473,6 +512,19 @@ class Lesson extends React.Component {
                                         <button onClick={this.submitLesson}>
                                             Submit this lesson
                                         </button>
+                                        {this.state.lesson.author_notes && (
+                                            <div>
+                                                <p>
+                                                    The note of the author is:
+                                                </p>
+                                                <p>
+                                                    {
+                                                        this.state.lesson
+                                                            .author_notes
+                                                    }
+                                                </p>
+                                            </div>
+                                        )}
                                     </React.Fragment>
                                 )}
                             </React.Fragment>
