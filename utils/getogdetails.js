@@ -29,12 +29,12 @@ module.exports.getOgDetails = function getOgDetails(url, cb) {
                     let resObj = {
                         type: type || "external page",
                         title: title || "external page",
-                        url: siteUrl || "/",
+                        url: siteUrl || url,
                         desc:
                             desc ||
                             "This is a link to an external page without og tag.",
                         name: name || "external page",
-                        imageurl: img || "./logo.svg"
+                        imageurl: img || "/extlogo.png"
                     };
                     console.log("getOgDetails resObj", resObj);
                     cb(null, resObj);

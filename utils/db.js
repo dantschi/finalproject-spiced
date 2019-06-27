@@ -54,6 +54,18 @@ module.exports.changeUserImage = function changeUserImage(id, url) {
     );
 };
 
+module.exports.acceptAnswer = function acceptAnswer(uid, lpid) {
+    return db.query(
+        `
+        UPDATE started_lessons
+        SET
+        completed=true
+        WHERE user_id=$1 AND parent_lesson_id=$2;
+        `,
+        [uid, lpid]
+    );
+};
+
 module.exports.changeUserProfile = function changeUserProfile(
     id,
     loc,
@@ -81,7 +93,7 @@ module.exports.getLessonStarters = function getLessonStarters(id) {
         SELECT
         started_lessons.id AS "started_lesson_id",
         started_lessons.text_answer, started_lessons.audio_answer,
-        started_lessons.completed,
+        started_lessons.completed, started_lessons.user_id,
         users.id AS "user_id", users.first,users.last,users.imageurl
         FROM started_lessons
         LEFT JOIN users on started_lessons.user_id = users.id
@@ -139,7 +151,23 @@ module.exports.getLessons = function getLessons() {
     );
 };
 
-module.exports.getLessonData = function getLessonData(id) {
+// module.exports.getLessonDataTest = function getLessonDataTest(id, uid) {
+//     return db.query(
+//         `
+//         SELECT
+//         lessons.id AS "parent_id", lessons.external_url AS "external_url",
+//         users.first AS "creator_id",
+//         started_lessons.id AS "started_lesson_id", started_lessons.completed
+//         FROM lessons
+//         LEFT JOIN users on users.id = lessons.user_id
+//         LEFT JOIN started_lessons on started_lessons.parent_lesson_id = lessons.id AND started_lessons.user_id = $2
+//         WHERE lessons.id = $1;
+//         `,
+//         [id, uid]
+//     );
+// };
+
+module.exports.getLessonData = function getLessonData(id, uid) {
     return db.query(
         `
         SELECT lessons.id AS "parent_id", lessons.external_url, lessons.title,
@@ -151,10 +179,10 @@ module.exports.getLessonData = function getLessonData(id) {
         started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
-        LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id
+        LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id AND started_lessons.user_id = $2
         WHERE lessons.id=$1;
         `,
-        [id]
+        [id, uid]
     );
 };
 

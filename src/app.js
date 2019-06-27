@@ -30,7 +30,7 @@ export class App extends React.Component {
         axios
             .get("/getuserdata")
             .then(rslt => {
-                console.log(rslt.data);
+                // console.log(rslt.data);
                 // this.setState(rslt.data);
                 this.props.dispatch(addUserData(rslt.data));
                 // console.log("App did mount:", this.state);
@@ -41,22 +41,22 @@ export class App extends React.Component {
     }
 
     async logout(e) {
-        console.log("logout fires", e);
+        // console.log("logout fires", e);
         this.setState({
             loggedIn: false
         });
         let rslt = await axios.post("/logout", { wantToLogout: true });
-        console.log("/logout response from server", rslt);
+        // console.log("/logout response from server", rslt);
         location.replace("/");
     }
 
     toggleMenu(e) {
-        console.log("togglemenu", e);
+        // console.log("togglemenu", e);
 
         this.state.menuOnScreen
             ? this.setState({ menuOnScreen: false })
             : this.setState({ menuOnScreen: true });
-        console.log(this.state);
+        // console.log(this.state);
     }
 
     closeMenu() {
@@ -132,7 +132,7 @@ export class App extends React.Component {
 }
 
 const mapStateToProps = (props, state) => {
-    console.log("app redux state", state);
+    // console.log("app redux state", state);
     if (!state.userData) {
         return {};
     } else {

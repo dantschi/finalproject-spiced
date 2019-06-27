@@ -328,9 +328,13 @@ app.post("/change-user-data", (req, res) => {
 
 app.get("/get-lessons", (req, res) => {
     console.log("/get-lessons request");
-    db.getLessons().then(rslt => {
-        res.json(rslt.rows);
-    });
+    db.getLessons()
+        .then(rslt => {
+            res.json(rslt.rows);
+        })
+        .catch(err => {
+            console.log("/get-lessons error", err);
+        });
 });
 
 /////////////////////////////////////////////////////////////
@@ -338,7 +342,7 @@ app.get("/get-lessons", (req, res) => {
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.get("/get-lesson-data/:id", async (req, res) => {
-    console.log("/get-lesson-data params", req.params);
+    console.log("/get-lesson-data params", req.params, req.session);
     // let tempRes = await db.getThisStartedDetails(
     //     req.params.id,
     //     req.session.userId
@@ -346,13 +350,21 @@ app.get("/get-lesson-data/:id", async (req, res) => {
 
     // db.getLessonStarters(req.params.is);
     // db.getLessonData(req.params.id);
+    // db.getLessonDataTest(req.params.id, req.session.userId)
+    //     .then(rslt => {
+    //         console.log("test result", rslt);
+    //         res.json(rslt.rows[0]);
+    //     })
+    //     .catch(err => {
+    //         console.log("test error", err);
+    //     });
 
     Promise.all([
         db.getLessonStarters(req.params.id),
-        db.getLessonData(req.params.id)
+        db.getLessonData(req.params.id, req.session.userId)
     ])
         .then(rslt => {
-            console.log("lesson data", rslt[1].rows[0].external_url);
+            console.log("lesson data", rslt[1].rows[0]);
             if (rslt[1].rows[0].external_url.startsWith("https://")) {
                 god.getOgDetails(
                     rslt[1].rows[0].external_url,
@@ -363,15 +375,17 @@ app.get("/get-lesson-data/:id", async (req, res) => {
                         console.log(
                             "omg result",
                             result,
-                            typeof rslt[1].rows[0]
+                            typeof rslt[1].rows[0],
+                            typeof result
                         );
 
-                        rslt[1].rows[0].external_result = result;
+                        rslt[1].rows[0].external_url = result;
+                        res.json([rslt[0].rows, rslt[1].rows]);
                     }
                 );
+            } else {
+                res.json([rslt[0].rows, rslt[1].rows]);
             }
-
-            res.json([rslt[0].rows, rslt[1].rows]);
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -480,6 +494,12 @@ io.on("connection", async socket => {
             console.log("newNote", note);
             let rslt = await db.addNote(note.note, note.parent_id);
             socket.emit("addNoteResult", rslt);
+        });
+        socket.on("acceptAnswer", async ans => {
+            console.log("accept answer details", ans);
+            let rslt = await db.acceptAnswer(ans.user_id, ans.lesson_parent_id);
+            console.log("accept answer query result", rslt);
+            socket.emit("answerAccepted", rslt);
         });
         // socket.on("newLesson", async lesson => {
         //     console.log("newLesson", lesson);

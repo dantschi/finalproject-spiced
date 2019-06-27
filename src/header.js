@@ -7,7 +7,7 @@ import ProfilePic from "./profilepic";
 // import { BrowserRouter, Route } from "react-router-dom";
 
 export function Header(props, toggleMenu) {
-    console.log("header props", props, toggleMenu);
+    // console.log("header props", props, toggleMenu);
 
     if (!props.userData) {
         return (
@@ -16,7 +16,7 @@ export function Header(props, toggleMenu) {
             </div>
         );
     } else {
-        console.log("header props", props);
+        // console.log("header props", props);
         return (
             <header>
                 <div className="header-content-container">

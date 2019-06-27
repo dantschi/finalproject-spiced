@@ -175,6 +175,43 @@ header {
     margin-top: 5px;
 }
 
+.lesson-box-right {
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+    -ms-animation: fadein 2s; /* Internet Explorer */
+    -o-animation: fadein 2s; /* Opera < 12.1 */
+    animation: fadein 2s;
+}
+
+.external-url-wrapper {
+    margin: 5px;
+    padding-left: 10px;
+    border-left: 5px solid tomato;
+}
+
+.external-url-img-box {
+    display: flex;
+    align-items: flex-start;
+}
+
+.external-url-img-box img {
+    width: 30px;
+    height: 30px;
+}
+
+.external-url-img-box p {
+    padding-left: 5px;
+}
+
+.ext-box {
+    text-decoration: none;
+    color: black;
+}
+
+.lesson-starters-list {
+    text-align: center;
+}
+
 .usersLessons-container {
     width: 100%;
     padding-top: 10px;
@@ -223,6 +260,7 @@ textarea[name="notes"] {
     display: flex;
     justify-content: center;
     align-items: center;
+
     /* border: 1px solid blue; */
 }
 
@@ -321,7 +359,7 @@ textarea[name="notes"] {
     overflow: hidden;
     object-fit: cover;
     background: url("./img1.jpg");
-    background-blend-mode: luminosity;
+    /* background-blend-mode: luminosity; */
     background-repeat: no-repeat;
     /* background-size: 110vw 110vh; */
     /* background-size: 100% 100%; */
@@ -332,6 +370,10 @@ textarea[name="notes"] {
     margin: 5px;
     padding: 12px 20px;
     width: 100%;
+}
+
+button {
+    margin: 10px auto;
 }
 
 @keyframes scaleit {

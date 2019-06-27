@@ -5,7 +5,6 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     imageurl VARCHAR,
-    teacher BOOLEAN,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -23,13 +22,14 @@ CREATE TABLE user_profiles(
 
 CREATE TABLE lessons(
     id SERIAL PRIMARY KEY,
-    external_url TEXT,
-    description TEXT,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title TEXT,
+    description TEXT,
     challenge TEXT,
     goal TEXT,
-    recording_url,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    external_url TEXT,
+    recording_url TEXT,
+    categories TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

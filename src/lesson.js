@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import AudioPlayer from "react-h5-audio-player";
 import { Recorder } from "./recorder";
 import { socket } from "./socket";
+import { Link } from "react-router-dom";
 // import ReactPlayer from "react-player";
 // import ReactAudioPlayer from "react-audio-player";
 
@@ -136,8 +137,20 @@ class Lesson extends React.Component {
                 });
             })
             .catch(err => {
+                console.log;
                 console.log("/start-lesson error", err);
             });
+    }
+
+    acceptAnswer(e) {
+        console.log("accept answer fires", e);
+        socket.emit("acceptAnswer", {
+            user_id: e,
+            lesson_parent_id: this.state.lesson.parent_id
+        });
+        socket.on("answerAccepted", rslt => {
+            console.log(rslt);
+        });
     }
 
     render() {
@@ -157,7 +170,7 @@ class Lesson extends React.Component {
             console.log("notStarted", notStarted);
             console.log("completed", completed);
             console.log("!creator && notStarted", !creator && notStarted);
-            console.log("lesson this.state", this.state);
+            console.log("lesson this.state, props", this.state, this.props);
             return (
                 <div className="lesson-container">
                     <div className="lesson-box-left">
@@ -187,7 +200,42 @@ class Lesson extends React.Component {
                                 <p onClick={this.loopToggle}>Loop it!</p>
                             </div>
                         )}
+                        {this.state.lesson.external_url && (
+                            <React.Fragment>
+                                <h4>External source</h4>
+                                <a
+                                    className="ext-box"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={this.state.lesson.external_url.url}
+                                >
+                                    <div className="external-url-wrapper">
+                                        <div className="external-url-img-box">
+                                            <img
+                                                src={
+                                                    this.state.lesson
+                                                        .external_url.imageurl
+                                                }
+                                            />
+                                            <p>
+                                                {
+                                                    this.state.lesson
+                                                        .external_url.name
+                                                }
+                                            </p>
+                                        </div>
+                                        <p>
+                                            {
+                                                this.state.lesson.external_url
+                                                    .desc
+                                            }
+                                        </p>
+                                    </div>
+                                </a>
+                            </React.Fragment>
+                        )}
                     </div>
+
                     <div className="lesson-box-right">
                         {creator && (
                             <div className="lesson-starters-list">
@@ -195,11 +243,10 @@ class Lesson extends React.Component {
                                     You are the creator of this lesson! Thanks,{" "}
                                     {this.props.userData.first}!
                                 </h3>
-                                <p>
-                                    There are already{" "}
-                                    {this.state.started.length} people started
-                                    your lesson
-                                </p>
+                                <h4>
+                                    People who started lesson #
+                                    {this.state.lesson.parent_id}:
+                                </h4>
                                 {this.state.started.map(user => (
                                     <div
                                         className="user-box"
@@ -208,6 +255,32 @@ class Lesson extends React.Component {
                                         <p>
                                             {user.first} {user.last}
                                         </p>
+                                        <p>Answer: {user.text_answer}</p>
+                                        <p>Recording: </p>
+                                        <AudioPlayer
+                                            src={this.state.tempUrl}
+                                            preload="none"
+                                        />
+                                        {user.completed == false && (
+                                            <div>
+                                                <button
+                                                    onClick={() =>
+                                                        this.acceptAnswer(
+                                                            user.user_id
+                                                        )
+                                                    }
+                                                >
+                                                    Accept answer
+                                                </button>
+                                            </div>
+                                        )}
+                                        {user.completed == true && (
+                                            <p>
+                                                Completed! You have already
+                                                accepted the answer of{" "}
+                                                {user.first}
+                                            </p>
+                                        )}
                                     </div>
                                 ))}
                             </div>

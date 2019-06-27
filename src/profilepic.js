@@ -13,7 +13,7 @@ export function ProfilePic(props) {
             </div>
         );
     } else {
-        console.log("props in ProfilePic render", props);
+        // console.log("props in ProfilePic render", props);
         return (
             <div className="profile-pic-container">
                 <img
@@ -27,7 +27,7 @@ export function ProfilePic(props) {
 }
 
 const mapStateToProps = (state, props) => {
-    console.log("profilepic state, props", state, props);
+    // console.log("profilepic state, props", state, props);
     if (!state.userData) {
         return {};
     } else {
