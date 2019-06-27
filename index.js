@@ -366,25 +366,29 @@ app.get("/get-lesson-data/:id", async (req, res) => {
         .then(rslt => {
             console.log("lesson data", rslt[1].rows[0]);
             res.json([rslt[0].rows, rslt[1].rows]);
-            // if (rslt[1].rows[0].external_url.startsWith("https://")) {
-            //     god.getOgDetails(
-            //         rslt[1].rows[0].external_url,
-            //         (err, result) => {
-            //             if (err) {
-            //                 console.log("omg error", err);
-            //             }
-            //             console.log(
-            //                 "omg result",
-            //                 result,
-            //                 typeof rslt[1].rows[0]
-            //             );
-            //             rslt[1].rows[0].external_url = result;
-            //             res.json([rslt[0].rows[0], rslt[1].rows]);
-            //         }
-            //     );
-            // } else {
-            //     res.json([rslt[0].rows[0], rslt[1].rows]);
-            // }
+            if (rslt[1].rows[0].external_url.startsWith("https://")) {
+                god.getOgDetails(
+                    rslt[1].rows[0].external_url,
+                    (err, result) => {
+                        if (err) {
+                            console.log("omg error", err);
+                            res.json(
+                                rslt[1].rows[0].external_url,
+                                rslt[1].rows
+                            );
+                        }
+                        console.log(
+                            "omg result",
+                            result,
+                            typeof rslt[1].rows[0]
+                        );
+                        rslt[1].rows[0].external_url = result;
+                        res.json([rslt[0].rows[0], rslt[1].rows]);
+                    }
+                );
+            } else {
+                res.json([rslt[0].rows[0], rslt[1].rows]);
+            }
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -450,7 +454,7 @@ app.post(
         )
             .then(rslt => {
                 console.log(rslt);
-                res.json(rslt);
+                res.json(rslt.rows[0]);
             })
             .catch(err => {
                 console.log("submit-lesson-with-audio query result", err);

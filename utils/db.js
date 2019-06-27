@@ -195,7 +195,8 @@ module.exports.submitAnswer = function submitAnswer(uid, pid, answer, url) {
         `
         UPDATE started_lessons
         SET text_answer=$3, audio_answer=$4, submitted=true
-        WHERE user_id=$1 AND parent_lesson_id = $2;
+        WHERE user_id=$1 AND parent_lesson_id = $2
+        RETURNING *;
         `,
         [uid, pid, answer, url]
     );

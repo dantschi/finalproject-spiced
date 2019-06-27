@@ -100,6 +100,13 @@ class Lesson extends React.Component {
                 })
                 .then(rslt => {
                     console.log("submit lesson result", rslt);
+                    this.setState({
+                        lesson: {
+                            ...this.state.lesson,
+                            lesson_submitted: true,
+                            text_answer: rslt.data.text_answer
+                        }
+                    });
                 })
                 .catch(err => {
                     console.log("submit lesson error", err);
@@ -121,7 +128,17 @@ class Lesson extends React.Component {
             axios
                 .post("/submit-lesson-with-audio", formData)
                 .then(rslt => {
-                    console.log(rslt);
+                    console.log("/submit-lesson-with-audio result", rslt);
+                    console.log("this.state after answer", this.state);
+                    this.deleteRecording();
+                    this.setState({
+                        lesson: {
+                            ...this.state.lesson,
+                            lesson_submitted: true,
+                            audio_answer: rslt.data.audio_answer,
+                            text_answer: rslt.data.text_answer
+                        }
+                    });
                 })
                 .catch(err => {
                     console.log(err);
