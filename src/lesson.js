@@ -479,9 +479,9 @@ class Lesson extends React.Component {
                                             <React.Fragment>
                                                 <p>Your audio-answer</p>
                                                 <Recorder
-                                                    closeMenu={
-                                                        this.props.closeMenu
-                                                    }
+                                                    // closeMenu={
+                                                    //     this.props.closeMenu
+                                                    // }
                                                     handleFileChange={
                                                         this.handleFileChange
                                                     }
@@ -491,23 +491,30 @@ class Lesson extends React.Component {
 
                                         {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
 
-                                        {this.state.tempUrl && (
-                                            <React.Fragment>
-                                                <p>Your audio-answer</p>
-                                                <AudioPlayer
-                                                    src={this.state.tempUrl}
-                                                    preload="none"
-                                                />
-                                                <button
-                                                    onClick={() =>
-                                                        this.deleteRecording()
-                                                    }
-                                                >
-                                                    Delete this recording if you
-                                                    are not satisfied with it
-                                                </button>
-                                            </React.Fragment>
-                                        )}
+                                        {this.state.tempUrl &&
+                                            this.state.lesson.audio_answer && (
+                                                <React.Fragment>
+                                                    <p>Your audio-answer</p>
+                                                    <AudioPlayer
+                                                        src={
+                                                            this.state
+                                                                .tempUrl ||
+                                                            this.state.lesson
+                                                                .audio_answer
+                                                        }
+                                                        preload="none"
+                                                    />
+                                                    <button
+                                                        onClick={() =>
+                                                            this.deleteRecording()
+                                                        }
+                                                    >
+                                                        Delete this recording if
+                                                        you are not satisfied
+                                                        with it
+                                                    </button>
+                                                </React.Fragment>
+                                            )}
 
                                         <button onClick={this.submitLesson}>
                                             Submit this lesson

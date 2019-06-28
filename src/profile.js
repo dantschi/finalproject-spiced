@@ -22,7 +22,7 @@ export class Profile extends React.Component {
 
     componentDidMount() {
         console.log("props in profile componentDidMount", this.props);
-        this.props.closeMenu();
+        // this.props.closeMenu();
     }
 
     handleChange(e) {

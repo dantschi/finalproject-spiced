@@ -258,7 +258,7 @@ class CreateLesson extends React.Component {
                                 <p className="input-label">Recording</p>
                                 <div className="input-wrapper">
                                     <Recorder
-                                        closeMenu={this.props.closeMenu}
+                                        // closeMenu={this.props.closeMenu}
                                         handleFileChange={this.handleFileChange}
                                     />
                                 </div>

@@ -13,7 +13,7 @@ export class Recorder extends React.Component {
     }
 
     componentDidMount() {
-        this.props.closeMenu();
+        // this.props.closeMenu();
     }
 
     record() {

@@ -10,7 +10,7 @@
 }
 
 :root {
-    --distance-top: 100px;
+    --distance-top: 140px;
 }
 
 body {
@@ -93,15 +93,50 @@ header {
 .aside-menu {
     position: fixed;
     right: 0;
-    top: var(--distance-top);
-    width: 200px;
+    top: 75px;
+    width: 100%;
+    height: 75px;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+
     /* height: 100vh; */
     background-color: white;
     z-index: 9999;
+    box-shadow: 0px 16px 12px -6px rgba(87, 84, 87, 0.48);
 }
 
 .aside-menu ul {
     color: black;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-list li {
+    padding: 15px 5px;
+    list-style: none;
+    height: 100%;
+}
+
+.menu-list a {
+    width: 100%;
+    text-align: center;
+    height: 100%;
+}
+
+.menu-list li:hover {
+    background-color: lightgray;
+}
+.menu-list a li {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: black;
+}
+
+.menu-list a {
+    text-decoration: none;
 }
 
 .lessons-container {
@@ -298,24 +333,6 @@ textarea[name="notes"] {
 /* .btn-stopRecord {
 
 } */
-
-.menu-list li {
-    padding: 15px 18px;
-    list-style: none;
-}
-
-.menu-list li:hover {
-    background-color: lightgray;
-}
-.menu-list a li {
-    text-decoration: none;
-    font-size: 1.2em;
-    color: black;
-}
-
-.menu-list a {
-    text-decoration: none;
-}
 
 .input-row {
     display: flex;
