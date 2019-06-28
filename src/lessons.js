@@ -47,10 +47,25 @@ export class Lessons extends React.Component {
                                     <div className="lessons-box-abs">
                                         <img src={lesson.creator_img} />
                                     </div>
-                                    <p>Title: {lesson.title}</p>
+                                    <p>
+                                        <span className="lessons-box-bold">
+                                            Title:
+                                        </span>{" "}
+                                        {lesson.title}
+                                    </p>
 
-                                    <p>Challenge: {lesson.challenge}</p>
-                                    <p>Categories: {lesson.categories}</p>
+                                    <p>
+                                        <span className="lessons-box-bold">
+                                            Goal:
+                                        </span>{" "}
+                                        {lesson.goal}
+                                    </p>
+                                    <p>
+                                        <span className="lessons-box-bold">
+                                            Categories:
+                                        </span>{" "}
+                                        {lesson.categories}
+                                    </p>
                                     <Link to={`/lesson/${lesson.id}`}>
                                         See details here!
                                     </Link>

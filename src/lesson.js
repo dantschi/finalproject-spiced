@@ -495,45 +495,42 @@ class Lesson extends React.Component {
 
                                             {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
 
-                                            {this.state.tempUrl ||
-                                                (this.state.lesson
-                                                    .audio_answer && (
-                                                    <React.Fragment>
-                                                        <p>Your audio-answer</p>
+                                            {this.state.tempUrl && (
+                                                <React.Fragment>
+                                                    <p>Your audio-answer</p>
 
-                                                        {this.state.tempUrl && (
-                                                            <AudioPlayer
-                                                                src={
-                                                                    this.state
-                                                                        .tempUrl
-                                                                }
-                                                                preload="none"
-                                                            />
-                                                        )}
-                                                        {this.state.lesson
-                                                            .audio_answer && (
-                                                            <AudioPlayer
-                                                                src={
-                                                                    this.state
-                                                                        .lesson
-                                                                        .audio_answer
-                                                                }
-                                                                preload="none"
-                                                            />
-                                                        )}
-
-                                                        <button
-                                                            onClick={() =>
-                                                                this.deleteRecording()
+                                                    {this.state.tempUrl && (
+                                                        <AudioPlayer
+                                                            src={
+                                                                this.state
+                                                                    .tempUrl
                                                             }
-                                                        >
-                                                            Delete this
-                                                            recording if you are
-                                                            not satisfied with
-                                                            it
-                                                        </button>
-                                                    </React.Fragment>
-                                                ))}
+                                                            preload="none"
+                                                        />
+                                                    )}
+                                                    {this.state.lesson
+                                                        .audio_answer && (
+                                                        <AudioPlayer
+                                                            src={
+                                                                this.state
+                                                                    .lesson
+                                                                    .audio_answer
+                                                            }
+                                                            preload="none"
+                                                        />
+                                                    )}
+
+                                                    <button
+                                                        onClick={() =>
+                                                            this.deleteRecording()
+                                                        }
+                                                    >
+                                                        Delete this recording if
+                                                        you are not satisfied
+                                                        with it
+                                                    </button>
+                                                </React.Fragment>
+                                            )}
 
                                             <button onClick={this.submitLesson}>
                                                 Submit this lesson

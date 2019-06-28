@@ -196,6 +196,11 @@ header {
     height: auto;
 }
 
+.lessons-box-bold {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .lessons {
     width: 100%;
     max-width: 250px;
