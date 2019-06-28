@@ -181,7 +181,7 @@ class CreateLesson extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Goal of this lesson"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                     required
                                 />
                             </div>
@@ -196,7 +196,7 @@ class CreateLesson extends React.Component {
                                     await
                                     onChange={this.handleChange}
                                     placeholder="Title"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                     required
                                 />
                             </div>
@@ -210,7 +210,7 @@ class CreateLesson extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="External url (optional)"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                     required
                                 />
                             </div>
@@ -236,7 +236,7 @@ class CreateLesson extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="What is the challenge?"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -249,7 +249,7 @@ class CreateLesson extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Type here the categories"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -273,6 +273,7 @@ class CreateLesson extends React.Component {
                                         preload="none"
                                     />
                                     <button
+                                        className="delete-rec"
                                         onClick={() => this.deleteRecording()}
                                     >
                                         Delete this recording if you are not
@@ -286,9 +287,14 @@ class CreateLesson extends React.Component {
                     {!!this.state.error.length && (
                         <p className="error">{this.state.error}</p>
                     )}
-                    <button onClick={() => this.saveChanges()}>
-                        Save changes
-                    </button>
+                    <div className="input-row">
+                        <p className="input-label" />
+                        <div className="input-wrapper">
+                            <button onClick={() => this.saveChanges()}>
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

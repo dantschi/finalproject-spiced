@@ -55,7 +55,7 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>
+                                        <p className="your-lessons-list-item">
                                             #{lesson.parent_lesson_id},{" "}
                                             {lesson.title}
                                         </p>
@@ -73,7 +73,7 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>
+                                        <p className="your-lessons-list-item">
                                             #{lesson.parent_lesson_id},{" "}
                                             {lesson.title}
                                         </p>
@@ -91,7 +91,7 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>
+                                        <p className="your-lessons-list-item">
                                             #{lesson.parent_lesson_id},{" "}
                                             {lesson.title}
                                         </p>
@@ -105,7 +105,7 @@ class YourLessons extends React.Component {
                             this.props.ownLessons.map(lesson => (
                                 <div key={lesson.id}>
                                     <Link to={`/lesson/${lesson.id}`}>
-                                        <p>
+                                        <p className="your-lessons-list-item">
                                             #{lesson.id} {lesson.title}
                                         </p>
                                     </Link>

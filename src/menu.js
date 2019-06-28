@@ -9,8 +9,9 @@ export class Menu extends React.Component {
     }
 
     render() {
+        console.log("menu props", this.props);
         return (
-            <div className="aside-menu">
+            <div className={`aside-menu ${this.props.menuOnScreen}`}>
                 <ul className="menu-list">
                     <Link to="/lessons">
                         <li className="aside-menu-item">Lessons</li>

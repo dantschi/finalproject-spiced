@@ -81,9 +81,11 @@ export class App extends React.Component {
                     />
 
                     <div className="anything-else">
-                        {this.state.menuOnScreen && (
-                            <Menu toggleMenu={this.toggleMenu} />
-                        )}
+                        <Menu
+                            toggleMenu={this.toggleMenu}
+                            menuOnScreen={this.state.menuOnScreen}
+                        />
+
                         <div className="logout">
                             <img onClick={this.logout} src="/logout.svg" />
                         </div>

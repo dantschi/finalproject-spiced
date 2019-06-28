@@ -58,8 +58,13 @@ class Lesson extends React.Component {
     deleteRecording() {
         this.setState({
             tempUrl: "",
-            tempRec: null
+            tempRec: null,
+            lesson: {
+                ...this.state.lesson,
+                audio_answer: ""
+            }
         });
+        axios.post("/delete-audio-answer");
     }
 
     handleFileChange(e) {
@@ -269,6 +274,26 @@ class Lesson extends React.Component {
                         <p>{this.state.lesson.challenge}</p>
                         <h3>Description</h3>
                         <p>{this.state.lesson.description}</p>
+                        {this.state.lesson.external_url && (
+                            <React.Fragment>
+                                <h4>External source</h4>
+                                <a
+                                    className="ext-box"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={this.state.lesson.external_url}
+                                >
+                                    <div className="external-url-wrapper">
+                                        <div className="external-url-img-box">
+                                            <img src="/extlogo.png" />
+                                            <p>
+                                                {this.state.lesson.external_url}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </React.Fragment>
+                        )}
                         {this.state.lesson.recording_url && (
                             <div>
                                 <h3>Voice note for the assignment</h3>
@@ -278,7 +303,15 @@ class Lesson extends React.Component {
                                     preload="none"
                                     loop={this.state.loopLesson}
                                 />
-                                <p onClick={this.loopToggle}>Loop it!</p>
+                                <p className="loopIt" onClick={this.loopToggle}>
+                                    Loop it!
+                                    <img
+                                        src="/loop.png"
+                                        className={`loopIcon ${
+                                            this.state.loopLesson
+                                        }`}
+                                    />
+                                </p>
                             </div>
                         )}
                     </div>
@@ -316,7 +349,7 @@ class Lesson extends React.Component {
                                             )}
                                             {user.completed == false &&
                                                 user.submitted == true && (
-                                                    <div>
+                                                    <div className="accept-or-try-again">
                                                         <button
                                                             onClick={() =>
                                                                 this.acceptAnswer(
@@ -352,11 +385,7 @@ class Lesson extends React.Component {
                                                     </div>
                                                 )}
                                             {user.completed == true && (
-                                                <p>
-                                                    Completed! You have already
-                                                    accepted the answer of{" "}
-                                                    {user.first}
-                                                </p>
+                                                <p>Completed!</p>
                                             )}
                                         </div>
                                     ))}
@@ -466,21 +495,33 @@ class Lesson extends React.Component {
 
                                             {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
 
-                                            {this.state.tempUrl &&
-                                                this.state.lesson
+                                            {this.state.tempUrl ||
+                                                (this.state.lesson
                                                     .audio_answer && (
                                                     <React.Fragment>
                                                         <p>Your audio-answer</p>
-                                                        <AudioPlayer
-                                                            src={
-                                                                this.state
-                                                                    .tempUrl ||
-                                                                this.state
-                                                                    .lesson
-                                                                    .audio_answer
-                                                            }
-                                                            preload="none"
-                                                        />
+
+                                                        {this.state.tempUrl && (
+                                                            <AudioPlayer
+                                                                src={
+                                                                    this.state
+                                                                        .tempUrl
+                                                                }
+                                                                preload="none"
+                                                            />
+                                                        )}
+                                                        {this.state.lesson
+                                                            .audio_answer && (
+                                                            <AudioPlayer
+                                                                src={
+                                                                    this.state
+                                                                        .lesson
+                                                                        .audio_answer
+                                                                }
+                                                                preload="none"
+                                                            />
+                                                        )}
+
                                                         <button
                                                             onClick={() =>
                                                                 this.deleteRecording()
@@ -492,7 +533,7 @@ class Lesson extends React.Component {
                                                             it
                                                         </button>
                                                     </React.Fragment>
-                                                )}
+                                                ))}
 
                                             <button onClick={this.submitLesson}>
                                                 Submit this lesson

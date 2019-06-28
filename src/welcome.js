@@ -128,7 +128,7 @@ export class Welcome extends React.Component {
                                 type="text"
                                 onChange={this.handleChange}
                                 placeholder="First name"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <input
@@ -136,7 +136,7 @@ export class Welcome extends React.Component {
                                 type="text"
                                 onChange={this.handleChange}
                                 placeholder="Last name"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
 
@@ -146,7 +146,7 @@ export class Welcome extends React.Component {
                                 type="email"
                                 onChange={this.handleChange}
                                 placeholder="Email address"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <input
@@ -154,7 +154,7 @@ export class Welcome extends React.Component {
                                 type="password"
                                 onChange={this.handleChange}
                                 placeholder="Password"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <input
@@ -162,7 +162,7 @@ export class Welcome extends React.Component {
                                 type="password"
                                 onChange={this.handleChange}
                                 placeholder="Password again"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <button
@@ -193,7 +193,7 @@ export class Welcome extends React.Component {
                                 type="email"
                                 onChange={this.handleChange}
                                 placeholder="Email address"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <input
@@ -202,7 +202,7 @@ export class Welcome extends React.Component {
                                 type="password"
                                 onChange={this.handleChange}
                                 placeholder="Password"
-                                autoComplete="new-password"
+                                autoComplete="off"
                                 required
                             />
                             <button

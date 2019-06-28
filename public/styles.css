@@ -39,16 +39,13 @@ textarea[name="description"] {
 header {
     width: 100%;
     height: 75px;
-    border-bottom: 1px solid grey;
+    /* border-bottom: 1px solid grey; */
     display: flex;
     position: fixed;
     top: 0;
     left: 0;
     background-color: white;
-    z-index: 10;
-    -webkit-box-shadow: 0px 16px 12px -6px rgba(87, 84, 87, 0.48);
-    -moz-box-shadow: 0px 16px 12px -6px rgba(87, 84, 87, 0.48);
-    box-shadow: 0px 16px 12px -6px rgba(87, 84, 87, 0.48);
+    z-index: 9999;
 }
 
 .header-content-container {
@@ -104,8 +101,18 @@ header {
 
     /* height: 100vh; */
     background-color: white;
-    z-index: 9999;
+    z-index: 9998;
     box-shadow: 0px 16px 12px -6px rgba(87, 84, 87, 0.48);
+}
+
+.aside-menu.false {
+    top: 0;
+    transition: top 0.2s ease-in-out;
+}
+
+.aside-menu.true {
+    top: 75px;
+    transition: top 0.2s ease-in-out;
 }
 
 .aside-menu ul {
@@ -129,7 +136,7 @@ header {
 }
 
 .menu-list li:hover {
-    background-color: lightgray;
+    background-color: rgba(245, 244, 244, 1);
 }
 .menu-list a li {
     text-decoration: none;
@@ -207,12 +214,17 @@ header {
 .lesson-box-left,
 .lesson-box-right {
     width: 45%;
-    border: 1px solid black;
+    border: 1px solid rgba(255, 211, 181, 1);
+    -webkit-box-shadow: 13px 12px 5px -6px rgba(112, 108, 112, 0.5);
+    -moz-box-shadow: 13px 12px 5px -6px rgba(112, 108, 112, 0.5);
+    box-shadow: 13px 12px 5px -6px rgba(112, 108, 112, 0.5);
+    border-radius: 5px;
     margin: 5px;
     display: flex;
     flex-direction: column;
     padding: 5px;
     overflow-y: auto;
+    overflow-x: hidden;
 
     /* line-height: 1.5em; */
 }
@@ -228,10 +240,23 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .lesson-box-right-inner button {
     text-align: center;
+}
+
+.lesson-box-right-inner p,
+.lesson-box-right-inner h2 {
+    text-align: center;
+    padding: 5px;
+}
+
+.react-h5-audio-player {
+    width: 80%;
+    min-width: 250px;
+    margin: 10px auto;
 }
 
 .lesson-b .lesson-box-left h3,
@@ -254,7 +279,8 @@ header {
 .external-url-wrapper {
     margin: 5px;
     padding-left: 10px;
-    border-left: 5px solid tomato;
+    border-left: 5px solid rgba(255, 211, 181, 1);
+    word-break: break-all;
 }
 
 .external-url-img-box {
@@ -264,7 +290,7 @@ header {
 
 .external-url-img-box img {
     width: 30px;
-    height: 30px;
+    height: auto;
 }
 
 .external-url-img-box p {
@@ -276,14 +302,28 @@ header {
     color: black;
 }
 
+.user-box {
+    border: 1px solid rgba(74, 70, 74, 0.3);
+    border-radius: 2px;
+    margin-top: 2px;
+}
+
 .lesson-starters-list {
     text-align: center;
 }
 
+.accept-or-try-again button {
+    margin: 2px 2px;
+    /* height: 15px; */
+    display: inline-block;
+    width: auto;
+}
+
 .usersLessons-container {
-    width: 100%;
-    margin-top: 20px;
-    display: inline-flex;
+    width: 90%;
+    margin: 160px auto 10px auto;
+    /* padding: 20px 5% 20px 5%; */
+    display: flex;
 }
 
 .usersLessons-column {
@@ -297,8 +337,21 @@ header {
     border: 1px solid lightgray;
 }
 
+.usersLessons-container a {
+    text-decoration: none;
+}
+
+.usersLessons-container a:hover {
+    text-decoration: underline;
+}
+
 .usersLessons-column h2 {
     text-align: center;
+}
+
+.your-lessons-list-item {
+    color: black;
+    padding: 5px;
 }
 
 .rec-container {
@@ -384,6 +437,20 @@ textarea[name="notes"] {
 }
 .input-wrapper {
     width: 50%;
+    text-align: left;
+}
+
+.input-wrapper > .rec-container {
+    margin: 5px 0;
+    /* padding: 5px; */
+}
+
+.input-wrapper > .react-h5-audio-player {
+    margin-left: 5px;
+}
+
+.input-wrapper .delete-rec {
+    margin-top: 2px;
 }
 
 .input-wrapper.wide {
@@ -421,21 +488,59 @@ textarea[name="notes"] {
     animation: scaleit 60s infinite;
 }
 
-.welcome-button {
-    margin: 5px;
+.welcome-button,
+.loopIt {
+    margin: 5px auto;
     padding: 12px 20px;
     width: 100%;
+    max-width: 300px;
     background-color: #ffd3b5;
     border-radius: 5px;
     border: none;
     opacity: 0.7;
-    transition: opacity 0.2 ease-in-out;
+    transition: opacity 0.2s ease-in-out;
 }
 
-.welcome-button:hover {
+.welcome-button:hover,
+.loopIt {
     cursor: pointer;
     opacity: 1;
-    transition: opacity 0.2 ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.loopIt {
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loopIcon {
+    width: 30px;
+    height: 30px;
+}
+
+.loopIcon.true {
+    display: block;
+    animation: blink 1s infinite;
+}
+
+.loopIcon.false {
+    display: none;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .welcome-change {

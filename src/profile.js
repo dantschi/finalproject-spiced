@@ -112,7 +112,7 @@ export class Profile extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="First name"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                     required
                                 />
                             </div>
@@ -126,7 +126,7 @@ export class Profile extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Last name"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                     required
                                 />
                             </div>
@@ -161,7 +161,7 @@ export class Profile extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Tell us the city you are"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -175,7 +175,7 @@ export class Profile extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Tell us the bands you like (comma separated)"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -190,7 +190,7 @@ export class Profile extends React.Component {
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="Tell us the instruments you are interested in"
-                                    autoComplete="new-password"
+                                    autoComplete="off"
                                 />
                             </div>
                         </div>
@@ -245,7 +245,7 @@ export default connect(mapStateToProps)(Profile);
 //             type="text"
 //             onChange={this.handleChange}
 //             placeholder="Tell us the genres you like (comma separated)"
-//             autoComplete="new-password"
+//             autoComplete="off"
 //         />
 //     </div>
 // </div>
