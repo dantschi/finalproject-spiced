@@ -119,6 +119,7 @@ app.post("/register", async (req, res) => {
         let hashedPw = await bc.hashPassword(password1);
         let rslt = await db.addUser(first, last, emailReg, hashedPw);
         req.session.userId = rslt.rows[0].id;
+        await db.addProfile(req.session.userId);
         console.log(req.session.userId);
 
         res.json({ success: true });
@@ -318,8 +319,23 @@ app.post(
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.post("/change-user-data", (req, res) => {
+    let { location, genres, bands, instruments, description } = req.body;
     console.log("/change-user-data", req.body);
-    res.json("/change-user-data arrived");
+    db.changeUserProfile(
+        req.session.userId,
+        location,
+        genres,
+        bands,
+        instruments,
+        description
+    )
+        .then(rslt => {
+            console.log("changeUserData result", rslt);
+            res.json(rslt.rows[0]);
+        })
+        .catch(err => {
+            console.log("changeUserData error", err);
+        });
 });
 
 /////////////////////////////////////////////////////////////

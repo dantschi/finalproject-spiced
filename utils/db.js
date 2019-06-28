@@ -20,6 +20,16 @@ module.exports.addUser = function addUser(fn, ln, em, pw) {
     );
 };
 
+module.exports.addProfile = function addProfile(id) {
+    return db.query(
+        `
+        INSERT INTO user_profiles(user_id)
+        VALUES($1)
+        `,
+        [id]
+    );
+};
+
 module.exports.getUserPwd = function getUserPwd(em) {
     return db.query(
         `
@@ -93,7 +103,7 @@ module.exports.changeUserProfile = function changeUserProfile(
         SET
         location=$2, genres=$3, bands=$4,
         instruments=$5, description=$6
-        WHERE id=$1
+        WHERE user_id=$1
         RETURNING *;
         `,
         [id, loc, genres, bands, instruments, description]
@@ -269,8 +279,15 @@ module.exports.startLesson = function startLesson(id, uid) {
 module.exports.getStartedLessons = function getStartedLessons(uid) {
     return db.query(
         `
-        SELECT * from started_lessons
-        WHERE user_id=$1;
+        SELECT started_lessons.id AS "id", started_lessons.completed AS "completed",
+        started_lessons.parent_lesson_id AS "parent_lesson_id", started_lessons.user_id AS "user_id",
+        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer",
+        started_lessons.notes AS "notes", started_lessons.submitted AS "submitted",
+        lessons.title AS "title"
+        FROM started_lessons
+        LEFT JOIN lessons on lessons.id = started_lessons.parent_lesson_id
+
+        WHERE started_lessons.user_id=$1;
         `,
         [uid]
     );

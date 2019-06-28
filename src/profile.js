@@ -75,8 +75,9 @@ export class Profile extends React.Component {
                 });
         } else {
             axios
-                .post("/changeuserdata", this.state.data)
+                .post("/change-user-data", this.state.data)
                 .then(rslt => {
+                    console.log("changeUserData result", rslt);
                     this.props.dispatch(changeUserData(rslt.data));
                 })
                 .catch(err => {
@@ -166,20 +167,6 @@ export class Profile extends React.Component {
                         </div>
 
                         <div className="input-row">
-                            <p className="input-label">Genres</p>
-                            <div className="input-wrapper">
-                                <input
-                                    defaultValue={this.props.userData.genres}
-                                    name="genre"
-                                    type="text"
-                                    onChange={this.handleChange}
-                                    placeholder="Tell us the genres you like (comma separated)"
-                                    autoComplete="new-password"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="input-row">
                             <p className="input-label">Bands</p>
                             <div className="input-wrapper">
                                 <input
@@ -248,3 +235,17 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(Profile);
+
+// <div className="input-row">
+//     <p className="input-label">Genres</p>
+//     <div className="input-wrapper">
+//         <input
+//             defaultValue={this.props.userData.genres}
+//             name="genre"
+//             type="text"
+//             onChange={this.handleChange}
+//             placeholder="Tell us the genres you like (comma separated)"
+//             autoComplete="new-password"
+//         />
+//     </div>
+// </div>

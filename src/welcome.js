@@ -171,7 +171,12 @@ export class Welcome extends React.Component {
                             >
                                 Register
                             </button>
-                            <p onClick={this.handleClick}>Log in</p>
+                            <p
+                                className="welcome-change"
+                                onClick={this.handleClick}
+                            >
+                                Log in
+                            </p>
                         </div>
                     )}
 
@@ -206,7 +211,12 @@ export class Welcome extends React.Component {
                             >
                                 Login
                             </button>
-                            <p onClick={this.handleClick}>Register</p>
+                            <p
+                                className="welcome-change"
+                                onClick={this.handleClick}
+                            >
+                                Register
+                            </p>
                         </div>
                     )}
                 </div>
