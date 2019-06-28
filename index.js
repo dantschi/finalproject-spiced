@@ -560,7 +560,11 @@ io.on("connection", async socket => {
         });
         socket.on("acceptAnswer", async ans => {
             console.log("accept answer details", ans);
-            let rslt = await db.acceptAnswer(ans.user_id, ans.lesson_parent_id);
+            let rslt = await db.acceptAnswer(
+                ans.user_id,
+                ans.lesson_parent_id,
+                ans.authorNote
+            );
             console.log("accept answer query result", rslt);
             socket.emit("answerAccepted", rslt.rows[0]);
         });

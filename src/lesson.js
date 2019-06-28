@@ -120,7 +120,7 @@ class Lesson extends React.Component {
                         lesson: {
                             ...this.state.lesson,
                             lesson_submitted: true,
-                            text_answer: rslt.data.text_answer
+                            text_answer: rslt.data.rows[0].text_answer
                         }
                     });
                 })
@@ -199,7 +199,7 @@ class Lesson extends React.Component {
         socket.emit("acceptAnswer", {
             user_id: e,
             lesson_parent_id: this.state.lesson.parent_id,
-            authorNote: this.state.authorNote
+            authorNote: this.state.data.authorNote
         });
         socket.on("answerAccepted", rslt => {
             console.log(rslt);
@@ -406,6 +406,12 @@ class Lesson extends React.Component {
                                             src={audioAnswer}
                                             preload="none"
                                         />
+                                    )}
+                                    {this.state.lesson.author_notes && (
+                                        <p>
+                                            Notes from the author:{" "}
+                                            {this.state.lesson.author_notes}
+                                        </p>
                                     )}
                                 </div>
                             )}

@@ -203,7 +203,8 @@ module.exports.getLessonData = function getLessonData(id, uid) {
         users.imageurl AS "creator_img",
         started_lessons.id AS "started_lesson_id", started_lessons.completed AS "completed",
         started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer",
-        started_lessons.notes AS "lesson_notes", started_lessons.submitted AS "lesson_submitted"
+        started_lessons.notes AS "lesson_notes", started_lessons.submitted AS "lesson_submitted",
+        started_lessons.author_notes AS "author_notes"
         from lessons
         LEFT JOIN users on users.id=lessons.user_id
         LEFT JOIN started_lessons on started_lessons.parent_lesson_id=lessons.id AND started_lessons.user_id = $2

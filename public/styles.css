@@ -716,6 +716,10 @@ textarea {
     width: 100%;
 }
 
+textarea[name="authorNote"] {
+    max-width: 200px;
+}
+
 textarea:focus {
     border-color: rgba(255, 211, 181, 0.9);
     outline: 0;
