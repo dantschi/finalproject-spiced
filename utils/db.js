@@ -106,7 +106,7 @@ module.exports.getLessonStarters = function getLessonStarters(id) {
         SELECT
         started_lessons.id AS "started_lesson_id",
         started_lessons.text_answer, started_lessons.audio_answer,
-        started_lessons.completed, started_lessons.user_id,
+        started_lessons.completed, started_lessons.user_id, started_lessons.submitted,
         users.id AS "user_id", users.first,users.last,users.imageurl
         FROM started_lessons
 
@@ -232,7 +232,13 @@ module.exports.getThisStartedDetails = function getThisStartedDetails(
 ) {
     return db.query(
         `
-        SELECT * FROM started_lessons
+        SELECT started_lessons.id AS "id", started_lessons.completed AS "completed",
+        started_lessons.parent_lesson_id AS "parent_lesson_id", started_lessons.user_id AS "user_id",
+        started_lessons.text_answer AS "text_answer", started_lessons.audio_answer AS "audio_answer",
+        started_lessons.notes AS "notes", started_lessons.submitted AS "submitted",
+        lessons.title AS "title"
+        FROM started_lessons
+        LEFT JOIN lessons on lessons.id = started_lessons.parent_lesson_id
         WHERE parent_lesson_id=$1 AND user_id=$2;
         `,
         [lid, uid]

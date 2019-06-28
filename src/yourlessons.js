@@ -55,7 +55,10 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>#{lesson.parent_lesson_id}</p>
+                                        <p>
+                                            #{lesson.parent_lesson_id},{" "}
+                                            {lesson.title}
+                                        </p>
                                     </Link>
                                 </div>
                             ))}
@@ -70,7 +73,10 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>#{lesson.parent_lesson_id}</p>
+                                        <p>
+                                            #{lesson.parent_lesson_id},{" "}
+                                            {lesson.title}
+                                        </p>
                                     </Link>
                                 </div>
                             ))}
@@ -85,7 +91,10 @@ class YourLessons extends React.Component {
                                             lesson.parent_lesson_id
                                         }`}
                                     >
-                                        <p>#{lesson.parent_lesson_id}</p>
+                                        <p>
+                                            #{lesson.parent_lesson_id},{" "}
+                                            {lesson.title}
+                                        </p>
                                     </Link>
                                 </div>
                             ))}
@@ -96,7 +105,9 @@ class YourLessons extends React.Component {
                             this.props.ownLessons.map(lesson => (
                                 <div key={lesson.id}>
                                     <Link to={`/lesson/${lesson.id}`}>
-                                        <p>#{lesson.id}</p>
+                                        <p>
+                                            #{lesson.id} {lesson.title}
+                                        </p>
                                     </Link>
                                 </div>
                             ))}

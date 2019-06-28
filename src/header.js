@@ -21,17 +21,10 @@ export function Header(props, toggleMenu) {
             <header>
                 <div className="header-content-container">
                     <Link to="/">
-                        <div className="logo-container">Logo</div>
+                        <div className="logo-container">
+                            <img src="/logo.png" />
+                        </div>
                     </Link>
-                    {props.match.url === "/lessons" && (
-                        <input
-                            name="searchField"
-                            type="text"
-                            placeholder="Search"
-                            autoComplete="new-password"
-                            required
-                        />
-                    )}
 
                     <div className="header-links">
                         <div
@@ -66,3 +59,13 @@ const mapStateToProps = (state, props) => {
 };
 
 export default connect(mapStateToProps)(Header);
+
+// {props.match.url === "/lessons" && (
+//     <input
+//         name="searchField"
+//         type="text"
+//         placeholder="Search"
+//         autoComplete="new-password"
+//         required
+//     />
+// )}

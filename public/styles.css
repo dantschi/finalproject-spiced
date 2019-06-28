@@ -63,11 +63,13 @@ header {
     display: flex;
     align-items: center;
     position: relative;
-}
-
-.header-menu {
+    height: 100%;
     border-left: 2px solid #e1e1e1;
     padding: 0 0 0 18px;
+}
+
+.header-menu:hover {
+    cursor: pointer;
 }
 
 .header-links {
@@ -147,10 +149,12 @@ header {
     /* text-align: center; */
     flex-wrap: wrap;
     margin: 20px auto;
+    padding-top: 20px;
 }
 
 .lessons-box {
-    width: 300px;
+    min-width: 200px;
+    max-width: 300px;
 
     border-radius: 5px;
     border: 1px solid black;
@@ -193,13 +197,14 @@ header {
     justify-content: center;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
+    padding-top: 10px;
 }
 
 .lesson-box-left,
 .lesson-box-right {
     width: 45%;
     border: 1px solid black;
-    /* margin: 10px auto; */
+    margin: 5px;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -207,6 +212,14 @@ header {
 
     /* line-height: 1.5em; */
 }
+
+.lesson-box-left > * {
+    padding: 5px;
+}
+
+/* .lesson-box-right-inner * {
+    padding: 5px;
+} */
 
 .lesson-box-left h3,
 .lesson-box-right h3 {
@@ -264,6 +277,10 @@ header {
     border: 1px solid red;
     display: flex;
     flex-direction: column;
+}
+
+.usersLessons-column h2 {
+    text-align: center;
 }
 
 .rec-container {
@@ -477,12 +494,12 @@ button {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    opacity: 0.8;
+    opacity: 0.3;
 
     transition: all 0.2s ease-in-out;
 }
 
-.logout > img:hover {
+.logout:hover {
     cursor: pointer;
     opacity: 1;
     transition: all 0.2s ease-in-out;
@@ -490,6 +507,15 @@ button {
 
 .logo-container {
     margin-left: 20px;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.logo-container img {
+    width: 50px;
+    height: auto;
 }
 
 .header-links {

@@ -220,10 +220,13 @@ class Lesson extends React.Component {
             let updated = this.state.started;
             updated[i].lesson_submitted = false;
 
-            this.setState({
-                ...this.state,
-                started: updated
-            });
+            this.setState(
+                {
+                    ...this.state,
+                    started: updated
+                },
+                () => console.log(this.state)
+            );
         });
     }
 
@@ -278,170 +281,222 @@ class Lesson extends React.Component {
                                 <p onClick={this.loopToggle}>Loop it!</p>
                             </div>
                         )}
-                        {this.state.lesson.external_url && (
-                            <React.Fragment>
-                                <h4>External source</h4>
-                                <a
-                                    className="ext-box"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={this.state.lesson.external_url.url}
-                                >
-                                    <div className="external-url-wrapper">
-                                        <div className="external-url-img-box">
-                                            <img
-                                                src={
-                                                    this.state.lesson
-                                                        .external_url.imageurl
-                                                }
-                                            />
-                                            <p>
-                                                {
-                                                    this.state.lesson
-                                                        .external_url.name
-                                                }
-                                            </p>
-                                        </div>
-                                        <p>
-                                            {
-                                                this.state.lesson.external_url
-                                                    .desc
-                                            }
-                                        </p>
-                                    </div>
-                                </a>
-                            </React.Fragment>
-                        )}
                     </div>
 
                     <div className="lesson-box-right">
                         {/* CREATOR */}
-
-                        {creator && (
-                            <div className="lesson-starters-list">
-                                <h3>
-                                    You are the creator of this lesson! Thanks,{" "}
-                                    {this.props.userData.first}!
-                                </h3>
-                                <h4>
-                                    People who started lesson #
-                                    {this.state.lesson.parent_id}:
-                                </h4>
-                                {this.state.started.map((user, index) => (
-                                    <div
-                                        className="user-box"
-                                        key={user.user_id}
-                                    >
-                                        <p>
-                                            {user.first} {user.last}
-                                        </p>
-                                        <p>Answer: {user.text_answer}</p>
-                                        {user.audio_answer && (
-                                            <React.Fragment>
-                                                <p>Recording: </p>
-                                                <AudioPlayer
-                                                    src={user.audio_answer}
-                                                    preload="none"
-                                                />
-                                            </React.Fragment>
-                                        )}
-                                        {user.completed == false &&
-                                            user.lesson_submitted && (
-                                                <div>
-                                                    <button
-                                                        onClick={() =>
-                                                            this.acceptAnswer(
-                                                                user.user_id,
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        Accept answer
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            this.tryAgain(
-                                                                user.user_id,
-                                                                index
-                                                            );
-                                                        }}
-                                                    >
-                                                        Try again
-                                                    </button>
-                                                    <textarea
-                                                        name="authorNote"
-                                                        onChange={
-                                                            this.handleChange
-                                                        }
-                                                        onFocus={() => {
-                                                            this.getIndex(
-                                                                user.user_id
-                                                            );
-                                                        }}
+                        <div className="lesson-box-right-inner">
+                            {creator && (
+                                <div className="lesson-starters-list">
+                                    <h3>
+                                        You are the creator of this lesson!
+                                        Thanks, {this.props.userData.first}!
+                                    </h3>
+                                    <h4>
+                                        People who started lesson #
+                                        {this.state.lesson.parent_id}:
+                                    </h4>
+                                    {this.state.started.map((user, index) => (
+                                        <div
+                                            className="user-box"
+                                            key={user.user_id}
+                                        >
+                                            <p>
+                                                {user.first} {user.last}
+                                            </p>
+                                            <p>Answer: {user.text_answer}</p>
+                                            {user.audio_answer && (
+                                                <React.Fragment>
+                                                    <p>Recording: </p>
+                                                    <AudioPlayer
+                                                        src={user.audio_answer}
+                                                        preload="none"
                                                     />
-                                                </div>
+                                                </React.Fragment>
                                             )}
-                                        {user.completed == true && (
-                                            <p>
-                                                Completed! You have already
-                                                accepted the answer of{" "}
-                                                {user.first}
-                                            </p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                            {user.completed == false &&
+                                                user.submitted == true && (
+                                                    <div>
+                                                        <button
+                                                            onClick={() =>
+                                                                this.acceptAnswer(
+                                                                    user.user_id,
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            Accept answer
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                this.tryAgain(
+                                                                    user.user_id,
+                                                                    index
+                                                                );
+                                                            }}
+                                                        >
+                                                            Try again
+                                                        </button>
+                                                        <textarea
+                                                            name="authorNote"
+                                                            onChange={
+                                                                this
+                                                                    .handleChange
+                                                            }
+                                                            onFocus={() => {
+                                                                this.getIndex(
+                                                                    user.user_id
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            {user.completed == true && (
+                                                <p>
+                                                    Completed! You have already
+                                                    accepted the answer of{" "}
+                                                    {user.first}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
-                        {/* COMPLETED */}
+                            {/* COMPLETED */}
 
-                        {completed && (
-                            <div>
-                                <h2>You have already completed this lesson</h2>
-                                <h3>Your answer was:</h3>
-                                <p>{textAnswer}</p>
-                                {audioAnswer && (
-                                    <AudioPlayer
-                                        src={audioAnswer}
-                                        preload="none"
-                                    />
-                                )}
-                            </div>
-                        )}
+                            {completed && (
+                                <div>
+                                    <h2>
+                                        You have already completed this lesson
+                                    </h2>
+                                    <h3>Your answer was:</h3>
+                                    <p>{textAnswer}</p>
+                                    {audioAnswer && (
+                                        <AudioPlayer
+                                            src={audioAnswer}
+                                            preload="none"
+                                        />
+                                    )}
+                                </div>
+                            )}
 
-                        {/* NOT CREATOR, NOT COMPLETED, NOT STARTED  */}
+                            {/* NOT CREATOR, NOT COMPLETED, NOT STARTED  */}
 
-                        {!creator && !completed && notStarted && (
-                            <button onClick={this.startThisLesson}>
-                                Start this lesson
-                            </button>
-                        )}
+                            {!creator && !completed && notStarted && (
+                                <button onClick={this.startThisLesson}>
+                                    Start this lesson
+                                </button>
+                            )}
 
-                        {/* NOT CREATOR, NOT COMPLETED, STARTED */}
+                            {/* NOT CREATOR, NOT COMPLETED, STARTED */}
 
-                        {!creator && !completed && !notStarted && (
-                            // NOT CREATOR, NOT COMPLETED, STARTED || SUBMITTED
+                            {!creator && !completed && !notStarted && (
+                                // NOT CREATOR, NOT COMPLETED, STARTED || SUBMITTED
 
-                            <React.Fragment>
-                                {submitted && (
-                                    // NOT CREATOR, NOT COMPLETED, STARTED, SUBMITTED, NOT APPROVED
+                                <React.Fragment>
+                                    {submitted && (
+                                        // NOT CREATOR, NOT COMPLETED, STARTED, SUBMITTED, NOT APPROVED
 
-                                    <React.Fragment>
-                                        <div>
-                                            <p>
-                                                You have submitted this lesson,
-                                                but it has not been approved
-                                                yet.
-                                            </p>
+                                        <React.Fragment>
+                                            <div>
+                                                <p>
+                                                    You have submitted this
+                                                    lesson, but it has not been
+                                                    approved yet.
+                                                </p>
 
-                                            <h2>Your solution was:</h2>
-                                            <p>{textAnswer}</p>
-                                            {audioAnswer && (
-                                                <AudioPlayer
-                                                    src={audioAnswer}
-                                                    preload="none"
+                                                <h2>Your solution was:</h2>
+                                                <p>{textAnswer}</p>
+                                                {audioAnswer && (
+                                                    <AudioPlayer
+                                                        src={audioAnswer}
+                                                        preload="none"
+                                                    />
+                                                )}
+                                                {this.state.lesson
+                                                    .author_notes && (
+                                                    <div>
+                                                        <p>
+                                                            The note of the
+                                                            author is:
+                                                        </p>
+                                                        <p>
+                                                            {
+                                                                this.state
+                                                                    .lesson
+                                                                    .author_notes
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </React.Fragment>
+                                    )}
+
+                                    {/* NOT CREATOR, NOT COMPLETED, STARTED || NOT SUBMITTED */}
+
+                                    {!submitted && (
+                                        <React.Fragment>
+                                            <p>Your answer</p>
+                                            <div className="input-wrapper wide">
+                                                <textarea
+                                                    name="textanswer"
+                                                    type="text"
+                                                    onChange={this.handleChange}
                                                 />
+                                            </div>
+
+                                            {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO NOT RECORDED */}
+
+                                            {!this.state.tempUrl && (
+                                                <React.Fragment>
+                                                    <p>Your audio-answer</p>
+                                                    <Recorder
+                                                        // closeMenu={
+                                                        //     this.props.closeMenu
+                                                        // }
+                                                        handleFileChange={
+                                                            this
+                                                                .handleFileChange
+                                                        }
+                                                    />
+                                                </React.Fragment>
                                             )}
+
+                                            {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
+
+                                            {this.state.tempUrl &&
+                                                this.state.lesson
+                                                    .audio_answer && (
+                                                    <React.Fragment>
+                                                        <p>Your audio-answer</p>
+                                                        <AudioPlayer
+                                                            src={
+                                                                this.state
+                                                                    .tempUrl ||
+                                                                this.state
+                                                                    .lesson
+                                                                    .audio_answer
+                                                            }
+                                                            preload="none"
+                                                        />
+                                                        <button
+                                                            onClick={() =>
+                                                                this.deleteRecording()
+                                                            }
+                                                        >
+                                                            Delete this
+                                                            recording if you are
+                                                            not satisfied with
+                                                            it
+                                                        </button>
+                                                    </React.Fragment>
+                                                )}
+
+                                            <button onClick={this.submitLesson}>
+                                                Submit this lesson
+                                            </button>
                                             {this.state.lesson.author_notes && (
                                                 <div>
                                                     <p>
@@ -456,86 +511,11 @@ class Lesson extends React.Component {
                                                     </p>
                                                 </div>
                                             )}
-                                        </div>
-                                    </React.Fragment>
-                                )}
-
-                                {/* NOT CREATOR, NOT COMPLETED, STARTED || NOT SUBMITTED */}
-
-                                {!submitted && (
-                                    <React.Fragment>
-                                        <p>Your answer</p>
-                                        <div className="input-wrapper wide">
-                                            <textarea
-                                                name="textanswer"
-                                                type="text"
-                                                onChange={this.handleChange}
-                                            />
-                                        </div>
-
-                                        {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO NOT RECORDED */}
-
-                                        {!this.state.tempUrl && (
-                                            <React.Fragment>
-                                                <p>Your audio-answer</p>
-                                                <Recorder
-                                                    // closeMenu={
-                                                    //     this.props.closeMenu
-                                                    // }
-                                                    handleFileChange={
-                                                        this.handleFileChange
-                                                    }
-                                                />
-                                            </React.Fragment>
-                                        )}
-
-                                        {/* NOT CREATOR, NOT COMPLETED, STARTED, NOT SUBMITTED || AUDIO RECORDED */}
-
-                                        {this.state.tempUrl &&
-                                            this.state.lesson.audio_answer && (
-                                                <React.Fragment>
-                                                    <p>Your audio-answer</p>
-                                                    <AudioPlayer
-                                                        src={
-                                                            this.state
-                                                                .tempUrl ||
-                                                            this.state.lesson
-                                                                .audio_answer
-                                                        }
-                                                        preload="none"
-                                                    />
-                                                    <button
-                                                        onClick={() =>
-                                                            this.deleteRecording()
-                                                        }
-                                                    >
-                                                        Delete this recording if
-                                                        you are not satisfied
-                                                        with it
-                                                    </button>
-                                                </React.Fragment>
-                                            )}
-
-                                        <button onClick={this.submitLesson}>
-                                            Submit this lesson
-                                        </button>
-                                        {this.state.lesson.author_notes && (
-                                            <div>
-                                                <p>
-                                                    The note of the author is:
-                                                </p>
-                                                <p>
-                                                    {
-                                                        this.state.lesson
-                                                            .author_notes
-                                                    }
-                                                </p>
-                                            </div>
-                                        )}
-                                    </React.Fragment>
-                                )}
-                            </React.Fragment>
-                        )}
+                                        </React.Fragment>
+                                    )}
+                                </React.Fragment>
+                            )}
+                        </div>
                     </div>
                 </div>
             );
@@ -578,3 +558,38 @@ export default connect(mapStateToProps)(Lesson);
 //         Save notes
 //     </button>
 // </div>
+
+// {this.state.lesson.external_url && (
+//     <React.Fragment>
+//         <h4>External source</h4>
+//         <a
+//             className="ext-box"
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             href={this.state.lesson.external_url.url}
+//         >
+//             <div className="external-url-wrapper">
+//                 <div className="external-url-img-box">
+//                     <img
+//                         src={
+//                             this.state.lesson
+//                                 .external_url.imageurl
+//                         }
+//                     />
+//                     <p>
+//                         {
+//                             this.state.lesson
+//                                 .external_url.name
+//                         }
+//                     </p>
+//                 </div>
+//                 <p>
+//                     {
+//                         this.state.lesson.external_url
+//                             .desc
+//                     }
+//                 </p>
+//             </div>
+//         </a>
+//     </React.Fragment>
+// )}
