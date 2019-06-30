@@ -16,6 +16,7 @@ class Lesson extends React.Component {
         this.state = {
             data: {},
             lesson: {},
+            started: {},
             error: "",
             loopLesson: false
         };
@@ -37,10 +38,14 @@ class Lesson extends React.Component {
         axios
             .get("/get-lesson-data/" + this.props.match.params.id)
             .then(rslt => {
-                console.log("/get-lesson-data GET response from server", rslt);
+                console.log(
+                    "/get-lesson-data GET response from server",
+                    rslt.data[0]
+                );
 
                 this.setState(
                     {
+                        ...this.state,
                         started: rslt.data[0],
                         lesson: rslt.data[1][0]
                     },
@@ -272,28 +277,41 @@ class Lesson extends React.Component {
 
                         <h3>Challenge</h3>
                         <p>{this.state.lesson.challenge}</p>
-                        <h3>Description</h3>
+                        <h3>6Description</h3>
                         <p>{this.state.lesson.description}</p>
-                        {this.state.lesson.external_url && (
+
+                        {/*
+
+                            {this.state.lesson.external_url.url && (
                             <React.Fragment>
-                                <h4>External source</h4>
-                                <a
-                                    className="ext-box"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={this.state.lesson.external_url}
-                                >
-                                    <div className="external-url-wrapper">
-                                        <div className="external-url-img-box">
-                                            <img src="/extlogo.png" />
-                                            <p>
-                                                {this.state.lesson.external_url}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </React.Fragment>
-                        )}
+                            <h4>External source</h4>
+                            <a
+                            className="ext-box"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={this.state.lesson.external_url.url}
+                            >
+                            <div className="external-url-wrapper">
+                            <div className="external-url-img-box">
+                            <img
+                            src={
+                            this.state.lesson
+                            .external_url.imageurl
+                        }
+                        />
+                        <p>
+                        {
+                        this.state.lesson
+                        .external_url.title
+                    }
+                    </p>
+                    </div>
+                    </div>
+                    </a>
+                    </React.Fragment>
+                )}
+                            */}
+
                         {this.state.lesson.recording_url && (
                             <div>
                                 <h3>Voice note for the assignment</h3>
@@ -329,6 +347,7 @@ class Lesson extends React.Component {
                                         People who started lesson #
                                         {this.state.lesson.parent_id}:
                                     </h4>
+                                    {/*
                                     {this.state.started.map((user, index) => (
                                         <div
                                             className="user-box"
@@ -389,6 +408,7 @@ class Lesson extends React.Component {
                                             )}
                                         </div>
                                     ))}
+                                    */}
                                 </div>
                             )}
 
@@ -602,6 +622,41 @@ export default connect(mapStateToProps)(Lesson);
 //         Save notes
 //     </button>
 // </div>
+
+// {this.state.lesson.external_url && (
+//     <React.Fragment>
+//         <h4>External source</h4>
+//         <a
+//             className="ext-box"
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             href={this.state.lesson.external_url.url}
+//         >
+//             <div className="external-url-wrapper">
+//                 <div className="external-url-img-box">
+//                     <img
+//                         src={
+//                             this.state.lesson
+//                                 .external_url.imageurl
+//                         }
+//                     />
+//                     <p>
+//                         {
+//                             this.state.lesson
+//                                 .external_url.name
+//                         }
+//                     </p>
+//                 </div>
+//                 <p>
+//                     {
+//                         this.state.lesson.external_url
+//                             .desc
+//                     }
+//                 </p>
+//             </div>
+//         </a>
+//     </React.Fragment>
+// )}
 
 // {this.state.lesson.external_url && (
 //     <React.Fragment>

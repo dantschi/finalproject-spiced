@@ -12,6 +12,7 @@ import CreateLesson from "./createlesson";
 import Lessons from "./lessons";
 import Lesson from "./lesson";
 import YourLessons from "./yourlessons";
+import { News } from "./news";
 
 export class App extends React.Component {
     constructor(props) {
@@ -79,6 +80,7 @@ export class App extends React.Component {
                             />
                         )}
                     />
+                    <Route path="/news" render={props => <News />} />
 
                     <div className="anything-else">
                         <Menu

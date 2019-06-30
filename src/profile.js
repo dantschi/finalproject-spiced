@@ -27,12 +27,15 @@ export class Profile extends React.Component {
 
     handleChange(e) {
         // console.log(e.target.name, e.target.value, this.state);
-        this.setState({
-            data: {
-                ...this.state.data,
-                [e.target.name]: e.target.value
-            }
-        });
+        this.setState(
+            {
+                data: {
+                    ...this.state.data,
+                    [e.target.name]: e.target.value
+                }
+            },
+            () => console.log(this.state)
+        );
     }
 
     handleFileChange(e) {
@@ -107,7 +110,7 @@ export class Profile extends React.Component {
                             <p className="input-label">First</p>
                             <div className="input-wrapper">
                                 <input
-                                    defaultValue={this.props.userData.first}
+                                    value={this.props.userData.first}
                                     name="first"
                                     type="text"
                                     onChange={this.handleChange}
@@ -121,7 +124,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Last</p>
                             <div className="input-wrapper">
                                 <input
-                                    defaultValue={this.props.userData.last}
+                                    value={this.props.userData.last}
                                     name="last"
                                     type="text"
                                     onChange={this.handleChange}
@@ -156,7 +159,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Location</p>
                             <div className="input-wrapper">
                                 <input
-                                    defaultValue={this.props.userData.location}
+                                    value={this.props.userData.location}
                                     name="location"
                                     type="text"
                                     onChange={this.handleChange}
@@ -170,7 +173,7 @@ export class Profile extends React.Component {
                             <p className="input-label">Bands</p>
                             <div className="input-wrapper">
                                 <input
-                                    defaultValue={this.props.userData.bands}
+                                    value={this.props.userData.bands}
                                     name="bands"
                                     type="text"
                                     onChange={this.handleChange}
@@ -179,13 +182,29 @@ export class Profile extends React.Component {
                                 />
                             </div>
                         </div>
+
+                        <div className="input-row">
+                            <p className="input-label">Genres</p>
+                            <div className="input-wrapper">
+                                <input
+                                    value={
+                                        this.state.data.genres ||
+                                        this.props.userData.genres
+                                    }
+                                    name="genres"
+                                    type="text"
+                                    onChange={this.handleChange}
+                                    placeholder="Tell us the genres you like (comma separated)"
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+
                         <div className="input-row">
                             <p className="input-label">Instruments</p>
                             <div className="input-wrapper">
                                 <input
-                                    defaultValue={
-                                        this.props.userData.instruments
-                                    }
+                                    value={this.props.userData.instruments}
                                     name="instruments"
                                     type="text"
                                     onChange={this.handleChange}
@@ -204,9 +223,7 @@ export class Profile extends React.Component {
                             </p>
                             <div className="input-wrapper">
                                 <textarea
-                                    defaultValue={
-                                        this.props.userData.description
-                                    }
+                                    value={this.props.userData.description}
                                     name="description"
                                     type="text"
                                     onChange={this.handleChange}
@@ -240,7 +257,7 @@ export default connect(mapStateToProps)(Profile);
 //     <p className="input-label">Genres</p>
 //     <div className="input-wrapper">
 //         <input
-//             defaultValue={this.props.userData.genres}
+//             value={this.props.userData.genres}
 //             name="genre"
 //             type="text"
 //             onChange={this.handleChange}

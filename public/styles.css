@@ -655,6 +655,43 @@ button:hover {
     flex-direction: column;
 }
 
+.news-container {
+    width: 80%;
+    margin: 160px auto 50px auto;
+    border: 1px solid black;
+}
+
+.news-box {
+    width: 90%;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.news-box-left,
+.news-box-right {
+    padding: 5px;
+    margin: 5px;
+}
+
+.news-box-left {
+    width: 300px;
+}
+.news-box-img-container {
+    width: 300px;
+    /* height: 300px; */
+    overflow: hidden;
+}
+
+.news-box-img-container > img {
+    width: 100%;
+    height: auto;
+}
+
 .logout {
     position: fixed;
     bottom: 30px;

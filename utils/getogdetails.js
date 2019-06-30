@@ -3,6 +3,7 @@ const https = require("https");
 
 module.exports.getOgDetails = function getOgDetails(url, cb) {
     var data = "";
+    var resObj = {};
 
     https
         .get(url, resp => {
@@ -12,7 +13,18 @@ module.exports.getOgDetails = function getOgDetails(url, cb) {
 
             resp.on("end", () => {
                 if (resp.statusCode != 200) {
-                    cb(new Error(resp.statusCode));
+                    // cb(new Error(resp.statusCode));
+                    cb(console.log("something went wrong", resp.statusCode));
+                    resObj = {
+                        type: "external page",
+                        title: "external page",
+                        url: url,
+                        desc:
+                            "This is a link to an external page without og tag.",
+                        name: "external page",
+                        imageurl: "/extlogo.png"
+                    };
+                    cb("no results", resObj);
                 } else {
                     var $ = cheerio.load(data);
                     let type = $('meta[property="og:type"]').attr("content");
@@ -26,7 +38,7 @@ module.exports.getOgDetails = function getOgDetails(url, cb) {
                     );
                     let img = $('meta[property="og:image"]').attr("content");
                     console.log("om:type", type);
-                    let resObj = {
+                    resObj = {
                         type: type || "external page",
                         title: title || "external page",
                         url: siteUrl || url,

@@ -4,12 +4,13 @@ import axios from "./axios";
 export class Recorder extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            news: []
+        };
 
         this.record = this.record.bind(this);
         this.stopRecording = this.stopRecording.bind(this);
         //
-        // this.getNews = this.getNews.bind(this);
     }
 
     componentDidMount() {
@@ -78,24 +79,32 @@ export class Recorder extends React.Component {
     }
 
     render() {
+        if (!this.state.news) {
+            return <h1>Loading</h1>;
+        }
         return (
-            <div className="rec-container">
-                <div className="rec-buttons">
-                    {!this.state.onRecord && (
-                        <div className="button">
-                            <div onClick={this.record} className="btn-record" />
-                        </div>
-                    )}
-                    {this.state.onRecord && (
-                        <div className="button">
-                            <div
-                                onClick={this.stopRecording}
-                                className="btn-stopRecord"
-                            />
-                        </div>
-                    )}
+            <React.Fragment>
+                <div className="rec-container">
+                    <div className="rec-buttons">
+                        {!this.state.onRecord && (
+                            <div className="button">
+                                <div
+                                    onClick={this.record}
+                                    className="btn-record"
+                                />
+                            </div>
+                        )}
+                        {this.state.onRecord && (
+                            <div className="button">
+                                <div
+                                    onClick={this.stopRecording}
+                                    className="btn-stopRecord"
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }
@@ -126,6 +135,3 @@ export class Recorder extends React.Component {
 // IN CASE OF NEWS API
 ///////////////////////////////////////////////////
 //
-// <div onClick={this.getNews} className="btn-getnews">
-//     Get News
-// </div>

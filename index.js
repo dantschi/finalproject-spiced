@@ -330,7 +330,7 @@ app.post("/change-user-data", (req, res) => {
         description
     )
         .then(rslt => {
-            console.log("changeUserData result", rslt);
+            console.log("changeUserData result", rslt.rows[0]);
             res.json(rslt.rows[0]);
         })
         .catch(err => {
@@ -381,30 +381,27 @@ app.get("/get-lesson-data/:id", async (req, res) => {
     ])
         .then(rslt => {
             console.log("lesson data", rslt[1].rows[0]);
-            res.json([rslt[0].rows, rslt[1].rows]);
-            // if (rslt[1].rows[0].external_url.startsWith("https://")) {
-            //     god.getOgDetails(
-            //         rslt[1].rows[0].external_url,
-            //         (err, result) => {
-            //             if (err) {
-            //                 console.log("omg error", err);
-            //                 res.json(
-            //                     rslt[1].rows[0].external_url,
-            //                     rslt[1].rows
-            //                 );
-            //             }
-            //             console.log(
-            //                 "omg result",
-            //                 result,
-            //                 typeof rslt[1].rows[0]
-            //             );
-            //             rslt[1].rows[0].external_url = result;
-            //             res.json([rslt[0].rows[0], rslt[1].rows]);
-            //         }
-            //     );
-            // } else {
-            //     res.json([rslt[0].rows[0], rslt[1].rows]);
-            // }
+            // res.json([rslt[0].rows, rslt[1].rows]);
+            if (rslt[1].rows[0].external_url.startsWith("https://")) {
+                god.getOgDetails(
+                    rslt[1].rows[0].external_url,
+                    (err, result) => {
+                        if (err) {
+                            console.log("omg error", err);
+                            res.json([rslt[0].rows[0], rslt[1].rows]);
+                        }
+                        console.log(
+                            "omg result",
+                            result,
+                            typeof rslt[1].rows[0]
+                        );
+                        rslt[1].rows[0].external_url = result;
+                        res.json([rslt[0].rows[0], rslt[1].rows]);
+                    }
+                );
+            } else {
+                res.json([rslt[0].rows[0], rslt[1].rows]);
+            }
         })
         .catch(err => {
             console.log("lesson data error", err);
@@ -524,11 +521,12 @@ app.get("/get-your-created-lessons", (req, res) => {
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.get("/get-news", (req, res) => {
-    getNews.getNews("Metallica", (err, rslt) => {
+    getNews.getNews("berlin", (err, rslt) => {
         if (err) {
             console.log("getNews error", err);
         }
         console.log("getNews result", rslt);
+        res.json(rslt);
     });
     console.log("/news");
 });
