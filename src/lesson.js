@@ -277,7 +277,7 @@ class Lesson extends React.Component {
 
                         <h3>Challenge</h3>
                         <p>{this.state.lesson.challenge}</p>
-                        <h3>6Description</h3>
+                        <h3>Description</h3>
                         <p>{this.state.lesson.description}</p>
 
                         {/*
