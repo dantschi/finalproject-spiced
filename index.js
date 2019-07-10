@@ -521,7 +521,7 @@ app.get("/get-your-created-lessons", (req, res) => {
 ////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 app.get("/get-news", (req, res) => {
-    getNews.getNews("berlin", (err, rslt) => {
+    getNews.getNews("vác", (err, rslt) => {
         if (err) {
             console.log("getNews error", err);
         }
