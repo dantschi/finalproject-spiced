@@ -20,6 +20,15 @@ I chose to create a simple and small online learning platform. The intention was
 -   Once the student has practiced enough, he or she can assign his solution, also with audio recording.
 -   The creator of the lesson evaluates if the student's assignment/solution is correct
 
+### Future plans, TODO:
+- a massive refactor with subcomponents of `lesson.js`.
+- profile edit and profile image update fixes
+- being able to add notes before submitting the lesson, and load this notes before submitting
+- handling what happens when the creator of lesson does not accept the solution of lesson
+- filtering lessons by tag names
+- some social network features, like chat wall, private chat, ...
+
+
 ### Screenshots:
 
 ![Screenshot](/screenshots/login.png?raw=true "login")
